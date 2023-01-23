@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "S:\\Charamon\\Charamon\\Charamon.csproj": {}
+    "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {}
   },
   "projects": {
-    "S:\\Charamon\\Charamon\\Charamon.csproj": {
+    "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "S:\\Charamon\\Charamon\\Charamon.csproj",
+        "projectUniqueName": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
         "projectName": "Charamon",
-        "projectPath": "S:\\Charamon\\Charamon\\Charamon.csproj",
-        "packagesPath": "C:\\Users\\arthurjouve\\.nuget\\packages\\",
-        "outputPath": "S:\\Charamon\\Charamon\\obj\\",
+        "projectPath": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+        "packagesPath": "C:\\Users\\arthu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\arthurjouve\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\arthu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

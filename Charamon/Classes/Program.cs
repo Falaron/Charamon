@@ -27,6 +27,7 @@ public partial class Program
         OpeningScreen();
         while (gameRunning)
         {
+            //UpdateCharacter();
             RenderWorldMapView();
             PlayerInputs();
             UpdateDeltaTime();
@@ -53,6 +54,7 @@ public partial class Program
                 }
             }
         }
+        player.PlayerRenderer = Sprites.Player;
     }
 
     static void OpeningScreen()
@@ -96,25 +98,38 @@ public partial class Program
         switch(keyPressed)
         {
             // Player movement
-            case ConsoleKey.UpArrow:
-                player.posY -= 1;
-                Write(Sprites.Player, player.posX, player.posY);
-                break;
-            case ConsoleKey.DownArrow:
-                player.posY += 1;
-                break;
-            case ConsoleKey.LeftArrow:
-                player.posX -= 2;
-                break;
-            case ConsoleKey.RightArrow:
-                int newY = player.posY;
-                int newX = player.posX + 2;
+            case
+            ConsoleKey.UpArrow or
+            ConsoleKey.DownArrow or
+            ConsoleKey.LeftArrow or
+            ConsoleKey.RightArrow:
+                var (tileX, tileY) = keyPressed switch
+                {
+                    ConsoleKey.UpArrow => (player.TileX, player.TileY - 1),
+                    ConsoleKey.DownArrow => (player.TileX, player.TileY + 1),
+                    ConsoleKey.LeftArrow => (player.TileX - 1, player.TileY),
+                    ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
+                };
 
-                if (!CheckMove(newY, newX)) break;
-                player.posX += 2;
+                if (Maps.IsValidCharacterMapTile(Map, tileX, tileY))
+                {
+                    switch(keyPressed)
+                    {
+                        case ConsoleKey.UpArrow:
+                            player.posY -= Sprites.spriteHeight;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            player.posY += Sprites.spriteHeight;
+                            break;
+                        case ConsoleKey.LeftArrow:
+                            player.posX -= Sprites.spriteWidth;
+                            break;
+                        case ConsoleKey.RightArrow:
+                            player.posX += Sprites.spriteWidth;
+                            break;
+                    }
+                }
                 break;
-
-            
 
             // Quit game
             case ConsoleKey.Escape:
@@ -183,6 +198,16 @@ public partial class Program
                 }
 
 
+                // player
+                if (x > midWidth - 4 && x < midWidth + 4 && y > midHeight - 2 && y < midHeight + 3)
+                {
+                    int ci = x - (midWidth - 3);
+                    int cj = y - (midHeight - 1);
+                    string characterMapRender = player.PlayerRenderer;
+                    builder.Append(characterMapRender[cj * 8 + ci]);
+                    continue;
+                }
+
                 // tiles
                 // compute the map location that this screen pixel represents
                 int mapX = x - midWidth + player.posX;
@@ -204,18 +229,5 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
-    }
-
-    static bool CheckMove(int x, int y)
-    {
-        /*if (Map[x][y] == Mountain)
-            return false;*/
-        return true;
-    }
-
-    static void Write(string toWrite, int x = 0, int y = 0)
-    {
-        Console.SetCursorPosition(x, y);
-        Console.Write(toWrite);
     }
 }
