@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace ProjectPokemin;
-
 public partial class Program
 {
     static Player? _player;
@@ -39,6 +37,7 @@ public partial class Program
     {
         Console.CursorVisible = false;                      // Hide cursor
         Map = Maps.Field;                                   // Load selected map
+
         player = new();
         {                      
             // Find in the current map the char "X" (spawn point char)
@@ -96,12 +95,28 @@ public partial class Program
         
         switch(keyPressed)
         {
-            //Move up
+            // Player movement
             case ConsoleKey.UpArrow:
                 player.posY -= 1;
-                return;
+                Write(Sprites.Player, player.posX, player.posY);
+                break;
+            case ConsoleKey.DownArrow:
+                player.posY += 1;
+                break;
+            case ConsoleKey.LeftArrow:
+                player.posX -= 2;
+                break;
+            case ConsoleKey.RightArrow:
+                int newY = player.posY;
+                int newX = player.posX + 2;
 
-            //Quit game
+                if (!CheckMove(newY, newX)) break;
+                player.posX += 2;
+                break;
+
+            
+
+            // Quit game
             case ConsoleKey.Escape:
                 gameRunning= false;
                 Console.Clear();
@@ -189,5 +204,18 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
+    }
+
+    static bool CheckMove(int x, int y)
+    {
+        /*if (Map[x][y] == Mountain)
+            return false;*/
+        return true;
+    }
+
+    static void Write(string toWrite, int x = 0, int y = 0)
+    {
+        Console.SetCursorPosition(x, y);
+        Console.Write(toWrite);
     }
 }

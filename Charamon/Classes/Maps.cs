@@ -28,8 +28,8 @@ public static class Maps
     {
         "mmmmmmmmmmmmmmm".ToCharArray(),
         "mmmm  t      mm".ToCharArray(),
-        "mm  X    tt  mm".ToCharArray(),
-        "mm    ffff    m".ToCharArray(),
+        "mm       tt  mm".ToCharArray(),
+        "mm    ffff X  m".ToCharArray(),
         "ttttttttttttmmm".ToCharArray(),
     };
 }
