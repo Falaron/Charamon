@@ -1,7 +1,6 @@
 ﻿using ProjectCharamon;
 using System.Diagnostics;
 using System.Text;
-
 public partial class Program
 {
     static Player? _player;
@@ -27,8 +26,8 @@ public partial class Program
         OpeningScreen();
         while (gameRunning)
         {
-            //RenderWorldMapView();
-            RenderCombatView();
+            RenderWorldMapView();
+            //RenderCombatView();
             PlayerInputs();
             UpdateDeltaTime();
         }
