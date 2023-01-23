@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace ProjectPokemin;
-
 public partial class Program
 {
     static Player? _player;
@@ -29,7 +27,8 @@ public partial class Program
         OpeningScreen();
         while (gameRunning)
         {
-            RenderWorldMapView();
+            //RenderWorldMapView();
+            RenderCombatView();
             PlayerInputs();
             UpdateDeltaTime();
         }
@@ -135,38 +134,7 @@ public partial class Program
         {
             for (int x = 0; x < width; x++)
             {
-                // map outline
-                if (x == 0 && y == 0)
-                {
-                    builder.Append('╔');
-                    continue;
-                }
-                if (x == 0 && y == height - 1)
-                {
-                    builder.Append('╚');
-                    continue;
-                }
-                if (x == width - 1 && y == 0)
-                {
-                    builder.Append('╗');
-                    continue;
-                }
-                if (x == width - 1 && y == height - 1)
-                {
-                    builder.Append('╝');
-                    continue;
-                }
-                if (x == 0 || x == width - 1)
-                {
-                    builder.Append('║');
-                    continue;
-                }
-                if (y == 0 || y == height - 1)
-                {
-                    builder.Append('═');
-                    continue;
-                }
-
+                if (SetOutline(builder, width, height, x, y)) continue;
 
                 // tiles
                 // compute the map location that this screen pixel represents
@@ -189,5 +157,62 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
+    }
+
+    static void RenderCombatView()
+    {
+        int width = Console.WindowWidth;
+        int height = Console.WindowHeight;
+        int midWidth = (int)Math.Round(width * 0.5f);
+        int midHeight = (int)Math.Round(height * 0.5f);
+
+        StringBuilder builder = new(width * height);
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (SetOutline(builder, width, height, x, y)) continue;
+
+
+            }
+        }
+        Console.SetCursorPosition(0, 0);
+        Console.Write(builder);
+    }
+
+    //map outline 
+    static bool SetOutline(StringBuilder builder, int width, int height, int x, int y)
+    {
+        if (x == 0 && y == 0)
+        {
+            builder.Append('╔');
+            return true;
+        }
+        if (x == 0 && y == height - 1)
+        {
+            builder.Append('╚');
+            return true;
+        }
+        if (x == width - 1 && y == 0)
+        {
+            builder.Append('╗');
+            return true;
+        }
+        if (x == width - 1 && y == height - 1)
+        {
+            builder.Append('╝');
+            return true;
+        }
+        if (x == 0 || x == width - 1)
+        {
+            builder.Append('║');
+            return true;
+        }
+        if (y == 0 || y == height - 1)
+        {
+            builder.Append('═');
+            return true;
+        }
+        return false;
     }
 }
