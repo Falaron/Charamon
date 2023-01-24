@@ -14,9 +14,6 @@ public class Player
     public string? PlayerRenderer
     {
         get => _playerRenderer;
-        set
-        {
-            _playerRenderer = value;
-        }
+        set => _playerRenderer = value;
     }
 }
