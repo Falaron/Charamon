@@ -1,6 +1,9 @@
 ﻿using ProjectCharamon;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+
+
 public partial class Program
 {
     static Player? _player;
@@ -23,6 +26,8 @@ public partial class Program
     public static void Main()
     {
         Initialize();
+        JsonParser.SetCharamons();
+        JsonParser.SetCapacities();
         OpeningScreen();
         while (gameRunning)
         {

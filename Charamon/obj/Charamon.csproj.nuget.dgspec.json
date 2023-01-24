@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\matee\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {}
+    "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {}
   },
   "projects": {
-    "C:\\Users\\matee\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {
+    "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\matee\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+        "projectUniqueName": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
         "projectName": "Charamon",
-        "projectPath": "C:\\Users\\matee\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
-        "packagesPath": "C:\\Users\\matee\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\matee\\Source\\Repos\\Charamon\\Charamon\\obj\\",
+        "projectPath": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+        "packagesPath": "C:\\Users\\rmateescu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\matee\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\rmateescu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
