@@ -1,10 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="ProjectCharamon.Player">
-    <Position X="3.75" Y="1.75" Width="1.5" />
+    <Position X="6.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAIAAABAAAAAAAAIAAAAAAAAAAAwAAAAAA=</HashCode>
       <FileName>Classes\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Maps">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Classes\Maps.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Sprites">
+    <Position X="6.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAKCAQAAEAIAAAAQAAAAAAAAEAAAAQAAAAA=</HashCode>
+      <FileName>Classes\Sprites.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Program">
+    <Position X="9.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQIAAARAAAQgIAAAECAAAAAAAAAIBAEAARAAAAAA=</HashCode>
+      <FileName>Classes\Program.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

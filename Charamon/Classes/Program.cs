@@ -26,7 +26,6 @@ public partial class Program
         OpeningScreen();
         while (gameRunning)
         {
-            //UpdateCharacter();
             RenderWorldMapView();
             PlayerInputs();
             UpdateDeltaTime();
@@ -47,8 +46,8 @@ public partial class Program
                 {
                     if (Map[y][x] == 'X')
                     {
-                        player.posX = x * Sprites.spriteWidth;
-                        player.posY = y * Sprites.spriteHeight;
+                        player.posX = x * Sprites.SpriteWidth;
+                        player.posY = y * Sprites.SpriteHeight;
                     }
                 }
             }
@@ -93,7 +92,6 @@ public partial class Program
     static void PlayerInputs()
     {
         ConsoleKey keyPressed = Console.ReadKey(true).Key;
-
         switch (keyPressed)
         {
             // Player movement
@@ -115,19 +113,25 @@ public partial class Program
                     switch (keyPressed)
                     {
                         case ConsoleKey.UpArrow:
-                            player.posY -= Sprites.spriteHeight;
+                            player.posY -= Sprites.SpriteHeight;
                             break;
                         case ConsoleKey.DownArrow:
-                            player.posY += Sprites.spriteHeight;
+                            player.posY += Sprites.SpriteHeight;
                             break;
                         case ConsoleKey.LeftArrow:
-                            player.posX -= Sprites.spriteWidth;
+                            player.posX -= Sprites.SpriteWidth;
                             break;
                         case ConsoleKey.RightArrow:
-                            player.posX += Sprites.spriteWidth;
+                            player.posX += Sprites.SpriteWidth;
                             break;
                     }
                 }
+                CheckInterraction();
+                break;
+
+            // Open inventory
+            case ConsoleKey.Enter:
+                Inventory();
                 break;
 
             // Quit game
@@ -138,6 +142,30 @@ public partial class Program
 
             default: break;
         }
+    }
+
+    static void CheckInterraction()
+    {
+       /*switch (Map[player.TileX][player.TileY])
+        {
+            case 'g': GrassInterraction(); break;
+            default: break;
+        }*/
+    }
+
+    static void GrassInterraction()
+    {
+        //Map[player.TileX][player.TileY] = 'g';
+        Console.Clear();
+        Console.WriteLine("You entered a battle");
+        PressEnterToContiue();
+    }
+
+    static void Inventory()
+    {
+        Console.Clear();
+        Console.WriteLine(" INVENTORY");
+        PressEnterToContiue();
     }
 
     static void UpdateDeltaTime()
@@ -213,12 +241,12 @@ public partial class Program
                 int mapY = y - midHeight + player.posY;
 
                 // compute the coordinates of the tile
-                int tileX = mapX < 0 ? (mapX - 6) / Sprites.spriteWidth : mapX / Sprites.spriteWidth;
-                int tileY = mapY < 0 ? (mapY - 3) / Sprites.spriteHeight : mapY / Sprites.spriteHeight;
+                int tileX = mapX < 0 ? (mapX - 6) / Sprites.SpriteWidth : mapX / Sprites.SpriteWidth;
+                int tileY = mapY < 0 ? (mapY - 3) / Sprites.SpriteHeight : mapY / Sprites.SpriteHeight;
 
                 // compute the coordinates of the pixel within the tile's sprite
-                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.spriteWidth) : (mapX % Sprites.spriteWidth);
-                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.spriteHeight) : (mapY % Sprites.spriteHeight);
+                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.SpriteWidth) : (mapX % Sprites.SpriteWidth);
+                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.SpriteHeight) : (mapY % Sprites.SpriteHeight);
 
                 // render
                 string tileRender = Maps.GetMapTileRender(Map, tileX, tileY);

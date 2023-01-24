@@ -15,6 +15,7 @@ public static class Maps
                 't' => Sprites.Tree,
                 'f' => Sprites.Fence,
                 'm' => Sprites.Mountain,
+                'g' => Sprites.Grass,
 
                 ' ' => Sprites.Empty,
                 'X' => Sprites.Empty,
@@ -30,18 +31,22 @@ public static class Maps
         {
             ' ' => true,
             'X' => true,
+            'g' => true,
             _ => false
         };
     }
 
     public static readonly char[][] Field = new char[][]
     {
-        "mmmmmmmmmmmmmmm".ToCharArray(),
-        "mmmm  t      mm".ToCharArray(),
-        "mm X     tt  mm".ToCharArray(),
-        "mmm           m".ToCharArray(),
-        "mm    ffff    m".ToCharArray(),
-        "mmm           m".ToCharArray(),
+        "mmmmmmm    mmmm".ToCharArray(),
+        "mm           mm".ToCharArray(),
+        "mmmm         mm".ToCharArray(),
+        "mmmmmfffffffmmm".ToCharArray(),
+        "mmmm         mm".ToCharArray(),
+        "mm       tt  mm".ToCharArray(),
+        "mmm   Xg      m".ToCharArray(),
+        "mm    t       m".ToCharArray(),
+        "mmm      tt   m".ToCharArray(),
         "ttttttttttttmmm".ToCharArray(),
     };
 }
