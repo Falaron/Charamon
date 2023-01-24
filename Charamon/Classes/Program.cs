@@ -111,7 +111,7 @@ public partial class Program
                     ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
                 };
 
-                if (Maps.IsValidCharacterMapTile(Map, tileX, tileY))
+                if (Maps.DontCollide(Map, tileX, tileY))
                 {
                     switch(keyPressed)
                     {
@@ -137,7 +137,7 @@ public partial class Program
                 Console.Clear();
                 return;
 
-            default: return;
+            default: break;
         }
     }
 

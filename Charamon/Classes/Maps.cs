@@ -24,12 +24,8 @@ public static class Maps
         
     }
 
-    public static bool IsValidCharacterMapTile(char[][] map, int tileX, int tileY)
+    public static bool DontCollide(char[][] map, int tileX, int tileY)
     {
-        if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
-        {
-            return false;
-        }
         return map[tileY][tileX] switch
         {
             ' ' => true,
