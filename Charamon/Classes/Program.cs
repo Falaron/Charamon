@@ -1,5 +1,4 @@
 ﻿using ProjectCharamon;
-using System.Diagnostics;
 using System.Text;
 
 public partial class Program
@@ -40,7 +39,7 @@ public partial class Program
         Map = Maps.Field;                                   // Load selected map
 
         player = new();
-        {                      
+        {
             // Find in the current map the char "X" (spawn point char)
             for (int y = 0; y < Map.Length; y++)
             {
@@ -94,8 +93,8 @@ public partial class Program
     static void PlayerInputs()
     {
         ConsoleKey keyPressed = Console.ReadKey(true).Key;
-        
-        switch(keyPressed)
+
+        switch (keyPressed)
         {
             // Player movement
             case
@@ -113,7 +112,7 @@ public partial class Program
 
                 if (Maps.DontCollide(Map, tileX, tileY))
                 {
-                    switch(keyPressed)
+                    switch (keyPressed)
                     {
                         case ConsoleKey.UpArrow:
                             player.posY -= Sprites.spriteHeight;
@@ -133,7 +132,7 @@ public partial class Program
 
             // Quit game
             case ConsoleKey.Escape:
-                gameRunning= false;
+                gameRunning = false;
                 Console.Clear();
                 return;
 
@@ -199,10 +198,10 @@ public partial class Program
 
 
                 // player
-                if (x > midWidth - 4 && x < midWidth + 4 && y > midHeight - 2 && y < midHeight + 3)
+                if (x > midWidth - 1 && x < midWidth + 7 && y > midHeight - 1 && y < midHeight + 4)
                 {
-                    int ci = x - (midWidth - 3);
-                    int cj = y - (midHeight - 1);
+                    int ci = x - midWidth;
+                    int cj = y - midHeight;
                     string characterMapRender = player.PlayerRenderer;
                     builder.Append(characterMapRender[cj * 8 + ci]);
                     continue;

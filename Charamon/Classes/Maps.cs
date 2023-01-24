@@ -29,6 +29,7 @@ public static class Maps
         return map[tileY][tileX] switch
         {
             ' ' => true,
+            'X' => true,
             _ => false
         };
     }
@@ -37,8 +38,8 @@ public static class Maps
     {
         "mmmmmmmmmmmmmmm".ToCharArray(),
         "mmmm  t      mm".ToCharArray(),
-        "mm  X    tt  mm".ToCharArray(),
-        "mm            m".ToCharArray(),
+        "mm X     tt  mm".ToCharArray(),
+        "mmm           m".ToCharArray(),
         "mm    ffff    m".ToCharArray(),
         "mmm           m".ToCharArray(),
         "ttttttttttttmmm".ToCharArray(),
