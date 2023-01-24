@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {}
+    "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj": {
+    "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+        "projectUniqueName": "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
         "projectName": "Charamon",
-        "projectPath": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+        "projectPath": "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
         "packagesPath": "C:\\Users\\rmateescu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rmateescu\\Source\\Repos\\Charamon\\Charamon\\obj\\",
+        "outputPath": "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rmateescu\\AppData\\Roaming\\NuGet\\NuGet.Config",

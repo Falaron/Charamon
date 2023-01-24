@@ -26,13 +26,13 @@ public partial class Program
     public static void Main()
     {
         Initialize();
-        JsonParser.SetCharamons();
-        JsonParser.SetCapacities();
+        CharamonActions.SetCharamons();
+        CharamonActions.SetCapacities();
+        CharamonActions.CreateCharamon(16, 1);
         OpeningScreen();
         while (gameRunning)
         {
             RenderWorldMapView();
-            //RenderCombatView();
             PlayerInputs();
             UpdateDeltaTime();
         }
@@ -157,27 +157,6 @@ public partial class Program
                 string tileRender = Maps.GetMapTileRender(Map, tileX, tileY);
                 char c = tileRender[pixelY * 8 + pixelX];
                 builder.Append(char.IsWhiteSpace(c) ? ' ' : c);
-            }
-        }
-        Console.SetCursorPosition(0, 0);
-        Console.Write(builder);
-    }
-
-    static void RenderCombatView()
-    {
-        int width = Console.WindowWidth;
-        int height = Console.WindowHeight;
-        int midWidth = (int)Math.Round(width * 0.5f);
-        int midHeight = (int)Math.Round(height * 0.5f);
-
-        StringBuilder builder = new(width * height);
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                if (SetOutline(builder, width, height, x, y)) continue;
-
-
             }
         }
         Console.SetCursorPosition(0, 0);
