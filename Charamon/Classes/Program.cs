@@ -28,11 +28,11 @@ public partial class Program
         Initialize();
         CharamonActions.SetCharamons();
         CharamonActions.SetCapacities();
-        CharamonActions.CreateCharamon(16, 1);
-        OpeningScreen();
+        CharamonActions.AddToTeam(CharamonActions.CreateCharamon(0, 1));
+        //OpeningScreen();
         while (gameRunning)
         {
-            RenderWorldMapView();
+            //RenderWorldMapView();
             PlayerInputs();
             UpdateDeltaTime();
         }

@@ -44,6 +44,8 @@ public class CharamonActions
     }
     static Abilities _ablties;
 
+    public static List<Charamon> team = new List<Charamon>(); 
+
     public static void SetCapacities()
     {
         var abilities = new Abilities();
@@ -54,7 +56,7 @@ public class CharamonActions
         }
     }
 
-    public static void CreateCharamon(int id, int level)
+    public static Charamon CreateCharamon(int id, int level)
     {
         Pokemon chosenPokemon = new Pokemon();
         chosenPokemon = _pkmn.pokemons[id];
@@ -98,6 +100,7 @@ public class CharamonActions
             }
         }
         charamon.xpThreshold = (int)Math.Pow(charamon.level, 3);
+        return charamon;
     }
 
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
@@ -148,7 +151,7 @@ public class CharamonActions
         return ratio;
     }
 
-    public int FromTypeToInt(string typeName)
+    public static int FromTypeToInt(string typeName)
     {
         switch (typeName)
         {
@@ -192,6 +195,54 @@ public class CharamonActions
                 return -1;
         }
     }
+
+    public void GainXp(Charamon target, Charamon defeated)//gain 60 * lvlPokeVaincu / 7 
+    {
+        target.xp += 60 * defeated.level / 7;
+        while (target.xp >= target.xpThreshold && target.level < 100)
+        {
+            target.level++;
+            UpdateStats(target);
+            if (target.level >= target.evolutionLvl) Evolve(target);
+        }
+    }
+    public static void UpdateStats(Charamon target)
+    {
+        foreach (var kvp in target.stats)
+        {
+            if (kvp.Key == "HP")
+            {
+                int hp = target.stats[kvp.Key]; 
+                target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
+                target.currentHp += target.stats[kvp.Key] - hp;
+            }
+            else
+            {
+                target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + 5;
+            }
+        }
+        target.xpThreshold = (int)Math.Pow(target.level, 3);
+    }
+    public static void Evolve(Charamon target)
+    {
+        Pokemon evolutionTarget = new Pokemon();
+        evolutionTarget = _pkmn.pokemons[target.evolutionId-1];
+
+        target.id = evolutionTarget.id;
+        target.name = evolutionTarget.name["english"];
+        target.stats = evolutionTarget.stats;
+        target.type = evolutionTarget.type;
+        if (evolutionTarget.evolution.ContainsKey("next"))
+        {
+            target.evolutionLvl = Convert.ToInt16(evolutionTarget.evolution["next"][1]);
+            target.evolutionId = Convert.ToInt16(evolutionTarget.evolution["next"][0]);
+        }
+    }
+
+    public static void AddToTeam(Charamon target)
+    {
+        team.Add(target);
+    }
 }
 
 
@@ -211,12 +262,12 @@ public class Charamon
     public string name { get; set; }
     public string[] type { get; set; }
     public int level { get; set; }
-    public int xp { get; set; } //gain 60 * lvlPokeVaincu / 7 * nbParticipants
+    public int xp { get; set; } 
     public int xpThreshold { get; set; }
     public Dictionary<string, int> stats { get; set; }
     public int currentHp { get; set; }
-    public int? evolutionLvl { get; set; }
-    public int? evolutionId { get; set; }
+    public int evolutionLvl { get; set; }
+    public int evolutionId { get; set; }
 
     public List<Ability> abilities = new List<Ability>(4);
 }
