@@ -57,6 +57,11 @@ public static class Sprites
         @"███████" + "\n" +
         @"███████" + "\n" +
         @"███████";
+    public const string InvisibleWall =
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       ";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +

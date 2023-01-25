@@ -24,6 +24,8 @@ public partial class Program
     {
         Initialize();
         OpeningScreen();
+        CharamonActions.SetCharamons();
+        CharamonActions.SetCapacities();
         while (gameRunning)
         {
             RenderWorldMapView();

@@ -23,6 +23,7 @@ public static class Maps
                 's' => Sprites.Charashop,
                 'w' => Sprites.Wall,
                 'z' => Sprites.ZoneField,
+                'i' => Sprites.InvisibleWall,
 
                 ' ' => Sprites.Empty,
                 'X' => Sprites.Empty,
@@ -78,6 +79,7 @@ public static class Maps
         "w       w".ToCharArray(),
         "w       w".ToCharArray(),
         "w       w".ToCharArray(),
-        "wwwwzwwww".ToCharArray()
+        "wwwwzwwww".ToCharArray(),
+        "    i    ".ToCharArray()
     };
 }
