@@ -126,7 +126,7 @@ public partial class Program
                             break;
                     }
                 }
-                CheckInterraction();
+                if (Maps.CheckForGrass(Map, tileX, tileY) == 1) GrassInterraction();
                 break;
 
             // Open inventory
@@ -142,15 +142,6 @@ public partial class Program
 
             default: break;
         }
-    }
-
-    static void CheckInterraction()
-    {
-       /*switch (Map[player.TileX][player.TileY])
-        {
-            case 'g': GrassInterraction(); break;
-            default: break;
-        }*/
     }
 
     static void GrassInterraction()

@@ -36,6 +36,15 @@ public static class Maps
         };
     }
 
+    public static int CheckForGrass(char[][] map, int tileX, int tileY)
+    {
+        return map[tileY][tileX] switch
+        {
+            'g' => 1,
+            _ => 0
+        };
+    }
+
     public static readonly char[][] Field = new char[][]
     {
         "mmmmmmm    mmmm".ToCharArray(),
