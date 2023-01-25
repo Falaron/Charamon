@@ -44,7 +44,9 @@ public class CharamonActions
     }
     static Abilities _ablties;
 
-    public static List<Charamon> team = new List<Charamon>(); 
+    public static List<Charamon> team = new List<Charamon>(6);
+    public static List<Charamon> pc = new List<Charamon>(32);
+
 
     public static void SetCapacities()
     {
@@ -55,7 +57,6 @@ public class CharamonActions
             _ablties = JsonSerializer.Deserialize<Abilities>(json);
         }
     }
-
     public static Charamon CreateCharamon(int id, int level)
     {
         Pokemon chosenPokemon = new Pokemon();
@@ -102,7 +103,6 @@ public class CharamonActions
         charamon.xpThreshold = (int)Math.Pow(charamon.level, 3);
         return charamon;
     }
-
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
     {
         if (attack.category == "special")
@@ -118,8 +118,8 @@ public class CharamonActions
                 * GetTypeAdvantage(attacker, defender, attack));
         }
     }
-
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
+    /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
     public static float[,] typeTable = new float[18, 18] {
         {1, 1, 1, 1, 1, 0.5f, 1, 0, 0.5f, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	    {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
@@ -140,7 +140,6 @@ public class CharamonActions
 	    { 1, 0.5f, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 0.5f},
 	    { 1, 2, 1, 0.5f, 1, 1, 1, 1, 0.5f, 0.5f, 1, 1, 1, 1, 1, 2, 2, 1}
     };
-    /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
     public static float GetTypeAdvantage(Charamon attacking, Charamon defending, Ability capacity)
     {
         float ratio = 0;
@@ -150,7 +149,6 @@ public class CharamonActions
         }
         return ratio;
     }
-
     public static int FromTypeToInt(string typeName)
     {
         switch (typeName)
@@ -195,8 +193,7 @@ public class CharamonActions
                 return -1;
         }
     }
-
-    public void GainXp(Charamon target, Charamon defeated)//gain 60 * lvlPokeVaincu / 7 
+    public void GainXp(Charamon target, Charamon defeated)
     {
         target.xp += 60 * defeated.level / 7;
         while (target.xp >= target.xpThreshold && target.level < 100)
@@ -238,10 +235,26 @@ public class CharamonActions
             target.evolutionId = Convert.ToInt16(evolutionTarget.evolution["next"][0]);
         }
     }
-
     public static void AddToTeam(Charamon target)
     {
         team.Add(target);
+    }
+    public static void AddToPC(Charamon target)
+    {
+        pc.Add(target);
+    }
+    public static void TryToCapture(Charamon target)
+    {
+        Random random = new Random();
+
+        float f = (target.stats["HP"] * 255 * 4) / target.currentHp * 12;
+        float m = random.Next(255);
+
+        if (f >= m)
+        {
+            if (team.Count >= 6) AddToPC(target);
+            else AddToTeam(target);
+        }
     }
 }
 
@@ -255,7 +268,6 @@ public class Pokemon
     public Dictionary<string, int> stats { get; set; }
     public Dictionary<string, string[]> evolution { get; set; }
 }
-
 public class Charamon
 {
     public int id { get; set; }
@@ -271,7 +283,6 @@ public class Charamon
 
     public List<Ability> abilities = new List<Ability>(4);
 }
-
 public class Ability
 {
     public int id { get; set; }
