@@ -99,7 +99,7 @@ public class CharamonActions
                 }
                 charamon.abilities.Add(_ablties.abilities[aId]);
             }
-            
+
 
         }
         foreach (var kvp in charamon.stats)
@@ -128,43 +128,44 @@ public class CharamonActions
     {
         if (attack.category == "special")
         {
-            defender.currentHp -= (int) Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Sp. Attack"] * attack.power
-                / defender.stats["Sp. Defense"] / 50) + 2) 
+            defender.currentHp -= (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Sp. Attack"] * attack.power
+                / defender.stats["Sp. Defense"] / 50) + 2)
                 * GetTypeAdvantage(attacker, defender, attack));
         }
         else
         {
-           defender.currentHp -= (int) Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Attack"] * attack.power
-                / defender.stats["Defense"] / 50) + 2)
-                * GetTypeAdvantage(attacker, defender, attack));
+            defender.currentHp -= (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Attack"] * attack.power
+                 / defender.stats["Defense"] / 50) + 2)
+                 * GetTypeAdvantage(attacker, defender, attack));
         }
     }
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
     /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
     public static float[,] typeTable = new float[18, 18] {
         {1, 1, 1, 1, 1, 0.5f, 1, 0, 0.5f, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	    {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
-	    {1, 2, 1, 1, 1, 0.5f, 2, 1, 0.5f, 1, 1, 2, 0.5f, 1, 1, 1, 1, 1},
-	    { 1, 1, 1, 0.5f, 0.5f, 0.5f, 1, 0.5f, 0, 1, 1, 2, 1, 1, 1, 1, 1, 2},
-	    { 1, 1, 0, 2, 1, 2, 0.5f, 1, 2, 2, 1, 0.5f, 2, 1, 1, 1, 1, 1},
-	    { 1, 0.5f, 2, 1, 0.5f, 1, 2, 1, 0.5f, 2, 1, 1, 1, 1, 2, 1, 1, 1},
-	    { 1, 0.5f, 0.5f, 0.5f, 1, 1, 1, 0.5f, 0.5f, 0.5f, 1, 2, 1, 2, 1, 1, 2, 0.5f},
-	    { 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 1},
-	    { 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 0.5f, 0.5f, 1, 0.5f, 1, 2, 1, 1, 2},
-	    { 1, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f, 0.5f, 2, 1, 1, 2, 0.5f, 1, 1},
-	    { 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 0.5f, 0.5f, 1, 1, 1, 0.5f, 1, 1},
-	    { 1, 1, 0.5f, 0.5f, 2, 2, 0.5f, 1, 0.5f, 0.5f, 2, 0.5f, 1, 1, 1, 0.5f, 1, 1},
-	    { 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0.5f, 0.5f, 1, 1, 0.5f, 1, 1},
-	    { 1, 2, 1, 2, 1, 1, 1, 1, 0.5f, 1, 1, 1, 1, 0.5f, 1, 1, 0, 1},
-	    { 1, 1, 2, 1, 2, 1, 1, 1, 0.5f, 0.5f, 0.5f, 2, 1, 1, 0.5f, 2, 1, 1},
-	    { 1, 1, 1, 1, 1, 1, 1, 1, 0.5f, 1, 1, 1, 1, 1, 1, 2, 1, 0},
-	    { 1, 0.5f, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 0.5f},
-	    { 1, 2, 1, 0.5f, 1, 1, 1, 1, 0.5f, 0.5f, 1, 1, 1, 1, 1, 2, 2, 1}
+        {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
+        {1, 2, 1, 1, 1, 0.5f, 2, 1, 0.5f, 1, 1, 2, 0.5f, 1, 1, 1, 1, 1},
+        { 1, 1, 1, 0.5f, 0.5f, 0.5f, 1, 0.5f, 0, 1, 1, 2, 1, 1, 1, 1, 1, 2},
+        { 1, 1, 0, 2, 1, 2, 0.5f, 1, 2, 2, 1, 0.5f, 2, 1, 1, 1, 1, 1},
+        { 1, 0.5f, 2, 1, 0.5f, 1, 2, 1, 0.5f, 2, 1, 1, 1, 1, 2, 1, 1, 1},
+        { 1, 0.5f, 0.5f, 0.5f, 1, 1, 1, 0.5f, 0.5f, 0.5f, 1, 2, 1, 2, 1, 1, 2, 0.5f},
+        { 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 1},
+        { 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 0.5f, 0.5f, 1, 0.5f, 1, 2, 1, 1, 2},
+        { 1, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f, 0.5f, 2, 1, 1, 2, 0.5f, 1, 1},
+        { 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 0.5f, 0.5f, 1, 1, 1, 0.5f, 1, 1},
+        { 1, 1, 0.5f, 0.5f, 2, 2, 0.5f, 1, 0.5f, 0.5f, 2, 0.5f, 1, 1, 1, 0.5f, 1, 1},
+        { 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0.5f, 0.5f, 1, 1, 0.5f, 1, 1},
+        { 1, 2, 1, 2, 1, 1, 1, 1, 0.5f, 1, 1, 1, 1, 0.5f, 1, 1, 0, 1},
+        { 1, 1, 2, 1, 2, 1, 1, 1, 0.5f, 0.5f, 0.5f, 2, 1, 1, 0.5f, 2, 1, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1, 0.5f, 1, 1, 1, 1, 1, 1, 2, 1, 0},
+        { 1, 0.5f, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 0.5f, 0.5f},
+        { 1, 2, 1, 0.5f, 1, 1, 1, 1, 0.5f, 0.5f, 1, 1, 1, 1, 1, 2, 2, 1}
     };
     public static float GetTypeAdvantage(Charamon attacking, Charamon defending, Ability capacity)
     {
         float ratio = 0;
-        foreach (var type in defending.type ) {
+        foreach (var type in defending.type)
+        {
             if (ratio != 0) ratio *= typeTable[FromTypeToInt(capacity.type), FromTypeToInt(type)];
             else ratio += typeTable[FromTypeToInt(capacity.type), FromTypeToInt(type)];
         }
@@ -210,7 +211,7 @@ public class CharamonActions
                 return 16;
             case "Fairy":
                 return 17;
-            default : 
+            default:
                 return -1;
         }
     }
@@ -230,7 +231,7 @@ public class CharamonActions
         {
             if (kvp.Key == "HP")
             {
-                int hp = target.stats[kvp.Key]; 
+                int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
             }
@@ -244,7 +245,7 @@ public class CharamonActions
     public static void Evolve(Charamon target)
     {
         Pokemon evolutionTarget = new Pokemon();
-        evolutionTarget = _pkmn.pokemons[target.evolutionId-1];
+        evolutionTarget = _pkmn.pokemons[target.evolutionId - 1];
 
         target.id = evolutionTarget.id;
         target.name = evolutionTarget.name["english"];
@@ -304,8 +305,7 @@ public class CharamonActions
         }
         else GetFromPc(pc[pcSlot]);
     }
-
-
+}
 
 public class Pokemon
 {
