@@ -146,11 +146,11 @@ public partial class Program
 
     static void GrassInterraction()
     {
-        //Map[player.TileX][player.TileY] = 'g';
         Console.Clear();
         Console.WriteLine("You entered a battle");
         PressEnterToContiue();
     }
+
     static void ShopInterraction()
     {
         SpawnAtLocation(Maps.Charashop, 'z');
