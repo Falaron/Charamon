@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -102,6 +103,13 @@ public class CharamonActions
         }
         charamon.xpThreshold = (int)Math.Pow(charamon.level, 3);
         return charamon;
+    }
+    public static void Attack(Charamon attacker, Charamon defender, Ability attack)
+    {
+        Random random = new Random();
+        int accuracy = random.Next(1, 100);
+        if (accuracy < attack.accuracy) InflictDamage(attacker, defender, attack);
+        else; ///missed
     }
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
     {
@@ -256,7 +264,33 @@ public class CharamonActions
             else AddToTeam(target);
         }
     }
-}
+    public static void HealAll()
+    {
+        foreach (var charamon in team)
+        {
+            charamon.currentHp = charamon.stats["HP"];
+        }
+    }
+    public static void SwitchPokemon(int target1, int target2)
+    {
+        Charamon substitute = team[target1];
+        team[target1] = team[target2];
+        team[target2] = substitute;
+    }
+    public static void GetFromPc(Charamon target)
+    {
+        AddToTeam(target);
+    }
+    public static void SwitchFromPC(int pcSlot, int teamSlot)
+    {
+        if (team.Count >= 6)
+        {
+            Charamon substitute = team[teamSlot];
+            team[teamSlot] = pc[pcSlot];
+            pc[pcSlot] = substitute;
+        }
+        else GetFromPc(pc[pcSlot]);
+    }
 
 
 
