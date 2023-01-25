@@ -1,5 +1,4 @@
 ﻿using ProjectCharamon;
-using System.Diagnostics;
 using System.Text;
 
 public partial class Program
@@ -39,7 +38,7 @@ public partial class Program
         Map = Maps.Field;                                   // Load selected map
 
         player = new();
-        {                      
+        {
             // Find in the current map the char "X" (spawn point char)
             for (int y = 0; y < Map.Length; y++)
             {
@@ -47,12 +46,13 @@ public partial class Program
                 {
                     if (Map[y][x] == 'X')
                     {
-                        player.posX = x * Sprites.spriteWidth;
-                        player.posY = y * Sprites.spriteHeight;
+                        player.posX = x * Sprites.SpriteWidth;
+                        player.posY = y * Sprites.SpriteHeight;
                     }
                 }
             }
         }
+        player.PlayerRenderer = Sprites.Player;
     }
 
     static void OpeningScreen()
@@ -92,38 +92,80 @@ public partial class Program
     static void PlayerInputs()
     {
         ConsoleKey keyPressed = Console.ReadKey(true).Key;
-        
-        switch(keyPressed)
+        switch (keyPressed)
         {
             // Player movement
-            case ConsoleKey.UpArrow:
-                player.posY -= 1;
-                Write(Sprites.Player, player.posX, player.posY);
-                break;
-            case ConsoleKey.DownArrow:
-                player.posY += 1;
-                break;
-            case ConsoleKey.LeftArrow:
-                player.posX -= 2;
-                break;
-            case ConsoleKey.RightArrow:
-                int newY = player.posY;
-                int newX = player.posX + 2;
+            case
+            ConsoleKey.UpArrow or
+            ConsoleKey.DownArrow or
+            ConsoleKey.LeftArrow or
+            ConsoleKey.RightArrow:
+                var (tileX, tileY) = keyPressed switch
+                {
+                    ConsoleKey.UpArrow => (player.TileX, player.TileY - 1),
+                    ConsoleKey.DownArrow => (player.TileX, player.TileY + 1),
+                    ConsoleKey.LeftArrow => (player.TileX - 1, player.TileY),
+                    ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
+                };
 
-                if (!CheckMove(newY, newX)) break;
-                player.posX += 2;
+                if (Maps.DontCollide(Map, tileX, tileY))
+                {
+                    switch (keyPressed)
+                    {
+                        case ConsoleKey.UpArrow:
+                            player.posY -= Sprites.SpriteHeight;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            player.posY += Sprites.SpriteHeight;
+                            break;
+                        case ConsoleKey.LeftArrow:
+                            player.posX -= Sprites.SpriteWidth;
+                            break;
+                        case ConsoleKey.RightArrow:
+                            player.posX += Sprites.SpriteWidth;
+                            break;
+                    }
+                }
+                CheckInterraction();
                 break;
 
-            
+            // Open inventory
+            case ConsoleKey.Enter:
+                Inventory();
+                break;
 
             // Quit game
             case ConsoleKey.Escape:
-                gameRunning= false;
+                gameRunning = false;
                 Console.Clear();
                 return;
 
-            default: return;
+            default: break;
         }
+    }
+
+    static void CheckInterraction()
+    {
+       /*switch (Map[player.TileX][player.TileY])
+        {
+            case 'g': GrassInterraction(); break;
+            default: break;
+        }*/
+    }
+
+    static void GrassInterraction()
+    {
+        //Map[player.TileX][player.TileY] = 'g';
+        Console.Clear();
+        Console.WriteLine("You entered a battle");
+        PressEnterToContiue();
+    }
+
+    static void Inventory()
+    {
+        Console.Clear();
+        Console.WriteLine(" INVENTORY");
+        PressEnterToContiue();
     }
 
     static void UpdateDeltaTime()
@@ -183,18 +225,28 @@ public partial class Program
                 }
 
 
+                // player
+                if (x > midWidth - 1 && x < midWidth + 7 && y > midHeight - 1 && y < midHeight + 4)
+                {
+                    int ci = x - midWidth;
+                    int cj = y - midHeight;
+                    string characterMapRender = player.PlayerRenderer;
+                    builder.Append(characterMapRender[cj * 8 + ci]);
+                    continue;
+                }
+
                 // tiles
                 // compute the map location that this screen pixel represents
                 int mapX = x - midWidth + player.posX;
                 int mapY = y - midHeight + player.posY;
 
                 // compute the coordinates of the tile
-                int tileX = mapX < 0 ? (mapX - 6) / Sprites.spriteWidth : mapX / Sprites.spriteWidth;
-                int tileY = mapY < 0 ? (mapY - 3) / Sprites.spriteHeight : mapY / Sprites.spriteHeight;
+                int tileX = mapX < 0 ? (mapX - 6) / Sprites.SpriteWidth : mapX / Sprites.SpriteWidth;
+                int tileY = mapY < 0 ? (mapY - 3) / Sprites.SpriteHeight : mapY / Sprites.SpriteHeight;
 
                 // compute the coordinates of the pixel within the tile's sprite
-                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.spriteWidth) : (mapX % Sprites.spriteWidth);
-                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.spriteHeight) : (mapY % Sprites.spriteHeight);
+                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.SpriteWidth) : (mapX % Sprites.SpriteWidth);
+                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.SpriteHeight) : (mapY % Sprites.SpriteHeight);
 
                 // render
                 string tileRender = Maps.GetMapTileRender(Map, tileX, tileY);
@@ -204,18 +256,5 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
-    }
-
-    static bool CheckMove(int x, int y)
-    {
-        /*if (Map[x][y] == Mountain)
-            return false;*/
-        return true;
-    }
-
-    static void Write(string toWrite, int x = 0, int y = 0)
-    {
-        Console.SetCursorPosition(x, y);
-        Console.Write(toWrite);
     }
 }
