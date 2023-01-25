@@ -8,7 +8,7 @@ public static class Maps
     {
         if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
         {
-            if (map != Charashop) return Sprites.Mountain;
+            if (map != StartHouse) return Sprites.Mountain;
             else return Sprites.Empty;
                 
         }
@@ -20,7 +20,7 @@ public static class Maps
                 'f' => Sprites.Fence,
                 'm' => Sprites.Mountain,
                 'g' => Sprites.Grass,
-                's' => Sprites.Charashop,
+                's' => Sprites.StartHouse,
                 'w' => Sprites.Wall,
                 'z' => Sprites.ZoneField,
                 'i' => Sprites.InvisibleWall,
@@ -63,18 +63,18 @@ public static class Maps
         "mm           mm".ToCharArray(),
         "mmmm         mm".ToCharArray(),
         "mmmmmfffffffmmm".ToCharArray(),
-        "mmmm         mm".ToCharArray(),
-        "mm       tt  mm".ToCharArray(),
-        "mmm   Xg  s   m".ToCharArray(),
+        "mmmmggg   g  mm".ToCharArray(),
+        "mmggg    tt  mm".ToCharArray(),
+        "mmm       s   m".ToCharArray(),
         "mm    t       m".ToCharArray(),
-        "mmm      tt   m".ToCharArray(),
+        "mmm   gg tt   m".ToCharArray(),
         "ttttttttttttmmm".ToCharArray(),
     };
 
-    public static readonly char[][] Charashop = new char[][]
+    public static readonly char[][] StartHouse = new char[][]
     {
         "wwwwwwwww".ToCharArray(),
-        "w       w".ToCharArray(),
+        "w   X   w".ToCharArray(),
         "w       w".ToCharArray(),
         "w       w".ToCharArray(),
         "w       w".ToCharArray(),

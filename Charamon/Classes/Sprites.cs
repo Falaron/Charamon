@@ -24,7 +24,7 @@ public static class Sprites
         @";;;;;;;" + "\n" +
         @";;;;;;;" + "\n" +
         @";;;;;;;";
-    public const string Charashop =
+    public const string StartHouse =
         @"/▀▀▀▀▀\" + "\n" +
         @"|█████|" + "\n" +
         @"|██ ██|" + "\n" +

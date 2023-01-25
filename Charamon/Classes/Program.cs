@@ -1,11 +1,19 @@
 ﻿using ProjectCharamon;
 using System.Text;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Transactions;
+using Microsoft.VisualBasic.FileIO;
 
 public partial class Program
 {
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
+    public static List<Options> menuOptions;
+    static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
     static Player player
@@ -23,9 +31,8 @@ public partial class Program
     public static void Main()
     {
         Initialize();
-        OpeningScreen();
-        CharamonActions.SetCharamons();
-        CharamonActions.SetCapacities();
+        MenuScreen();
+        StartEvent();
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -36,16 +43,18 @@ public partial class Program
 
     static void Initialize()
     {
-        Console.CursorVisible = false;                      // Hide cursor
+        Console.CursorVisible = false; // Hide cursor
+        CharamonActions.SetCharamons();
+        CharamonActions.SetCapacities();
 
         player = new();
         {
-            SpawnAtLocation(Maps.Field, 'X');
+            SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
     }
 
-    static void OpeningScreen()
+    static void MenuScreen()
     {
         Console.Clear();
         TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
@@ -54,6 +63,65 @@ public partial class Program
         TextColor(14, " Press "); TextColor(6, "[enter]"); TextColor(14, " to begin...");
 
         PressEnterToContiue();
+    }
+
+    static void StartEvent()
+    {
+        Console.Clear();
+
+        //create starter pokemons
+        Charamon starterOne = CharamonActions.CreateCharamon(0, 5);
+        Charamon starterTwo = CharamonActions.CreateCharamon(3, 5);
+        Charamon starterThree = CharamonActions.CreateCharamon(6, 5);
+
+        menuOptions = new List<Options>
+        {
+                new Options(starterOne.name, () => WriteStarterMessage(starterOne)),
+                new Options(starterTwo.name, () =>  WriteStarterMessage(starterTwo)),
+                new Options(starterThree.name, () =>  WriteStarterMessage(starterThree))
+        };
+        int index = 0;
+
+        Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
+        Thread.Sleep(2000);
+        Console.WriteLine(" CHARAMON !\n");
+        Thread.Sleep(1000);
+        Console.WriteLine(" Now, it's time for you to choose your starter. It will lead you to a great adventure.");
+        Thread.Sleep(4000);
+
+        WriteMenu(menuOptions, menuOptions[index]);
+
+        ConsoleKeyInfo keyinfo;
+        do
+        {
+            keyinfo = Console.ReadKey();
+
+            if (keyinfo.Key == ConsoleKey.DownArrow)
+            {
+                if (index + 1 < menuOptions.Count)
+                {
+                    index++;
+                    WriteMenu(menuOptions, menuOptions[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.UpArrow)
+            {
+                if (index - 1 >= 0)
+                {
+                    index--;
+                    WriteMenu(menuOptions, menuOptions[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.Enter)
+            {
+                menuOptions[index].Selected.Invoke();
+                index = 0;
+            }
+        }
+        while (isCharamonSelected != true);
+
+        if(isCharamonSelected != true)
+            Console.ReadKey();
     }
 
     static void TextColor(int color, string text)
@@ -116,13 +184,13 @@ public partial class Program
                             break;
                     }
                 }
-                switch(Maps.CheckForInterraction(Map, tileX, tileY))
+                switch (Maps.CheckForInterraction(Map, tileX, tileY))
                 {
                     case 1:
                         GrassInterraction();
                         break;
                     case 2:
-                        ShopInterraction();
+                        StartHouseInterraction();
                         break;
                     case 3:
                         EnterField();
@@ -153,9 +221,9 @@ public partial class Program
         PressEnterToContiue();
     }
 
-    static void ShopInterraction()
+    static void StartHouseInterraction()
     {
-        SpawnAtLocation(Maps.Charashop, 'z');
+        SpawnAtLocation(Maps.StartHouse, 'z');
     }
 
     static void EnterField()
@@ -274,5 +342,56 @@ public partial class Program
                 }
             }
         }
+    }
+
+    static void WriteMenu(List<Options> options, Options selectedOption)
+    {
+        Console.Clear();
+        Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
+
+        foreach (Options option in options)
+        {
+            if (option == selectedOption)
+            {
+                Console.Write(" > ");
+            }
+            else
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine(option.Name + "\n");
+        }
+    }
+
+    static void WriteStarterMessage(Charamon charamon)
+    {
+        CharamonActions.AddToTeam(charamon);
+
+        Console.Clear();
+        Console.Write("\n\n Nice choice ! ");
+        switch(charamon.id)
+        {
+            case 1:
+                TextColor(10, charamon.name);
+                break;
+            case 4:
+                TextColor(12, charamon.name);
+                break;
+            case 7:
+                TextColor(9, charamon.name);
+                break;
+            default: break;
+        }
+        Console.WriteLine(" is a good starter.\n\n\n");
+
+        Thread.Sleep(1000);
+        Console.WriteLine(" Now,");
+        Thread.Sleep(1000);
+        Console.WriteLine(" Proceed.");
+        Thread.Sleep(1000);
+        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
+
+        isCharamonSelected = true;
+        PressEnterToContiue();
     }
 }

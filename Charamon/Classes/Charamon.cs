@@ -80,12 +80,25 @@ public class CharamonActions
             int aId = random.Next(_ablties.abilities.Count());
             Ability newAbility = new Ability();
             newAbility = _ablties.abilities[aId];
-            while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
+            if (charamon.type.Length == 2)
             {
-                aId = random.Next(_ablties.abilities.Count());
-                newAbility = _ablties.abilities[aId];
+                while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
+                {
+                    aId = random.Next(_ablties.abilities.Count());
+                    newAbility = _ablties.abilities[aId];
+                }
+                charamon.abilities.Add(_ablties.abilities[aId]);
             }
-            charamon.abilities.Add(_ablties.abilities[aId]);
+            else
+            {
+                while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0])
+                {
+                    aId = random.Next(_ablties.abilities.Count());
+                    newAbility = _ablties.abilities[aId];
+                }
+                charamon.abilities.Add(_ablties.abilities[aId]);
+            }
+            
 
         }
         foreach (var kvp in charamon.stats)
