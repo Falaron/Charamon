@@ -1,4 +1,6 @@
-﻿namespace ProjectCharamon;
+﻿using System.Numerics;
+
+namespace ProjectCharamon;
 
 public static class Maps
 {
@@ -6,7 +8,9 @@ public static class Maps
     {
         if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
         {
-            return Sprites.Mountain;
+            if (map != Charashop) return Sprites.Mountain;
+            else return Sprites.Empty;
+                
         }
         else
         {
@@ -16,6 +20,9 @@ public static class Maps
                 'f' => Sprites.Fence,
                 'm' => Sprites.Mountain,
                 'g' => Sprites.Grass,
+                's' => Sprites.Charashop,
+                'w' => Sprites.Wall,
+                'z' => Sprites.ZoneField,
 
                 ' ' => Sprites.Empty,
                 'X' => Sprites.Empty,
@@ -32,15 +39,19 @@ public static class Maps
             ' ' => true,
             'X' => true,
             'g' => true,
+            's' => true,
+            'z' => true,
             _ => false
         };
     }
 
-    public static int CheckForGrass(char[][] map, int tileX, int tileY)
+    public static int CheckForInterraction(char[][] map, int tileX, int tileY)
     {
         return map[tileY][tileX] switch
         {
             'g' => 1,
+            's' => 2,
+            'z' => 3,
             _ => 0
         };
     }
@@ -53,9 +64,20 @@ public static class Maps
         "mmmmmfffffffmmm".ToCharArray(),
         "mmmm         mm".ToCharArray(),
         "mm       tt  mm".ToCharArray(),
-        "mmm   Xg      m".ToCharArray(),
+        "mmm   Xg  s   m".ToCharArray(),
         "mm    t       m".ToCharArray(),
         "mmm      tt   m".ToCharArray(),
         "ttttttttttttmmm".ToCharArray(),
+    };
+
+    public static readonly char[][] Charashop = new char[][]
+    {
+        "wwwwwwwww".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "wwwwzwwww".ToCharArray()
     };
 }

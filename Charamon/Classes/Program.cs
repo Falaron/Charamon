@@ -35,22 +35,10 @@ public partial class Program
     static void Initialize()
     {
         Console.CursorVisible = false;                      // Hide cursor
-        Map = Maps.Field;                                   // Load selected map
 
         player = new();
         {
-            // Find in the current map the char "X" (spawn point char)
-            for (int y = 0; y < Map.Length; y++)
-            {
-                for (int x = 0; x < Map[y].Length; x++)
-                {
-                    if (Map[y][x] == 'X')
-                    {
-                        player.posX = x * Sprites.SpriteWidth;
-                        player.posY = y * Sprites.SpriteHeight;
-                    }
-                }
-            }
+            SpawnAtLocation(Maps.Field, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
     }
@@ -126,7 +114,19 @@ public partial class Program
                             break;
                     }
                 }
-                if (Maps.CheckForGrass(Map, tileX, tileY) == 1) GrassInterraction();
+                switch(Maps.CheckForInterraction(Map, tileX, tileY))
+                {
+                    case 1:
+                        GrassInterraction();
+                        break;
+                    case 2:
+                        ShopInterraction();
+                        break;
+                    case 3:
+                        EnterField();
+                        break;
+                    default: break;
+                }
                 break;
 
             // Open inventory
@@ -150,6 +150,15 @@ public partial class Program
         Console.Clear();
         Console.WriteLine("You entered a battle");
         PressEnterToContiue();
+    }
+    static void ShopInterraction()
+    {
+        SpawnAtLocation(Maps.Charashop, 'z');
+    }
+
+    static void EnterField()
+    {
+        SpawnAtLocation(Maps.Field, 's');
     }
 
     static void Inventory()
@@ -247,5 +256,21 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
+    }
+
+    public static void SpawnAtLocation(char[][] map, char charSpawn)
+    {
+        Map = map;
+        for (int y = 0; y < Map.Length; y++)
+        {
+            for (int x = 0; x < Map[y].Length; x++)
+            {
+                if (Map[y][x] == charSpawn)
+                {
+                    player.posX = x * Sprites.SpriteWidth;
+                    player.posY = y * Sprites.SpriteHeight;
+                }
+            }
+        }
     }
 }
