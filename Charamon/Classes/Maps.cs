@@ -71,6 +71,12 @@ public static class Maps
         "ttttttttttttmmm".ToCharArray(),
     };
 
+    public static float[,] FieldPool = new float[,]
+    {
+        {16,19,161,167,204,265,261,163},
+        {12.5f,25,37.5f,50,62.5f,75,87.5f,100f}
+    };
+
     public static readonly char[][] StartHouse = new char[][]
     {
         "wwwwwwwww".ToCharArray(),
@@ -81,5 +87,10 @@ public static class Maps
         "w       w".ToCharArray(),
         "wwwwzwwww".ToCharArray(),
         "    i    ".ToCharArray()
+    };
+
+    public static Dictionary<char[][], float[,]> maps = new Dictionary<char[][], float[,]>
+    {
+        {Field,  FieldPool}
     };
 }

@@ -187,7 +187,12 @@ public partial class Program
                 switch (Maps.CheckForInterraction(Map, tileX, tileY))
                 {
                     case 1:
-                        GrassInterraction();
+                        Random random = new Random();
+                        int proba = random.Next(100);
+                        if (proba <=16) 
+                        {
+                            GrassInterraction();
+                        }
                         break;
                     case 2:
                         StartHouseInterraction();
@@ -216,8 +221,10 @@ public partial class Program
 
     static void GrassInterraction()
     {
+        
         Console.Clear();
-        Console.WriteLine("You entered a battle");
+        CombatManager.EnterCombat(Map);
+        //Console.WriteLine("You entered a battle");
         PressEnterToContiue();
     }
 
