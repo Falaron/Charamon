@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Transactions;
 using Microsoft.VisualBasic.FileIO;
+using System.Runtime.CompilerServices;
+using System.Reflection.Metadata.Ecma335;
 
 public partial class Program
 {
@@ -82,12 +84,12 @@ public partial class Program
         };
         int index = 0;
 
-        Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
-        Thread.Sleep(2000);
-        Console.WriteLine(" CHARAMON !\n");
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...");
+        Thread.Sleep(500);
+        DialogueMessage(15, " CHARAMON !\n\n");
         Thread.Sleep(1000);
-        Console.WriteLine(" Now, it's time for you to choose your starter. It will lead you to a great adventure.");
-        Thread.Sleep(4000);
+        DialogueMessage(15, " Now, it's time for you to choose your starter. It will lead you to a great adventure.");
+        Thread.Sleep(2000);
 
         WriteMenu(menuOptions, menuOptions[index]);
 
@@ -112,7 +114,7 @@ public partial class Program
                     WriteMenu(menuOptions, menuOptions[index]);
                 }
             }
-            if (keyinfo.Key == ConsoleKey.Enter)
+            if (keyinfo.Key == ConsoleKey.Spacebar)
             {
                 menuOptions[index].Selected.Invoke();
                 index = 0;
@@ -124,27 +126,57 @@ public partial class Program
             Console.ReadKey();
     }
 
-    static void TextColor(int color, string text)
+    static void WriteMenu(List<Options> options, Options selectedOption)
     {
-        Console.ForegroundColor = (ConsoleColor)color;
-        Console.Write(text);
-        Console.ResetColor();
+        Console.Clear();
+        Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
+
+        foreach (Options option in options)
+        {
+            if (option == selectedOption)
+            {
+                Console.Write(" > ");
+            }
+            else
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine(option.Name + "\n");
+        }
+
+        Console.WriteLine("\n\n  Press [Space] to select your starter.");
     }
 
-    static void PressEnterToContiue()
+    static void WriteStarterMessage(Charamon charamon)
     {
-    GetInput:
-        ConsoleKey key = Console.ReadKey(true).Key;
-        switch (key)
+        CharamonActions.AddToTeam(charamon);
+
+        Console.Clear();
+        DialogueMessage(15, "\n\n Nice choice ! ");
+
+        switch (charamon.id)
         {
-            case ConsoleKey.Enter:
-                return;
-            case ConsoleKey.Escape:
-                gameRunning = false;
-                return;
-            default:
-                goto GetInput;
+            case 1:
+                DialogueMessage(10, charamon.name);
+                break;
+            case 4:
+                DialogueMessage(12, charamon.name);
+                break;
+            case 7:
+                DialogueMessage(9, charamon.name);
+                break;
+            default: break;
         }
+        DialogueMessage(15, " is a good starter.\n\n\n");
+        Thread.Sleep(1000);
+        DialogueMessage(15, " Now,\n");
+        Thread.Sleep(1000);
+        DialogueMessage(15, " Proceed.");
+        Thread.Sleep(1000);
+        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
+
+        isCharamonSelected = true;
+        PressEnterToContiue();
     }
 
     static void PlayerInputs()
@@ -200,7 +232,7 @@ public partial class Program
                 break;
 
             // Open inventory
-            case ConsoleKey.Enter:
+            case ConsoleKey.I:
                 Inventory();
                 break;
 
@@ -212,6 +244,13 @@ public partial class Program
 
             default: break;
         }
+    }
+
+    static void Inventory()
+    {
+        Console.Clear();
+        Console.WriteLine(" INVENTORY");
+        PressEnterToContiue();
     }
 
     static void GrassInterraction()
@@ -229,13 +268,6 @@ public partial class Program
     static void EnterField()
     {
         SpawnAtLocation(Maps.Field, 's');
-    }
-
-    static void Inventory()
-    {
-        Console.Clear();
-        Console.WriteLine(" INVENTORY");
-        PressEnterToContiue();
     }
 
     static void UpdateDeltaTime()
@@ -344,54 +376,37 @@ public partial class Program
         }
     }
 
-    static void WriteMenu(List<Options> options, Options selectedOption)
-    {
-        Console.Clear();
-        Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
 
-        foreach (Options option in options)
+    // DIALOGUE AND TEXT METHODS
+    static void DialogueMessage(int colorText, string text)
+    {
+        for (int i = 0; i < text.Length; i++)
         {
-            if (option == selectedOption)
-            {
-                Console.Write(" > ");
-            }
-            else
-            {
-                Console.Write("  ");
-            }
-            Console.WriteLine(option.Name + "\n");
+            TextColor(colorText, text[i].ToString());
+            Thread.Sleep(15);
         }
     }
 
-    static void WriteStarterMessage(Charamon charamon)
+    static void TextColor(int color, string text)
     {
-        CharamonActions.AddToTeam(charamon);
+        Console.ForegroundColor = (ConsoleColor)color;
+        Console.Write(text);
+        Console.ResetColor();
+    }
 
-        Console.Clear();
-        Console.Write("\n\n Nice choice ! ");
-        switch(charamon.id)
+    static void PressEnterToContiue()
+    {
+        GetInput:
+        ConsoleKey key = Console.ReadKey(true).Key;
+        switch (key)
         {
-            case 1:
-                TextColor(10, charamon.name);
-                break;
-            case 4:
-                TextColor(12, charamon.name);
-                break;
-            case 7:
-                TextColor(9, charamon.name);
-                break;
-            default: break;
+            case ConsoleKey.Enter:
+                return;
+            case ConsoleKey.Escape:
+                gameRunning = false;
+                return;
+            default:
+                goto GetInput;
         }
-        Console.WriteLine(" is a good starter.\n\n\n");
-
-        Thread.Sleep(1000);
-        Console.WriteLine(" Now,");
-        Thread.Sleep(1000);
-        Console.WriteLine(" Proceed.");
-        Thread.Sleep(1000);
-        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
-
-        isCharamonSelected = true;
-        PressEnterToContiue();
     }
 }
