@@ -73,7 +73,7 @@ public static class Maps
 
     public static float[,] FieldPool = new float[,]
     {
-        {16,19,161,167,204,265,261,163},
+        {16,19,1,167,204,265,261,163},
         {12.5f,25,37.5f,50,62.5f,75,87.5f,100f}
     };
 

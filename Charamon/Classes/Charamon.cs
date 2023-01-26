@@ -104,18 +104,22 @@ public class CharamonActions
     }
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
     {
+        int damage;
         if (attack.category == "special")
         {
-            defender.currentHp -= (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Sp. Attack"] * attack.power
+            damage = (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Sp. Attack"] * attack.power
                 / defender.stats["Sp. Defense"] / 50) + 2)
                 * GetTypeAdvantage(attacker, defender, attack));
+            defender.currentHp -= damage;
         }
         else
         {
-            defender.currentHp -= (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Attack"] * attack.power
+            damage = (int)Math.Round((((attacker.level * 0.4 + 2) * attacker.stats["Attack"] * attack.power
                  / defender.stats["Defense"] / 50) + 2)
                  * GetTypeAdvantage(attacker, defender, attack));
+            defender.currentHp -= damage;
         }
+        
     }
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
     /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 

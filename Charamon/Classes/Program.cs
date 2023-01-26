@@ -8,6 +8,7 @@ using System.Transactions;
 using Microsoft.VisualBasic.FileIO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
+using System.Reflection;
 
 public partial class Program
 {
@@ -15,7 +16,7 @@ public partial class Program
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
     public static List<Options> menuOptions;
-    static bool isCharamonSelected = false;
+    public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
     static Player player
@@ -91,42 +92,17 @@ public partial class Program
         DialogueMessage(15, " Now, it's time for you to choose your starter. It will lead you to a great adventure.");
         Thread.Sleep(2000);
 
-        WriteMenu(menuOptions, menuOptions[index]);
 
-        ConsoleKeyInfo keyinfo;
-        do
+        if (!isCharamonSelected)
         {
-            keyinfo = Console.ReadKey();
-
-            if (keyinfo.Key == ConsoleKey.DownArrow)
-            {
-                if (index + 1 < menuOptions.Count)
-                {
-                    index++;
-                    WriteMenu(menuOptions, menuOptions[index]);
-                }
-            }
-            if (keyinfo.Key == ConsoleKey.UpArrow)
-            {
-                if (index - 1 >= 0)
-                {
-                    index--;
-                    WriteMenu(menuOptions, menuOptions[index]);
-                }
-            }
-            if (keyinfo.Key == ConsoleKey.Spacebar)
-            {
-                menuOptions[index].Selected.Invoke();
-                index = 0;
-            }
+            WriteMenu(menuOptions, menuOptions[index]);
+            ChooseMenu(index, menuOptions);
         }
-        while (isCharamonSelected != true);
-
-        if(isCharamonSelected != true)
-            Console.ReadKey();
+        
+        
     }
 
-    static void WriteMenu(List<Options> options, Options selectedOption)
+    public static void WriteMenu(List<Options> options, Options selectedOption)
     {
         Console.Clear();
         Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
@@ -145,6 +121,43 @@ public partial class Program
         }
 
         Console.WriteLine("\n\n  Press [Space] to select your starter.");
+    }
+
+    public static void ChooseMenu(int index, List<Options> menu)
+    {
+        bool isSelected = false;
+        ConsoleKeyInfo keyinfo;
+        do
+        {
+            keyinfo = Console.ReadKey();
+
+            if (keyinfo.Key == ConsoleKey.DownArrow)
+            {
+                if (index + 1 < menu.Count)
+                {
+                    index++;
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.UpArrow)
+            {
+                if (index - 1 >= 0)
+                {
+                    index--;
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.Spacebar)
+            {
+                menu[index].Selected.Invoke();
+                index = 0;
+                isSelected = true;
+            }
+        }
+        while (isSelected != true);
+
+        if (isSelected != true)
+            Console.ReadKey();
     }
 
     static void WriteStarterMessage(Charamon charamon)
@@ -401,7 +414,7 @@ public partial class Program
         Console.ResetColor();
     }
 
-    static void PressEnterToContiue()
+    static void PressEnterToContiue()   
     {
         GetInput:
         ConsoleKey key = Console.ReadKey(true).Key;

@@ -1,14 +1,15 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "YZ8iDLeANFqpVBbHoeOtlLxQ9jfLbbKT1tlsW2ny0EcpMz6EEDcr3EIFYLloGCUhfU2ll9Spwih026h1gpouRw==",
+  "dgSpecHash": "+uT6C08bMCFGPfQaQKFfo8z2FihjfZOu0N3bQWKR2u3wBic0Bdu/3lO6a/RmGlrChLHE2Yee5MYA7V4CmdjFLA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
-=======
-  "dgSpecHash": "ZBZgRVa44WghAZm/PxBZcyYmTDBYQMrBrxDTcaGbCZby/zPiOeKHbDKCN5HX/4yeFovlLsHDPPXDX4b3QtMepw==",
-  "success": true,
-  "projectFilePath": "C:\\Users\\rmateescu\\Documents\\GitHub\\Charamon\\Charamon\\Charamon.csproj",
->>>>>>> 3b07786cfcde8afd8a68408e1bf00c466f93a577
+  "projectFilePath": "C:\\Users\\matee\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problème de lecture du fichier cache C:\\Users\\matee\\source\\repos\\Charamon\\Charamon\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
