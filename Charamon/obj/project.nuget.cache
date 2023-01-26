@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "YZ8iDLeANFqpVBbHoeOtlLxQ9jfLbbKT1tlsW2ny0EcpMz6EEDcr3EIFYLloGCUhfU2ll9Spwih026h1gpouRw==",
   "success": true,
   "projectFilePath": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
+=======
+  "dgSpecHash": "ZBZgRVa44WghAZm/PxBZcyYmTDBYQMrBrxDTcaGbCZby/zPiOeKHbDKCN5HX/4yeFovlLsHDPPXDX4b3QtMepw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rmateescu\\Documents\\GitHub\\Charamon\\Charamon\\Charamon.csproj",
+>>>>>>> 3b07786cfcde8afd8a68408e1bf00c466f93a577
   "expectedPackageFiles": [],
   "logs": []
 }

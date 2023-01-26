@@ -8,11 +8,16 @@
     "net6.0": []
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\arthu\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\rmateescu\\.nuget\\packages\\": {}
+>>>>>>> 3b07786cfcde8afd8a68408e1bf00c466f93a577
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
       "projectName": "Charamon",
       "projectPath": "C:\\Users\\arthu\\Source\\Repos\\Charamon\\Charamon\\Charamon.csproj",
@@ -21,6 +26,16 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\arthu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+=======
+      "projectUniqueName": "C:\\Users\\rmateescu\\Documents\\GitHub\\Charamon\\Charamon\\Charamon.csproj",
+      "projectName": "Charamon",
+      "projectPath": "C:\\Users\\rmateescu\\Documents\\GitHub\\Charamon\\Charamon\\Charamon.csproj",
+      "packagesPath": "C:\\Users\\rmateescu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\rmateescu\\Documents\\GitHub\\Charamon\\Charamon\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\rmateescu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> 3b07786cfcde8afd8a68408e1bf00c466f93a577
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

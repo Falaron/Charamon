@@ -78,29 +78,7 @@ public class CharamonActions
         int nbAbilities = random.Next(1, 4);
         for (int i = 0; i < nbAbilities; i++)
         {
-            int aId = random.Next(_ablties.abilities.Count());
-            Ability newAbility = new Ability();
-            newAbility = _ablties.abilities[aId];
-            if (charamon.type.Length == 2)
-            {
-                while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
-                {
-                    aId = random.Next(_ablties.abilities.Count());
-                    newAbility = _ablties.abilities[aId];
-                }
-                charamon.abilities.Add(_ablties.abilities[aId]);
-            }
-            else
-            {
-                while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0])
-                {
-                    aId = random.Next(_ablties.abilities.Count());
-                    newAbility = _ablties.abilities[aId];
-                }
-                charamon.abilities.Add(_ablties.abilities[aId]);
-            }
-
-
+            LearnMove(charamon);
         }
         foreach (var kvp in charamon.stats)
         {
@@ -304,6 +282,31 @@ public class CharamonActions
             pc[pcSlot] = substitute;
         }
         else GetFromPc(pc[pcSlot]);
+    }
+    public static void LearnMove(Charamon charamon)
+    {
+        Random random = new Random();
+        int aId = random.Next(_ablties.abilities.Count());
+        Ability newAbility = new Ability();
+        newAbility = _ablties.abilities[aId];
+        if (charamon.type.Length == 2)
+        {
+            while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
+            {
+                aId = random.Next(_ablties.abilities.Count());
+                newAbility = _ablties.abilities[aId];
+            }
+            charamon.abilities.Add(_ablties.abilities[aId]);
+        }
+        else
+        {
+            while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0])
+            {
+                aId = random.Next(_ablties.abilities.Count());
+                newAbility = _ablties.abilities[aId];
+            }
+            charamon.abilities.Add(_ablties.abilities[aId]);
+        }
     }
 }
 
