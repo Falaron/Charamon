@@ -241,7 +241,7 @@ public class CharamonActions
             Console.WriteLine(target.name + " level UP ! to lvl  " + target.level);
             UpdateStats(target);
             if (target.level >= target.evolutionLvl)  Evolve(target);
-            Program.PressEnterToContiue();
+            Program.PressSpaceToContiue();
         }
     }
     public static void UpdateStats(Charamon target)

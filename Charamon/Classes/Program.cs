@@ -1,5 +1,7 @@
 ﻿using ProjectCharamon;
 using System.Text;
+using static System.Console;
+using System.Media;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -47,7 +49,7 @@ public partial class Program
 
     static void Initialize()
     {
-        Console.CursorVisible = false; // Hide cursor
+        Console.CursorVisible = true; // Hide cursor
         CharamonActions.SetCharamons();
         CharamonActions.SetCapacities();
 
@@ -64,9 +66,9 @@ public partial class Program
         TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
         Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
-        TextColor(14, " Press "); TextColor(6, "[enter]"); TextColor(14, " to begin...");
+        TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
 
-        PressEnterToContiue();
+        PressSpaceToContiue();
     }
 
     static void StartEvent()
@@ -86,12 +88,9 @@ public partial class Program
         };
         int index = 0;
 
-        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...");
-        Thread.Sleep(500);
-        DialogueMessage(15, " CHARAMON !\n\n");
-        Thread.Sleep(1000);
-        DialogueMessage(15, " Now, it's time for you to choose your starter. It will lead you to a great adventure.");
-        Thread.Sleep(2000);
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 15);
+        DialogueMessage(15, " CHARAMON !", 75);
+        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 15);
 
 
         if (!isCharamonSelected)
@@ -106,7 +105,7 @@ public partial class Program
 
     public static void WriteMenu(List<Options> options, Options selectedOption)
     {
-        
+        Console.WriteLine("\n\n  SELECT YOUR STARTER\n\n");
 
         foreach (Options option in options)
         {
@@ -168,36 +167,35 @@ public partial class Program
         CharamonActions.AddToTeam(charamon);
 
         Console.Clear();
-        DialogueMessage(15, "\n\n Nice choice ! ");
+        DialogueMessage(15, "\n\n Nice choice ! ", 15);
 
         switch (charamon.id)
         {
             case 1:
-                DialogueMessage(10, charamon.name);
+                DialogueMessage(10, charamon.name + " is a good starter.", 15);
                 break;
             case 4:
-                DialogueMessage(12, charamon.name);
+                DialogueMessage(12, charamon.name + " is a good starter.", 15);
                 break;
             case 7:
-                DialogueMessage(9, charamon.name);
+                DialogueMessage(9, charamon.name + " is a good starter.", 15);
                 break;
             default: break;
         }
-        DialogueMessage(15, " is a good starter.\n\n\n");
-        Thread.Sleep(1000);
-        DialogueMessage(15, " Now,\n");
-        Thread.Sleep(1000);
-        DialogueMessage(15, " Proceed.");
-        Thread.Sleep(1000);
-        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
+        Console.WriteLine("\n");
+        DialogueMessage(15, " Now,", 15);
+        Console.WriteLine();
+        DialogueMessage(15, " Proceed.", 15);
+        Console.WriteLine("\n");
+        TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
 
         isCharamonSelected = true;
-        PressEnterToContiue();
+        PressSpaceToContiue();
     }
 
     static void PlayerInputs()
     {
-        ConsoleKey keyPressed = Console.ReadKey(true).Key;
+        ConsoleKey keyPressed = Console.ReadKey(false).Key;
         switch (keyPressed)
         {
             // Player movement
@@ -271,7 +269,7 @@ public partial class Program
     {
         Console.Clear();
         Console.WriteLine(" INVENTORY");
-        PressEnterToContiue();
+        PressSpaceToContiue();
     }
 
     static void GrassInterraction()
@@ -400,12 +398,37 @@ public partial class Program
 
 
     // DIALOGUE AND TEXT METHODS
-    static void DialogueMessage(int colorText, string text)
+    static void DialogueMessage(int colorText, string text, int delay)
     {
-        for (int i = 0; i < text.Length; i++)
+        bool skip = false;
+        string textWithEnd = text + " ▼";
+        int currentX = CursorLeft;
+        int currentY = CursorTop;
+
+        for (int i = 0; i < textWithEnd.Length; i++)
         {
-            TextColor(colorText, text[i].ToString());
-            Thread.Sleep(15);
+            TextColor(colorText, textWithEnd[i].ToString());
+            Thread.Sleep(delay);
+
+            if (KeyAvailable)
+            {
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.Spacebar)
+                {
+                    TextColor(colorText, textWithEnd.Substring(i + 1));
+                    break;
+                }
+            }
+        }
+        while (!skip)
+        {
+            ConsoleKeyInfo keyInfo = ReadKey(true);
+            if(keyInfo.Key == ConsoleKey.Spacebar)
+            {
+                Console.SetCursorPosition(currentX,currentY);
+                TextColor(colorText, text);
+                skip = true;
+            }
         }
     }
 
@@ -416,13 +439,13 @@ public partial class Program
         Console.ResetColor();
     }
 
-    public static void PressEnterToContiue()   
+    public static void PressSpaceToContiue()   
     {
         GetInput:
-        ConsoleKey key = Console.ReadKey(true).Key;
+        ConsoleKey key = Console.ReadKey(false).Key;
         switch (key)
         {
-            case ConsoleKey.Enter:
+            case ConsoleKey.Spacebar:
                 return;
             case ConsoleKey.Escape:
                 gameRunning = false;
