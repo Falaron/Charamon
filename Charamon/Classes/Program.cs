@@ -1,12 +1,22 @@
 ﻿using ProjectCharamon;
-using System.Diagnostics;
 using System.Text;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Transactions;
+using Microsoft.VisualBasic.FileIO;
+using System.Runtime.CompilerServices;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection;
 
 public partial class Program
 {
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
+    public static List<Options> menuOptions;
+    public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
     static Player player
@@ -24,10 +34,11 @@ public partial class Program
     public static void Main()
     {
         Initialize();
-        OpeningScreen();
+        MenuScreen();
+        StartEvent();
+        CharamonActions.team.Add(CharamonActions.CreateCharamon(56, 5));
         while (gameRunning)
         {
-            //UpdateCharacter();
             RenderWorldMapView();
             PlayerInputs();
             UpdateDeltaTime();
@@ -36,28 +47,18 @@ public partial class Program
 
     static void Initialize()
     {
-        Console.CursorVisible = false;                      // Hide cursor
-        Map = Maps.Field;                                   // Load selected map
+        Console.CursorVisible = false; // Hide cursor
+        CharamonActions.SetCharamons();
+        CharamonActions.SetCapacities();
 
         player = new();
-        {                      
-            // Find in the current map the char "X" (spawn point char)
-            for (int y = 0; y < Map.Length; y++)
-            {
-                for (int x = 0; x < Map[y].Length; x++)
-                {
-                    if (Map[y][x] == 'X')
-                    {
-                        player.posX = x * Sprites.spriteWidth;
-                        player.posY = y * Sprites.spriteHeight;
-                    }
-                }
-            }
+        {
+            SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
     }
 
-    static void OpeningScreen()
+    static void MenuScreen()
     {
         Console.Clear();
         TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
@@ -68,34 +69,136 @@ public partial class Program
         PressEnterToContiue();
     }
 
-    static void TextColor(int color, string text)
+    static void StartEvent()
     {
-        Console.ForegroundColor = (ConsoleColor)color;
-        Console.Write(text);
-        Console.ResetColor();
+        Console.Clear();
+
+        //create starter pokemons
+        Charamon starterOne = CharamonActions.CreateCharamon(0, 5);
+        Charamon starterTwo = CharamonActions.CreateCharamon(3, 5);
+        Charamon starterThree = CharamonActions.CreateCharamon(6, 5);
+
+        menuOptions = new List<Options>
+        {
+                new Options(starterOne.name, () => WriteStarterMessage(starterOne)),
+                new Options(starterTwo.name, () =>  WriteStarterMessage(starterTwo)),
+                new Options(starterThree.name, () =>  WriteStarterMessage(starterThree))
+        };
+        int index = 0;
+
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...");
+        Thread.Sleep(500);
+        DialogueMessage(15, " CHARAMON !\n\n");
+        Thread.Sleep(1000);
+        DialogueMessage(15, " Now, it's time for you to choose your starter. It will lead you to a great adventure.");
+        Thread.Sleep(2000);
+
+
+        if (!isCharamonSelected)
+        {
+            Console.Clear();
+            WriteMenu(menuOptions, menuOptions[index]);
+            ChooseMenu(index, menuOptions);
+        }
+        
+        
     }
 
-    static void PressEnterToContiue()
+    public static void WriteMenu(List<Options> options, Options selectedOption)
     {
-    GetInput:
-        ConsoleKey key = Console.ReadKey(true).Key;
-        switch (key)
+        
+
+        foreach (Options option in options)
         {
-            case ConsoleKey.Enter:
-                return;
-            case ConsoleKey.Escape:
-                gameRunning = false;
-                return;
-            default:
-                goto GetInput;
+            if (option == selectedOption)
+            {
+                Console.Write(" > ");
+            }
+            else
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine(option.Name + "\n");
         }
+
+        Console.WriteLine("\n\n  Press [Space] to select");
+    }
+
+    public static void ChooseMenu(int index, List<Options> menu)
+    {
+        bool isSelected = false;
+        ConsoleKeyInfo keyinfo;
+        do
+        {
+            keyinfo = Console.ReadKey();
+
+            if (keyinfo.Key == ConsoleKey.DownArrow)
+            {
+                if (index + 1 < menu.Count)
+                {
+                    index++;
+                    Console.Clear();
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.UpArrow)
+            {
+                if (index - 1 >= 0)
+                {
+                    index--;
+                    Console.Clear();
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.Spacebar)
+            {
+                menu[index].Selected.Invoke();
+                index = 0;
+                isSelected = true;
+            }
+        }
+        while (isSelected != true);
+
+        if (isSelected != true)
+            Console.ReadKey();
+    }
+
+    static void WriteStarterMessage(Charamon charamon)
+    {
+        CharamonActions.AddToTeam(charamon);
+
+        Console.Clear();
+        DialogueMessage(15, "\n\n Nice choice ! ");
+
+        switch (charamon.id)
+        {
+            case 1:
+                DialogueMessage(10, charamon.name);
+                break;
+            case 4:
+                DialogueMessage(12, charamon.name);
+                break;
+            case 7:
+                DialogueMessage(9, charamon.name);
+                break;
+            default: break;
+        }
+        DialogueMessage(15, " is a good starter.\n\n\n");
+        Thread.Sleep(1000);
+        DialogueMessage(15, " Now,\n");
+        Thread.Sleep(1000);
+        DialogueMessage(15, " Proceed.");
+        Thread.Sleep(1000);
+        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
+
+        isCharamonSelected = true;
+        PressEnterToContiue();
     }
 
     static void PlayerInputs()
     {
         ConsoleKey keyPressed = Console.ReadKey(true).Key;
-        
-        switch(keyPressed)
+        switch (keyPressed)
         {
             // Player movement
             case
@@ -111,34 +214,82 @@ public partial class Program
                     ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
                 };
 
-                if (Maps.IsValidCharacterMapTile(Map, tileX, tileY))
+                if (Maps.DontCollide(Map, tileX, tileY))
                 {
-                    switch(keyPressed)
+                    switch (keyPressed)
                     {
                         case ConsoleKey.UpArrow:
-                            player.posY -= Sprites.spriteHeight;
+                            player.posY -= Sprites.SpriteHeight;
                             break;
                         case ConsoleKey.DownArrow:
-                            player.posY += Sprites.spriteHeight;
+                            player.posY += Sprites.SpriteHeight;
                             break;
                         case ConsoleKey.LeftArrow:
-                            player.posX -= Sprites.spriteWidth;
+                            player.posX -= Sprites.SpriteWidth;
                             break;
                         case ConsoleKey.RightArrow:
-                            player.posX += Sprites.spriteWidth;
+                            player.posX += Sprites.SpriteWidth;
                             break;
                     }
                 }
+                switch (Maps.CheckForInterraction(Map, tileX, tileY))
+                {
+                    case 1:
+                        Random random = new Random();
+                        int proba = random.Next(100);
+                        if (proba <=16) 
+                        {
+                            GrassInterraction();
+                        }
+                        break;
+                    case 2:
+                        StartHouseInterraction();
+                        break;
+                    case 3:
+                        EnterField();
+                        break;
+                    default: break;
+                }
+                break;
+
+            // Open inventory
+            case ConsoleKey.I:
+                Inventory();
                 break;
 
             // Quit game
             case ConsoleKey.Escape:
-                gameRunning= false;
+                gameRunning = false;
                 Console.Clear();
                 return;
 
-            default: return;
+            default: break;
         }
+    }
+
+    static void Inventory()
+    {
+        Console.Clear();
+        Console.WriteLine(" INVENTORY");
+        PressEnterToContiue();
+    }
+
+    static void GrassInterraction()
+    {
+        
+        Console.Clear();
+        CombatManager.EnterCombat(Map);
+        //Console.WriteLine("You entered a battle");
+    }
+
+    static void StartHouseInterraction()
+    {
+        SpawnAtLocation(Maps.StartHouse, 'z');
+    }
+
+    static void EnterField()
+    {
+        SpawnAtLocation(Maps.Field, 's');
     }
 
     static void UpdateDeltaTime()
@@ -199,10 +350,10 @@ public partial class Program
 
 
                 // player
-                if (x > midWidth - 4 && x < midWidth + 4 && y > midHeight - 2 && y < midHeight + 3)
+                if (x > midWidth - 1 && x < midWidth + 7 && y > midHeight - 1 && y < midHeight + 4)
                 {
-                    int ci = x - (midWidth - 3);
-                    int cj = y - (midHeight - 1);
+                    int ci = x - midWidth;
+                    int cj = y - midHeight;
                     string characterMapRender = player.PlayerRenderer;
                     builder.Append(characterMapRender[cj * 8 + ci]);
                     continue;
@@ -214,12 +365,12 @@ public partial class Program
                 int mapY = y - midHeight + player.posY;
 
                 // compute the coordinates of the tile
-                int tileX = mapX < 0 ? (mapX - 6) / Sprites.spriteWidth : mapX / Sprites.spriteWidth;
-                int tileY = mapY < 0 ? (mapY - 3) / Sprites.spriteHeight : mapY / Sprites.spriteHeight;
+                int tileX = mapX < 0 ? (mapX - 6) / Sprites.SpriteWidth : mapX / Sprites.SpriteWidth;
+                int tileY = mapY < 0 ? (mapY - 3) / Sprites.SpriteHeight : mapY / Sprites.SpriteHeight;
 
                 // compute the coordinates of the pixel within the tile's sprite
-                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.spriteWidth) : (mapX % Sprites.spriteWidth);
-                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.spriteHeight) : (mapY % Sprites.spriteHeight);
+                int pixelX = mapX < 0 ? 6 + ((mapX + 1) % Sprites.SpriteWidth) : (mapX % Sprites.SpriteWidth);
+                int pixelY = mapY < 0 ? 3 + ((mapY + 1) % Sprites.SpriteHeight) : (mapY % Sprites.SpriteHeight);
 
                 // render
                 string tileRender = Maps.GetMapTileRender(Map, tileX, tileY);
@@ -229,5 +380,55 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
+    }
+
+    public static void SpawnAtLocation(char[][] map, char charSpawn)
+    {
+        Map = map;
+        for (int y = 0; y < Map.Length; y++)
+        {
+            for (int x = 0; x < Map[y].Length; x++)
+            {
+                if (Map[y][x] == charSpawn)
+                {
+                    player.posX = x * Sprites.SpriteWidth;
+                    player.posY = y * Sprites.SpriteHeight;
+                }
+            }
+        }
+    }
+
+
+    // DIALOGUE AND TEXT METHODS
+    static void DialogueMessage(int colorText, string text)
+    {
+        for (int i = 0; i < text.Length; i++)
+        {
+            TextColor(colorText, text[i].ToString());
+            Thread.Sleep(15);
+        }
+    }
+
+    static void TextColor(int color, string text)
+    {
+        Console.ForegroundColor = (ConsoleColor)color;
+        Console.Write(text);
+        Console.ResetColor();
+    }
+
+    public static void PressEnterToContiue()   
+    {
+        GetInput:
+        ConsoleKey key = Console.ReadKey(true).Key;
+        switch (key)
+        {
+            case ConsoleKey.Enter:
+                return;
+            case ConsoleKey.Escape:
+                gameRunning = false;
+                return;
+            default:
+                goto GetInput;
+        }
     }
 }
