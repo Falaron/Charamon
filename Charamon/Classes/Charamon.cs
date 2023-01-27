@@ -75,7 +75,7 @@ public class CharamonActions
         }
         charamon.level = level;
         Random random = new Random();
-        int nbAbilities = random.Next(1, 4);
+        int nbAbilities = random.Next(2, 4);
         for (int i = 0; i < nbAbilities; i++)
         {
             LearnMove(charamon);
@@ -99,8 +99,26 @@ public class CharamonActions
     {
         Random random = new Random();
         int accuracy = random.Next(1, 100);
-        if (accuracy < attack.accuracy) InflictDamage(attacker, defender, attack);
-        else; ///missed
+        if (accuracy < attack.accuracy )
+        {
+            if (attack.pp > 0)
+            {
+                attack.pp--;
+                InflictDamage(attacker, defender, attack);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("not enough PP \n");
+                Thread.Sleep(750);
+            }  
+        }   
+        else
+        {
+            Console.Clear();
+            Console.WriteLine(attack.ename + " missed \n");
+            Thread.Sleep(750);
+        }
     }
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
     {
@@ -119,7 +137,24 @@ public class CharamonActions
                  * GetTypeAdvantage(attacker, defender, attack));
             defender.currentHp -= damage;
         }
-        
+        Console.Clear();
+        Console.WriteLine(attacker.name + " inflicted " + damage + " damages with " + attack.ename);
+
+        switch (GetTypeAdvantage(attacker, defender, attack))
+        {
+            case 0: Console.WriteLine("it has no effect...");
+                    break;
+            case 0.25f: Console.WriteLine("it's not very effective");
+                    break;
+            case 0.5f: Console.WriteLine("it's not very effective ");
+                    break;
+            case 2: Console.WriteLine("it's super effective");
+                    break;
+            case 4: Console.WriteLine("it's super effective");
+                    break;
+            default: break;
+        }
+        Thread.Sleep(750);
     }
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
     /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
@@ -197,14 +232,16 @@ public class CharamonActions
                 return -1;
         }
     }
-    public void GainXp(Charamon target, Charamon defeated)
+    public static void GainXp(Charamon target, Charamon defeated)
     {
         target.xp += 60 * defeated.level / 7;
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
+            Console.WriteLine(target.name + " level UP ! to lvl  " + target.level);
             UpdateStats(target);
-            if (target.level >= target.evolutionLvl) Evolve(target);
+            if (target.level >= target.evolutionLvl)  Evolve(target);
+            Program.PressEnterToContiue();
         }
     }
     public static void UpdateStats(Charamon target)
@@ -216,16 +253,20 @@ public class CharamonActions
                 int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
+                Console.WriteLine(kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
             }
             else
             {
+                int stat = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + 5;
+                Console.WriteLine(kvp.Key +" " + target.stats[kvp.Key]+  " => " + stat);
             }
         }
         target.xpThreshold = (int)Math.Pow(target.level, 3);
     }
     public static void Evolve(Charamon target)
     {
+        string name = target.name;
         Pokemon evolutionTarget = new Pokemon();
         evolutionTarget = _pkmn.pokemons[target.evolutionId - 1];
 
@@ -238,6 +279,8 @@ public class CharamonActions
             target.evolutionLvl = Convert.ToInt16(evolutionTarget.evolution["next"][1]);
             target.evolutionId = Convert.ToInt16(evolutionTarget.evolution["next"][0]);
         }
+        Console.WriteLine(name + " evolves into " + target.name);
+        
     }
     public static void AddToTeam(Charamon target)
     {
@@ -295,7 +338,7 @@ public class CharamonActions
         newAbility = _ablties.abilities[aId];
         if (charamon.type.Length == 2)
         {
-            while (newAbility.category == "status" && newAbility.power == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
+            while (newAbility.category == "status" && newAbility.power == 0 && newAbility.accuracy == 0 && newAbility.type != charamon.type[0] || newAbility.type != charamon.type[1])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];

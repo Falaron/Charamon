@@ -95,6 +95,7 @@ public partial class Program
 
         if (!isCharamonSelected)
         {
+            Console.Clear();
             WriteMenu(menuOptions, menuOptions[index]);
             ChooseMenu(index, menuOptions);
         }
@@ -104,8 +105,7 @@ public partial class Program
 
     public static void WriteMenu(List<Options> options, Options selectedOption)
     {
-        Console.Clear();
-        Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
+        
 
         foreach (Options option in options)
         {
@@ -120,7 +120,7 @@ public partial class Program
             Console.WriteLine(option.Name + "\n");
         }
 
-        Console.WriteLine("\n\n  Press [Space] to select your starter.");
+        Console.WriteLine("\n\n  Press [Space] to select");
     }
 
     public static void ChooseMenu(int index, List<Options> menu)
@@ -136,6 +136,7 @@ public partial class Program
                 if (index + 1 < menu.Count)
                 {
                     index++;
+                    Console.Clear();
                     WriteMenu(menu, menu[index]);
                 }
             }
@@ -144,6 +145,7 @@ public partial class Program
                 if (index - 1 >= 0)
                 {
                     index--;
+                    Console.Clear();
                     WriteMenu(menu, menu[index]);
                 }
             }
@@ -277,7 +279,6 @@ public partial class Program
         Console.Clear();
         CombatManager.EnterCombat(Map);
         //Console.WriteLine("You entered a battle");
-        PressEnterToContiue();
     }
 
     static void StartHouseInterraction()
@@ -414,7 +415,7 @@ public partial class Program
         Console.ResetColor();
     }
 
-    static void PressEnterToContiue()   
+    public static void PressEnterToContiue()   
     {
         GetInput:
         ConsoleKey key = Console.ReadKey(true).Key;

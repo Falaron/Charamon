@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,13 +14,25 @@ public static class CombatManager
     public static List<Options> combatOptions;
     public static List<Options> abilityOptions;
     public static List<Options> charamonsList;
-    public static void Charamons()
+    public static void Charamons(Charamon charamon, Charamon enemy)
     {
-        // print team list + selection into "SwitchPokemon"
+        charamonsList = new List<Options>();
+        for (int i = 0; i < CharamonActions.team.Count; i++)
+        {
+            Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0,  i));
+            charamonsList.Add(charamonOption);
+        }
+        Options back = new Options("Return", () => DrawCombat(charamon, enemy));
+        charamonsList.Add(back);
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(charamonsList, charamonsList[index]);
+        Program.ChooseMenu(index, charamonsList);
+        DrawCombat(charamon, enemy);
     }
     public static void Run()
     {
-        //exit combat 
+        //exit 
     }
     public static void Inventory() 
     {
@@ -27,33 +40,56 @@ public static class CombatManager
     }
     public static void Fight(Charamon charamon, Charamon enemy)
     {
+        int index = 0;
         abilityOptions = new List<Options>();
         for (int i = 0; i < charamon.abilities.Count; i++)
         {
-            Options ability = new Options(charamon.abilities[i].ename, () => CharamonActions.Attack(charamon, enemy, charamon.abilities[i-1]));
+           
+            string abilityString = charamon.abilities[i].ename + "  " +charamon.abilities[i].type + "   power : " +
+                                charamon.abilities[i].power.ToString() + "   pp : " + charamon.abilities[i].pp.ToString()+ 
+                                " accuracy : " + charamon.abilities[i].accuracy.ToString();
+            Ability abilityNumber = charamon.abilities[i];
+            Options ability = new Options(abilityString, () => CharamonActions.Attack(charamon, enemy, abilityNumber));
             abilityOptions.Add(ability);
         }
         Options back = new Options("Return", () => DrawCombat(charamon, enemy));
         abilityOptions.Add(back);
-        int index = 0;
-        Program.WriteMenu(abilityOptions, abilityOptions[index]);
+       
+        
+        Console.Clear();
+        Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
+        Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
+        Program.WriteMenu(abilityOptions, abilityOptions[0]);
         Program.ChooseMenu(index, abilityOptions);
         DrawCombat(charamon, enemy);
     }
 
     public static void DrawCombat(Charamon charamon, Charamon enemy)
     {
-        combatOptions = new List<Options>
+        if (enemy.currentHp > 0)
         {
-                new Options("Charamons", () => Charamons()),
-                new Options("Run", () =>  Run()),
-                new Options("Inventory", () =>  Inventory()),
-                new Options("Fight", () =>  Fight(charamon, enemy))
-        };
-        int index = 0;
-        Program.WriteMenu(combatOptions, combatOptions[index]);
-        Program.ChooseMenu(index, combatOptions);
-        Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"]);
+            combatOptions = new List<Options>
+            {
+                    new Options("Charamons", () => Charamons(charamon, enemy)),
+                    new Options("Run", () =>  Run()),
+                    new Options("Inventory", () =>  Inventory()),
+                    new Options("Fight", () =>  Fight(charamon, enemy))
+            };
+            int index = 0;
+            Console.Clear();
+            Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
+            Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
+            Program.WriteMenu(combatOptions, combatOptions[index]);
+            Program.ChooseMenu(index, combatOptions);
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("you deafeated a lvl  " + enemy.level + "  " + enemy.name + "\n\n");
+            
+            CharamonActions.GainXp(charamon, enemy);
+        }
+          
     }
     public static void EnterCombat(char[][] map)
     {
@@ -62,7 +98,8 @@ public static class CombatManager
         float[,] pool = Maps.maps[map];
         Charamon enemy = new Charamon();
         enemy = CharamonActions.CreateCharamon(GetCharamonFromPool(pool, percentage) - 1, SetEnemyLevel());
-        Console.WriteLine("\n you encountered a " + enemy.name + "  lvl " + enemy.level);
+        Console.WriteLine("you encountered a lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
+        Console.WriteLine("lvl  " + CharamonActions.team[0].level + "  " + CharamonActions.team[0].name + "\n Hp :  " + CharamonActions.team[0].currentHp + "/" + CharamonActions.team[0].stats["HP"] + "\n\n");
         Thread.Sleep(1000);
         DrawCombat(CharamonActions.team[0], enemy);
     }
