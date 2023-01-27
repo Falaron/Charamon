@@ -19,7 +19,8 @@ public static class CombatManager
         charamonsList = new List<Options>();
         for (int i = 0; i < CharamonActions.team.Count; i++)
         {
-            Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0,  i));
+            int a = i;
+            Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0,  a));
             charamonsList.Add(charamonOption);
         }
         Options back = new Options("Return", () => DrawCombat(charamon, enemy));
@@ -28,11 +29,11 @@ public static class CombatManager
         Console.Clear();
         Program.WriteMenu(charamonsList, charamonsList[index]);
         Program.ChooseMenu(index, charamonsList);
-        DrawCombat(charamon, enemy);
+        DrawCombat(CharamonActions.team[0], enemy);
     }
     public static void Run()
     {
-        //exit 
+        //exit
     }
     public static void Inventory() 
     {
@@ -86,7 +87,6 @@ public static class CombatManager
         {
             Console.Clear();
             Console.WriteLine("you deafeated a lvl  " + enemy.level + "  " + enemy.name + "\n\n");
-            
             CharamonActions.GainXp(charamon, enemy);
         }
           

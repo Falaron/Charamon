@@ -36,6 +36,7 @@ public partial class Program
         Initialize();
         MenuScreen();
         StartEvent();
+        CharamonActions.team.Add(CharamonActions.CreateCharamon(56, 5));
         while (gameRunning)
         {
             RenderWorldMapView();
