@@ -24,6 +24,19 @@ public static class Sprites
         @";;;;;;;" + "\n" +
         @";;;;;;;" + "\n" +
         @";;;;;;;";
+    public const string StartHouse =
+        @"/▀▀▀▀▀\" + "\n" +
+        @"|█████|" + "\n" +
+        @"|██ ██|" + "\n" +
+        @"|██ ██|";
+    public const string ZoneField =
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       ";
+
+
+
     public const string Tree =
         @"  (@@) " + "\n" +
         @" (@@@@)" + "\n" +
@@ -39,6 +52,16 @@ public static class Sprites
         @"  /--\ " + "\n" +
         @" /    \" + "\n" +
         @"/      ";
+    public const string Wall =
+        @"███████" + "\n" +
+        @"███████" + "\n" +
+        @"███████" + "\n" +
+        @"███████";
+    public const string InvisibleWall =
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       ";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +

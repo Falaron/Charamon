@@ -1,11 +1,24 @@
 ﻿using ProjectCharamon;
 using System.Text;
+using static System.Console;
+using System.Media;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Transactions;
+using Microsoft.VisualBasic.FileIO;
+using System.Runtime.CompilerServices;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection;
 
 public partial class Program
 {
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
+    public static List<Options> menuOptions;
+    public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
     static Player player
@@ -23,7 +36,9 @@ public partial class Program
     public static void Main()
     {
         Initialize();
-        OpeningScreen();
+        MenuScreen();
+        StartEvent();
+        CharamonActions.team.Add(CharamonActions.CreateCharamon(56, 5));
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -34,64 +49,153 @@ public partial class Program
 
     static void Initialize()
     {
-        Console.CursorVisible = false;                      // Hide cursor
-        Map = Maps.Field;                                   // Load selected map
+        Console.CursorVisible = true; // Hide cursor
+        CharamonActions.SetCharamons();
+        CharamonActions.SetCapacities();
 
         player = new();
         {
-            // Find in the current map the char "X" (spawn point char)
-            for (int y = 0; y < Map.Length; y++)
-            {
-                for (int x = 0; x < Map[y].Length; x++)
-                {
-                    if (Map[y][x] == 'X')
-                    {
-                        player.posX = x * Sprites.SpriteWidth;
-                        player.posY = y * Sprites.SpriteHeight;
-                    }
-                }
-            }
+            SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
     }
 
-    static void OpeningScreen()
+    static void MenuScreen()
     {
         Console.Clear();
         TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
         Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
-        TextColor(14, " Press "); TextColor(6, "[enter]"); TextColor(14, " to begin...");
+        TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
 
-        PressEnterToContiue();
+        PressSpaceToContiue();
     }
 
-    static void TextColor(int color, string text)
+    static void StartEvent()
     {
-        Console.ForegroundColor = (ConsoleColor)color;
-        Console.Write(text);
-        Console.ResetColor();
-    }
+        Console.Clear();
 
-    static void PressEnterToContiue()
-    {
-    GetInput:
-        ConsoleKey key = Console.ReadKey(true).Key;
-        switch (key)
+        //create starter pokemons
+        Charamon starterOne = CharamonActions.CreateCharamon(0, 5);
+        Charamon starterTwo = CharamonActions.CreateCharamon(3, 5);
+        Charamon starterThree = CharamonActions.CreateCharamon(6, 5);
+
+        menuOptions = new List<Options>
         {
-            case ConsoleKey.Enter:
-                return;
-            case ConsoleKey.Escape:
-                gameRunning = false;
-                return;
-            default:
-                goto GetInput;
+                new Options(starterOne.name, () => WriteStarterMessage(starterOne)),
+                new Options(starterTwo.name, () =>  WriteStarterMessage(starterTwo)),
+                new Options(starterThree.name, () =>  WriteStarterMessage(starterThree))
+        };
+        int index = 0;
+
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 15);
+        DialogueMessage(15, " CHARAMON !", 75);
+        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 15);
+
+
+        if (!isCharamonSelected)
+        {
+            Console.Clear();
+            WriteMenu(menuOptions, menuOptions[index]);
+            ChooseMenu(index, menuOptions);
         }
+        
+        
+    }
+
+    public static void WriteMenu(List<Options> options, Options selectedOption)
+    {
+        Console.WriteLine("\n\n  SELECT YOUR STARTER\n\n");
+
+        foreach (Options option in options)
+        {
+            if (option == selectedOption)
+            {
+                Console.Write(" > ");
+            }
+            else
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine(option.Name + "\n");
+        }
+
+        Console.WriteLine("\n\n  Press [Space] to select");
+    }
+
+    public static void ChooseMenu(int index, List<Options> menu)
+    {
+        bool isSelected = false;
+        ConsoleKeyInfo keyinfo;
+        do
+        {
+            keyinfo = Console.ReadKey();
+
+            if (keyinfo.Key == ConsoleKey.DownArrow)
+            {
+                if (index + 1 < menu.Count)
+                {
+                    index++;
+                    Console.Clear();
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.UpArrow)
+            {
+                if (index - 1 >= 0)
+                {
+                    index--;
+                    Console.Clear();
+                    WriteMenu(menu, menu[index]);
+                }
+            }
+            if (keyinfo.Key == ConsoleKey.Spacebar)
+            {
+                menu[index].Selected.Invoke();
+                index = 0;
+                isSelected = true;
+            }
+        }
+        while (isSelected != true);
+
+        if (isSelected != true)
+            Console.ReadKey();
+    }
+
+    static void WriteStarterMessage(Charamon charamon)
+    {
+        CharamonActions.AddToTeam(charamon);
+
+        Console.Clear();
+        DialogueMessage(15, "\n\n Nice choice ! ", 15);
+
+        switch (charamon.id)
+        {
+            case 1:
+                DialogueMessage(10, charamon.name + " is a good starter.", 15);
+                break;
+            case 4:
+                DialogueMessage(12, charamon.name + " is a good starter.", 15);
+                break;
+            case 7:
+                DialogueMessage(9, charamon.name + " is a good starter.", 15);
+                break;
+            default: break;
+        }
+        Console.WriteLine("\n");
+        DialogueMessage(15, " Now,", 15);
+        Console.WriteLine();
+        DialogueMessage(15, " Proceed.", 15);
+        Console.WriteLine("\n");
+        TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
+
+        isCharamonSelected = true;
+        PressSpaceToContiue();
     }
 
     static void PlayerInputs()
     {
-        ConsoleKey keyPressed = Console.ReadKey(true).Key;
+        ConsoleKey keyPressed = Console.ReadKey(false).Key;
         switch (keyPressed)
         {
             // Player movement
@@ -126,11 +230,28 @@ public partial class Program
                             break;
                     }
                 }
-                CheckInterraction();
+                switch (Maps.CheckForInterraction(Map, tileX, tileY))
+                {
+                    case 1:
+                        Random random = new Random();
+                        int proba = random.Next(100);
+                        if (proba <=16) 
+                        {
+                            GrassInterraction();
+                        }
+                        break;
+                    case 2:
+                        StartHouseInterraction();
+                        break;
+                    case 3:
+                        EnterField();
+                        break;
+                    default: break;
+                }
                 break;
 
             // Open inventory
-            case ConsoleKey.Enter:
+            case ConsoleKey.I:
                 Inventory();
                 break;
 
@@ -144,28 +265,29 @@ public partial class Program
         }
     }
 
-    static void CheckInterraction()
-    {
-       /*switch (Map[player.TileX][player.TileY])
-        {
-            case 'g': GrassInterraction(); break;
-            default: break;
-        }*/
-    }
-
-    static void GrassInterraction()
-    {
-        //Map[player.TileX][player.TileY] = 'g';
-        Console.Clear();
-        Console.WriteLine("You entered a battle");
-        PressEnterToContiue();
-    }
-
     static void Inventory()
     {
         Console.Clear();
         Console.WriteLine(" INVENTORY");
-        PressEnterToContiue();
+        PressSpaceToContiue();
+    }
+
+    static void GrassInterraction()
+    {
+        
+        Console.Clear();
+        CombatManager.EnterCombat(Map);
+        //Console.WriteLine("You entered a battle");
+    }
+
+    static void StartHouseInterraction()
+    {
+        SpawnAtLocation(Maps.StartHouse, 'z');
+    }
+
+    static void EnterField()
+    {
+        SpawnAtLocation(Maps.Field, 's');
     }
 
     static void UpdateDeltaTime()
@@ -256,5 +378,80 @@ public partial class Program
         }
         Console.SetCursorPosition(0, 0);
         Console.Write(builder);
+    }
+
+    public static void SpawnAtLocation(char[][] map, char charSpawn)
+    {
+        Map = map;
+        for (int y = 0; y < Map.Length; y++)
+        {
+            for (int x = 0; x < Map[y].Length; x++)
+            {
+                if (Map[y][x] == charSpawn)
+                {
+                    player.posX = x * Sprites.SpriteWidth;
+                    player.posY = y * Sprites.SpriteHeight;
+                }
+            }
+        }
+    }
+
+
+    // DIALOGUE AND TEXT METHODS
+    static void DialogueMessage(int colorText, string text, int delay)
+    {
+        bool skip = false;
+        string textWithEnd = text + " ▼";
+        int currentX = CursorLeft;
+        int currentY = CursorTop;
+
+        for (int i = 0; i < textWithEnd.Length; i++)
+        {
+            TextColor(colorText, textWithEnd[i].ToString());
+            Thread.Sleep(delay);
+
+            if (KeyAvailable)
+            {
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.Spacebar)
+                {
+                    TextColor(colorText, textWithEnd.Substring(i + 1));
+                    break;
+                }
+            }
+        }
+        while (!skip)
+        {
+            ConsoleKeyInfo keyInfo = ReadKey(true);
+            if(keyInfo.Key == ConsoleKey.Spacebar)
+            {
+                Console.SetCursorPosition(currentX,currentY);
+                TextColor(colorText, text);
+                skip = true;
+            }
+        }
+    }
+
+    static void TextColor(int color, string text)
+    {
+        Console.ForegroundColor = (ConsoleColor)color;
+        Console.Write(text);
+        Console.ResetColor();
+    }
+
+    public static void PressSpaceToContiue()   
+    {
+        GetInput:
+        ConsoleKey key = Console.ReadKey(false).Key;
+        switch (key)
+        {
+            case ConsoleKey.Spacebar:
+                return;
+            case ConsoleKey.Escape:
+                gameRunning = false;
+                return;
+            default:
+                goto GetInput;
+        }
     }
 }

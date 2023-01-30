@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace ProjectCharamon;
+﻿namespace ProjectCharamon;
 
 public class Player
 {
