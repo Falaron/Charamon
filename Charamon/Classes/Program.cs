@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
 
+namespace ProjectCharamon;
 public partial class Program
 {
     static Player? _player;
@@ -39,6 +40,7 @@ public partial class Program
         MenuScreen();
         StartEvent();
         CharamonActions.team.Add(CharamonActions.CreateCharamon(56, 5));
+        //Save.SaveFile();
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -260,7 +262,6 @@ public partial class Program
                 gameRunning = false;
                 Console.Clear();
                 return;
-
             default: break;
         }
     }

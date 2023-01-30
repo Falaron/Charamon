@@ -25,7 +25,6 @@ public class CharamonActions
     static Pokemons _pkmn;
     public static void SetCharamons()
     {
-
         using (StreamReader r = new StreamReader("../../../Data/pokedex.json"))
         {
             string json = r.ReadToEnd();
@@ -66,6 +65,7 @@ public class CharamonActions
         Charamon charamon = new Charamon();
         charamon.id = chosenPokemon.id;
         charamon.name = chosenPokemon.name["english"];
+        charamon.iv = chosenPokemon.stats;
         charamon.stats = chosenPokemon.stats;
         charamon.type = chosenPokemon.type;
         if (chosenPokemon.evolution.ContainsKey("next"))
@@ -80,16 +80,20 @@ public class CharamonActions
         {
             LearnMove(charamon);
         }
+        foreach (var kvp in charamon.iv)
+        {
+            charamon.iv[kvp.Key] = random.Next(31);
+        }
         foreach (var kvp in charamon.stats)
         {
             if (kvp.Key == "HP")
             {
-                charamon.stats[kvp.Key] = ((2 * charamon.stats[kvp.Key] * charamon.level) / 100) + charamon.level + 10;
+                charamon.stats[kvp.Key] = (((2 * charamon.stats[kvp.Key] + charamon.iv[kvp.Key]) * charamon.level) / 100) + charamon.level + 10;
                 charamon.currentHp = charamon.stats[kvp.Key];
             }
             else
             {
-                charamon.stats[kvp.Key] = ((2 * charamon.stats[kvp.Key] * charamon.level) / 100) + 5;
+                charamon.stats[kvp.Key] = (((2 * charamon.stats[kvp.Key] + charamon.iv[kvp.Key]) * charamon.level) / 100) + 5;
             }
         }
         charamon.xpThreshold = (int)Math.Pow(charamon.level, 3);
@@ -374,6 +378,7 @@ public class Charamon
     public int xp { get; set; } 
     public int xpThreshold { get; set; }
     public Dictionary<string, int> stats { get; set; }
+    public Dictionary<string, int> iv { get; set; }
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
