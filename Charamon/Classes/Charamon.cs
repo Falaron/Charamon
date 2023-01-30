@@ -48,6 +48,7 @@ public class CharamonActions
 
     public static List<Charamon> team = new List<Charamon>(6);
     public static List<Charamon> pc = new List<Charamon>(32);
+    public static List<Charamon> enemies = new List<Charamon>(6);
 
 
     public static void SetCapacities()
@@ -65,6 +66,7 @@ public class CharamonActions
         chosenPokemon = _pkmn.pokemons[id];
 
         Charamon charamon = new Charamon();
+        charamon.abilities = new List<Ability>(4);
         charamon.id = chosenPokemon.id;
         charamon.name = chosenPokemon.name["english"];
         charamon.iv = chosenPokemon.stats;
@@ -113,12 +115,47 @@ public class CharamonActions
                 if (attacker.stats["Speed"] >= defender.stats["Speed"])
                 {
                     InflictDamage(attacker, defender, attack);
-                    EnemyAttack(defender, attacker) ;
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
+                    EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);                       
+                    }                 
+                                           
                 }
                 else
                 {
                     EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);
+                    }
                     InflictDamage(attacker, defender, attack);
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
                 }
                 
             }
@@ -432,6 +469,18 @@ public class CharamonActions
             InflictDamage(enemy, ally, enemy.abilities[random.Next(enemy.abilities.Count)]);
         }
     }
+    public static bool AllDead()
+    {
+        int alive = 0;
+        foreach (Charamon charamon in team)
+        {
+            if (charamon.currentHp > 0)
+            {
+                alive++;
+            }
+        }
+        return alive == 0;
+    }
 }
 
 public class Pokemon
@@ -455,7 +504,7 @@ public class Charamon
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
-    public List<Ability> abilities = new List<Ability>(4);
+    public List<Ability> abilities { get; set; }
 }
 public class Ability
 {

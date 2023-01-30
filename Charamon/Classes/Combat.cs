@@ -119,6 +119,7 @@ public static class CombatManager
         float[,] pool = Maps.maps[map];
         Charamon enemy = new Charamon();
         enemy = CharamonActions.CreateCharamon(GetCharamonFromPool(pool, percentage) - 1, SetEnemyLevel());
+        CharamonActions.enemies.Add(enemy);
 
         Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);

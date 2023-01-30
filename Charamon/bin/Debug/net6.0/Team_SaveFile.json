@@ -1,40 +1,58 @@
 [
   {
-    "id": 7,
-    "name": "Squirtle",
-    "type": [ "Water" ],
+    "id": 1,
+    "name": "Bulbasaur",
+    "type": [ "Grass", "Poison" ],
     "level": 5,
     "xp": 0,
     "xpThreshold": 125,
     "stats": {
-      "HP": 19,
+      "HP": 17,
       "Attack": 9,
-      "Defense": 11,
-      "Sp. Attack": 10,
-      "Sp. Defense": 11,
-      "Speed": 9
+      "Defense": 9,
+      "Sp. Attack": 8,
+      "Sp. Defense": 5,
+      "Speed": 6
     },
-    "currentHp": 19,
+    "iv": {
+      "HP": 17,
+      "Attack": 9,
+      "Defense": 9,
+      "Sp. Attack": 8,
+      "Sp. Defense": 5,
+      "Speed": 6
+    },
+    "currentHp": 17,
     "evolutionLvl": 16,
-    "evolutionId": 8
-  },
-  {
-    "id": 57,
-    "name": "Primeape",
-    "type": [ "Fighting" ],
-    "level": 5,
-    "xp": 0,
-    "xpThreshold": 125,
-    "stats": {
-      "HP": 21,
-      "Attack": 15,
-      "Defense": 11,
-      "Sp. Attack": 11,
-      "Sp. Defense": 12,
-      "Speed": 14
-    },
-    "currentHp": 21,
-    "evolutionLvl": 0,
-    "evolutionId": 0
+    "evolutionId": 2,
+    "abilities": [
+      {
+        "id": 532,
+        "ename": "Horn Leech",
+        "category": "physic",
+        "type": "Grass",
+        "accuracy": 100,
+        "power": 75,
+        "pp": 10
+      },
+      {
+        "id": 474,
+        "ename": "Venoshock",
+        "category": "special",
+        "type": "Poison",
+        "accuracy": 100,
+        "power": 65,
+        "pp": 10
+      },
+      {
+        "id": 536,
+        "ename": "Leaf Tornado",
+        "category": "special",
+        "type": "Grass",
+        "accuracy": 90,
+        "power": 65,
+        "pp": 10
+      }
+    ]
   }
 ]
