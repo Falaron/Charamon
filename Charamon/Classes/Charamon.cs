@@ -113,11 +113,11 @@ public class CharamonActions
                 if (attacker.stats["Speed"] >= defender.stats["Speed"])
                 {
                     InflictDamage(attacker, defender, attack);
-                    InflictDamage(defender, defender, attack);
+                    EnemyAttack(defender, attacker) ;
                 }
                 else
                 {
-                    InflictDamage(defender, defender, attack);
+                    EnemyAttack(defender, attacker);
                     InflictDamage(attacker, defender, attack);
                 }
                 
@@ -455,7 +455,7 @@ public class Charamon
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
-    public List<Ability> abilities { get; set; }
+    public List<Ability> abilities = new List<Ability>(4);
 }
 public class Ability
 {

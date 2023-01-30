@@ -133,13 +133,18 @@ public static class CombatManager
     public static int GetCharamonFromPool(float[,] pool, float random)
     {
         float percentage = 0;
+        
         float[] probas = GetRow(pool, 1);
         float[] ids = GetRow(pool, 0);
+        float previous = probas[0];
         int i;
-        for (i = probas.Length -1; i > 0; i--)
+        for (i = 0; i < probas.Length-1; i++)
         {
-            if ( random < percentage) break;
-            percentage += probas[i];
+            if (random > percentage)
+            {
+                percentage = probas[i];
+            }
+            else if (random <= percentage) break;
         }
         int id = (int)ids[i];
         return id;
