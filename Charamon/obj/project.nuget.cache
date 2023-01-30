@@ -1,25 +1,15 @@
 {
   "version": 2,
-<<<<<<< HEAD
   "dgSpecHash": "p6ltDLR63D6kEgzfjg+DyhBG2uH8GKWQ9bG6b/3Jv7hQh40cQcqULO92B33MR5sUwm76AvoK/wF2+zPHsX3qVA==",
   "success": true,
   "projectFilePath": "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
-=======
-  "dgSpecHash": "UqbHm10bT7+D5QSf6ewgkM+uBYVjEi2mo5Ar+/QplmSTtXA2IJbUKfCqvCI6ITN1srxP75G2deMJU6kPbLyLuw==",
-  "success": true,
-  "projectFilePath": "C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
->>>>>>> 017c3df14c7a661d7ad666c3f8b26beca00868f4
   "expectedPackageFiles": [],
   "logs": [
     {
       "code": "Undefined",
       "level": "Warning",
       "warningLevel": 1,
-<<<<<<< HEAD
       "message": "Problem reading the cache file C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-=======
-      "message": "Problème de lecture du fichier cache C:\\Users\\rmateescu\\source\\repos\\Charamon\\Charamon\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
->>>>>>> 017c3df14c7a661d7ad666c3f8b26beca00868f4
     }
   ]
 }
