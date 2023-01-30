@@ -30,7 +30,7 @@ public static class CombatManager
 
         Console.Clear();
         string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
-        string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+        string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
 
         Program.WriteMenu(charamonsList, charamonsList[index], charamonsName + charamonsLife);
         Program.ChooseMenu(index, charamonsList, charamonsName + charamonsLife);
@@ -80,7 +80,7 @@ public static class CombatManager
         
         Console.Clear();
         string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
-        string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+        string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
 
         Program.WriteMenu(abilityOptions, abilityOptions[0], charamonsName + charamonsLife);
         Program.ChooseMenu(index, abilityOptions, charamonsName + charamonsLife);
@@ -100,7 +100,7 @@ public static class CombatManager
             int index = 0;
             Console.Clear();
             string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
-            string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+            string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
 
             Program.WriteMenu(combatOptions, combatOptions[index], charamonsName + charamonsLife);
             Program.ChooseMenu(index, combatOptions, charamonsName + charamonsLife);
@@ -108,8 +108,7 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
-            Console.WriteLine("you deafeated a " + enemy.name + "  lvl " + enemy.level);
+            Program.DialogueMessage(15, "\n\n You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
             CharamonActions.GainXp(charamon, enemy);
         }
           
