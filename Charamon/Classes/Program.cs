@@ -15,7 +15,6 @@ using Charamon.Classes;
 
 namespace ProjectCharamon;
 
-namespace ProjectCharamon;
 public partial class Program
 {
     static Player? _player;

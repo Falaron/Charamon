@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ProjectCharamon;
 
-
 public static class CombatManager
 {
     public static List<Options> combatOptions;
