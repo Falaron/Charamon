@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -108,7 +110,17 @@ public class CharamonActions
             if (attack.pp > 0)
             {
                 attack.pp--;
-                InflictDamage(attacker, defender, attack);
+                if (attacker.stats["Speed"] >= defender.stats["Speed"])
+                {
+                    InflictDamage(attacker, defender, attack);
+                    EnemyAttack(defender, attacker) ;
+                }
+                else
+                {
+                    EnemyAttack(defender, attacker);
+                    InflictDamage(attacker, defender, attack);
+                }
+                
             }
             else
             {
@@ -122,6 +134,7 @@ public class CharamonActions
             Console.Clear();
             Console.WriteLine(attack.ename + " missed \n");
             Thread.Sleep(750);
+            EnemyAttack(defender, attacker);
         }
     }
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
@@ -359,6 +372,66 @@ public class CharamonActions
             charamon.abilities.Add(_ablties.abilities[aId]);
         }
     }
+    public static void EnemyAttack(Charamon enemy, Charamon ally)
+    {
+        Random random = new Random();
+        if (enemy.level >= 60)
+        {
+            int index = 0;
+            int precedent = 0;
+            
+            for (int i = 0; i < enemy.abilities.Count; i++)
+            {
+                Ability attack = enemy.abilities[i];
+                int damage;
+                if (attack.category == "special")
+                {
+                    damage = (int)Math.Round((((enemy.level * 0.4 + 2) * enemy.stats["Sp. Attack"] * attack.power
+                        / ally.stats["Sp. Defense"] / 50) + 2)
+                        * GetTypeAdvantage(enemy, ally, attack));
+                }
+                else
+                {
+                    damage = (int)Math.Round((((enemy.level * 0.4 + 2) * enemy.stats["Attack"] * attack.power
+                         / ally.stats["Defense"] / 50) + 2)
+                         * GetTypeAdvantage(enemy, ally, attack));
+                }
+                if (damage > precedent)
+                {
+                    precedent = damage;
+                    index = i;
+                }
+            }
+            InflictDamage(enemy, ally, enemy.abilities[index]);
+        }
+        else if (enemy.level >= 30)
+        {
+            var shuffledAbilities = new List<Ability>();
+            for (int i = 0; i < enemy.abilities.Count; i++)
+            {
+                var randomElementInList = random.Next(0, enemy.abilities.Count);
+                shuffledAbilities.Add(enemy.abilities[randomElementInList]);
+                enemy.abilities.Remove(enemy.abilities[randomElementInList]);
+            }
+            enemy.abilities = shuffledAbilities;
+            int index = 0;
+            float precedent = 0;
+            for (int i =0; i < enemy.abilities.Count; i++)
+            {
+                float current = GetTypeAdvantage(enemy, ally, enemy.abilities[i]);
+                if (precedent < current)
+                {
+                    precedent = current;
+                    index = i;
+                }
+            }
+            InflictDamage(enemy, ally, enemy.abilities[index]);
+        }
+        else
+        {
+            InflictDamage(enemy, ally, enemy.abilities[random.Next(enemy.abilities.Count)]);
+        }
+    }
 }
 
 public class Pokemon
@@ -382,7 +455,6 @@ public class Charamon
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
-
     public List<Ability> abilities = new List<Ability>(4);
 }
 public class Ability

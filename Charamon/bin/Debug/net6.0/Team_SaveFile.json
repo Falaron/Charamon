@@ -1,1 +1,40 @@
-[{"id":1,"name":"Bulbasaur","type":["Grass","Poison"],"level":5,"xp":0,"xpThreshold":125,"stats":{"HP":16,"Attack":7,"Defense":8,"Sp. Attack":6,"Sp. Defense":6,"Speed":7},"iv":{"HP":16,"Attack":7,"Defense":8,"Sp. Attack":6,"Sp. Defense":6,"Speed":7},"currentHp":16,"evolutionLvl":16,"evolutionId":2}]
+[
+  {
+    "id": 7,
+    "name": "Squirtle",
+    "type": [ "Water" ],
+    "level": 5,
+    "xp": 0,
+    "xpThreshold": 125,
+    "stats": {
+      "HP": 19,
+      "Attack": 9,
+      "Defense": 11,
+      "Sp. Attack": 10,
+      "Sp. Defense": 11,
+      "Speed": 9
+    },
+    "currentHp": 19,
+    "evolutionLvl": 16,
+    "evolutionId": 8
+  },
+  {
+    "id": 57,
+    "name": "Primeape",
+    "type": [ "Fighting" ],
+    "level": 5,
+    "xp": 0,
+    "xpThreshold": 125,
+    "stats": {
+      "HP": 21,
+      "Attack": 15,
+      "Defense": 11,
+      "Sp. Attack": 11,
+      "Sp. Defense": 12,
+      "Speed": 14
+    },
+    "currentHp": 21,
+    "evolutionLvl": 0,
+    "evolutionId": 0
+  }
+]
