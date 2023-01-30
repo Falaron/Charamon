@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ProjectCharamon;
 
-
 public static class CombatManager
 {
     public static List<Options> combatOptions;
     public static List<Options> abilityOptions;
     public static List<Options> charamonsList;
+
     public static void Charamons(Charamon charamon, Charamon enemy)
     {
         charamonsList = new List<Options>();
@@ -26,18 +26,38 @@ public static class CombatManager
         Options back = new Options("Return", () => DrawCombat(charamon, enemy));
         charamonsList.Add(back);
         int index = 0;
+
         Console.Clear();
-        Program.WriteMenu(charamonsList, charamonsList[index]);
-        Program.ChooseMenu(index, charamonsList);
+        string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+        string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
+
+        Program.WriteMenu(charamonsList, charamonsList[index], charamonsName + charamonsLife);
+        Program.ChooseMenu(index, charamonsList, charamonsName + charamonsLife);
         DrawCombat(CharamonActions.team[0], enemy);
     }
-    public static void Run()
+    public static void Run(Charamon charamon, Charamon enemy)
     {
-        //exit
+        Random random = new Random();
+        int chanceOfExit = random.Next(1, 100);
+
+        if(chanceOfExit >= 20)
+        {
+            Console.Clear();
+            Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
+            return; 
+        }
+        else
+        {
+            Console.Clear();
+            Program.DialogueMessage(15, "\n\n You failed to escape...", 10);
+            //Enemy attack
+            DrawCombat(charamon, enemy);
+        }
     }
-    public static void Inventory() 
+    public static void Inventory(Charamon charamon, Charamon enemy) 
     {
-        //open inventory 
+        Program.Inventory();
+        DrawCombat(charamon, enemy);
     }
     public static void Fight(Charamon charamon, Charamon enemy)
     {
@@ -58,13 +78,13 @@ public static class CombatManager
        
         
         Console.Clear();
-        Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-        Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-        Program.WriteMenu(abilityOptions, abilityOptions[0]);
-        Program.ChooseMenu(index, abilityOptions);
+        string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+        string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
+
+        Program.WriteMenu(abilityOptions, abilityOptions[0], charamonsName + charamonsLife);
+        Program.ChooseMenu(index, abilityOptions, charamonsName + charamonsLife);
         DrawCombat(charamon, enemy);
     }
-
     public static void DrawCombat(Charamon charamon, Charamon enemy)
     {
         if (enemy.currentHp > 0)
@@ -72,21 +92,22 @@ public static class CombatManager
             combatOptions = new List<Options>
             {
                     new Options("Charamons", () => Charamons(charamon, enemy)),
-                    new Options("Run", () =>  Run()),
-                    new Options("Inventory", () =>  Inventory()),
+                    new Options("Run", () =>  Run(charamon, enemy)),
+                    new Options("Inventory", () =>  Inventory(charamon, enemy)),
                     new Options("Fight", () =>  Fight(charamon, enemy))
             };
             int index = 0;
             Console.Clear();
-            Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-            Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-            Program.WriteMenu(combatOptions, combatOptions[index]);
-            Program.ChooseMenu(index, combatOptions);
+            string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+            string charamonsLife = "\n  HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "                           HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
+
+            Program.WriteMenu(combatOptions, combatOptions[index], charamonsName + charamonsLife);
+            Program.ChooseMenu(index, combatOptions, charamonsName + charamonsLife);
         }
         else
         {
             Console.Clear();
-            Console.WriteLine("you deafeated a lvl  " + enemy.level + "  " + enemy.name + "\n\n");
+            Program.DialogueMessage(15, "\n\n You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
             CharamonActions.GainXp(charamon, enemy);
         }
           
@@ -98,9 +119,9 @@ public static class CombatManager
         float[,] pool = Maps.maps[map];
         Charamon enemy = new Charamon();
         enemy = CharamonActions.CreateCharamon(GetCharamonFromPool(pool, percentage) - 1, SetEnemyLevel());
-        Console.WriteLine("you encountered a lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-        Console.WriteLine("lvl  " + CharamonActions.team[0].level + "  " + CharamonActions.team[0].name + "\n Hp :  " + CharamonActions.team[0].currentHp + "/" + CharamonActions.team[0].stats["HP"] + "\n\n");
-        Thread.Sleep(1000);
+        CharamonActions.enemies.Add(enemy);
+
+        Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);
     }
     public static T[] GetRow<T>(this T[,] matrix, int row)
@@ -117,13 +138,18 @@ public static class CombatManager
     public static int GetCharamonFromPool(float[,] pool, float random)
     {
         float percentage = 0;
+        
         float[] probas = GetRow(pool, 1);
         float[] ids = GetRow(pool, 0);
+        float previous = probas[0];
         int i;
-        for (i = probas.Length -1; i > 0; i--)
+        for (i = 0; i < probas.Length-1; i++)
         {
-            if ( random < percentage) break;
-            percentage += probas[i];
+            if (random > percentage)
+            {
+                percentage = probas[i];
+            }
+            else if (random <= percentage) break;
         }
         int id = (int)ids[i];
         return id;

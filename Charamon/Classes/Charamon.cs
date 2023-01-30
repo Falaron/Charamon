@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -25,7 +27,6 @@ public class CharamonActions
     static Pokemons _pkmn;
     public static void SetCharamons()
     {
-
         using (StreamReader r = new StreamReader("../../../Data/pokedex.json"))
         {
             string json = r.ReadToEnd();
@@ -47,6 +48,7 @@ public class CharamonActions
 
     public static List<Charamon> team = new List<Charamon>(6);
     public static List<Charamon> pc = new List<Charamon>(32);
+    public static List<Charamon> enemies = new List<Charamon>(6);
 
 
     public static void SetCapacities()
@@ -64,8 +66,10 @@ public class CharamonActions
         chosenPokemon = _pkmn.pokemons[id];
 
         Charamon charamon = new Charamon();
+        charamon.abilities = new List<Ability>(4);
         charamon.id = chosenPokemon.id;
         charamon.name = chosenPokemon.name["english"];
+        charamon.iv = chosenPokemon.stats;
         charamon.stats = chosenPokemon.stats;
         charamon.type = chosenPokemon.type;
         if (chosenPokemon.evolution.ContainsKey("next"))
@@ -80,16 +84,20 @@ public class CharamonActions
         {
             LearnMove(charamon);
         }
+        foreach (var kvp in charamon.iv)
+        {
+            charamon.iv[kvp.Key] = random.Next(31);
+        }
         foreach (var kvp in charamon.stats)
         {
             if (kvp.Key == "HP")
             {
-                charamon.stats[kvp.Key] = ((2 * charamon.stats[kvp.Key] * charamon.level) / 100) + charamon.level + 10;
+                charamon.stats[kvp.Key] = (((2 * charamon.stats[kvp.Key] + charamon.iv[kvp.Key]) * charamon.level) / 100) + charamon.level + 10;
                 charamon.currentHp = charamon.stats[kvp.Key];
             }
             else
             {
-                charamon.stats[kvp.Key] = ((2 * charamon.stats[kvp.Key] * charamon.level) / 100) + 5;
+                charamon.stats[kvp.Key] = (((2 * charamon.stats[kvp.Key] + charamon.iv[kvp.Key]) * charamon.level) / 100) + 5;
             }
         }
         charamon.xpThreshold = (int)Math.Pow(charamon.level, 3);
@@ -104,20 +112,64 @@ public class CharamonActions
             if (attack.pp > 0)
             {
                 attack.pp--;
-                InflictDamage(attacker, defender, attack);
+                if (attacker.stats["Speed"] >= defender.stats["Speed"])
+                {
+                    InflictDamage(attacker, defender, attack);
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
+                    EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);                       
+                    }                 
+                                           
+                }
+                else
+                {
+                    EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);
+                    }
+                    InflictDamage(attacker, defender, attack);
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
+                }
+                
             }
             else
             {
                 Console.Clear();
-                Console.WriteLine("not enough PP \n");
-                Thread.Sleep(750);
+                Program.DialogueMessage(15, "\n\n Not enough PP", 10);
             }  
         }   
         else
         {
             Console.Clear();
-            Console.WriteLine(attack.ename + " missed \n");
-            Thread.Sleep(750);
+            Program.DialogueMessage(15, "\n\n " + attack.ename + " missed", 10);
+            EnemyAttack(defender, attacker);
         }
     }
     public static void InflictDamage(Charamon attacker, Charamon defender, Ability attack)
@@ -138,23 +190,22 @@ public class CharamonActions
             defender.currentHp -= damage;
         }
         Console.Clear();
-        Console.WriteLine(attacker.name + " inflicted " + damage + " damages with " + attack.ename);
+        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
         {
-            case 0: Console.WriteLine("it has no effect...");
+            case 0: Program.DialogueMessage(15, "It has no effect...", 10);
                     break;
-            case 0.25f: Console.WriteLine("it's not very effective");
+            case 0.25f: Program.DialogueMessage(15, "It's not very effective.", 10);
+                break;
+            case 0.5f: Program.DialogueMessage(15, "It's not very effective.", 10);
+                break;
+            case 2: Program.DialogueMessage(15, "It's super effective !", 10);
                     break;
-            case 0.5f: Console.WriteLine("it's not very effective ");
-                    break;
-            case 2: Console.WriteLine("it's super effective");
-                    break;
-            case 4: Console.WriteLine("it's super effective");
-                    break;
+            case 4: Program.DialogueMessage(15, "It's super effective !", 10);
+                break;
             default: break;
         }
-        Thread.Sleep(750);
     }
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
     /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
@@ -238,7 +289,7 @@ public class CharamonActions
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
-            Console.WriteLine(target.name + " level UP ! to lvl  " + target.level);
+            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level, 10);
             UpdateStats(target);
             if (target.level >= target.evolutionLvl)  Evolve(target);
             Program.PressSpaceToContiue();
@@ -253,7 +304,7 @@ public class CharamonActions
                 int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
-                Console.WriteLine(kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
+                Console.WriteLine(" " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
             }
             else
             {
@@ -355,6 +406,78 @@ public class CharamonActions
             charamon.abilities.Add(_ablties.abilities[aId]);
         }
     }
+    public static void EnemyAttack(Charamon enemy, Charamon ally)
+    {
+        Random random = new Random();
+        if (enemy.level >= 60)
+        {
+            int index = 0;
+            int precedent = 0;
+            
+            for (int i = 0; i < enemy.abilities.Count; i++)
+            {
+                Ability attack = enemy.abilities[i];
+                int damage;
+                if (attack.category == "special")
+                {
+                    damage = (int)Math.Round((((enemy.level * 0.4 + 2) * enemy.stats["Sp. Attack"] * attack.power
+                        / ally.stats["Sp. Defense"] / 50) + 2)
+                        * GetTypeAdvantage(enemy, ally, attack));
+                }
+                else
+                {
+                    damage = (int)Math.Round((((enemy.level * 0.4 + 2) * enemy.stats["Attack"] * attack.power
+                         / ally.stats["Defense"] / 50) + 2)
+                         * GetTypeAdvantage(enemy, ally, attack));
+                }
+                if (damage > precedent)
+                {
+                    precedent = damage;
+                    index = i;
+                }
+            }
+            InflictDamage(enemy, ally, enemy.abilities[index]);
+        }
+        else if (enemy.level >= 30)
+        {
+            var shuffledAbilities = new List<Ability>();
+            for (int i = 0; i < enemy.abilities.Count; i++)
+            {
+                var randomElementInList = random.Next(0, enemy.abilities.Count);
+                shuffledAbilities.Add(enemy.abilities[randomElementInList]);
+                enemy.abilities.Remove(enemy.abilities[randomElementInList]);
+            }
+            enemy.abilities = shuffledAbilities;
+            int index = 0;
+            float precedent = 0;
+            for (int i =0; i < enemy.abilities.Count; i++)
+            {
+                float current = GetTypeAdvantage(enemy, ally, enemy.abilities[i]);
+                if (precedent < current)
+                {
+                    precedent = current;
+                    index = i;
+                }
+            }
+            InflictDamage(enemy, ally, enemy.abilities[index]);
+        }
+        else
+        {
+            InflictDamage(enemy, ally, enemy.abilities[random.Next(enemy.abilities.Count)]);
+        }
+    }
+    public static bool AllDead()
+    {
+        int alive = 0;
+        foreach (Charamon charamon in team)
+        {
+            if (charamon.currentHp > 0)
+            {
+                alive++;
+            }
+        }
+        return alive == 0;
+    }
 }
 
 public class Pokemon
@@ -374,11 +497,11 @@ public class Charamon
     public int xp { get; set; } 
     public int xpThreshold { get; set; }
     public Dictionary<string, int> stats { get; set; }
+    public Dictionary<string, int> iv { get; set; }
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
-
-    public List<Ability> abilities = new List<Ability>(4);
+    public List<Ability> abilities { get; set; }
 }
 public class Ability
 {
