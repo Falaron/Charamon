@@ -27,8 +27,8 @@ public static class CombatManager
         charamonsList.Add(back);
         int index = 0;
         Console.Clear();
-        Program.WriteMenu(charamonsList, charamonsList[index]);
-        Program.ChooseMenu(index, charamonsList);
+        Program.WriteMenu(charamonsList, charamonsList[index], "");
+        Program.ChooseMenu(index, charamonsList, "");
         DrawCombat(CharamonActions.team[0], enemy);
     }
     public static void Run()
@@ -60,8 +60,8 @@ public static class CombatManager
         Console.Clear();
         Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
         Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-        Program.WriteMenu(abilityOptions, abilityOptions[0]);
-        Program.ChooseMenu(index, abilityOptions);
+        Program.WriteMenu(abilityOptions, abilityOptions[0], "");
+        Program.ChooseMenu(index, abilityOptions, "");
         DrawCombat(charamon, enemy);
     }
 
@@ -80,8 +80,8 @@ public static class CombatManager
             Console.Clear();
             Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
             Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-            Program.WriteMenu(combatOptions, combatOptions[index]);
-            Program.ChooseMenu(index, combatOptions);
+            Program.WriteMenu(combatOptions, combatOptions[index], "");
+            Program.ChooseMenu(index, combatOptions, "");
         }
         else
         {

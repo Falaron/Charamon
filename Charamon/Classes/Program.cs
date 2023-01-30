@@ -11,6 +11,9 @@ using Microsoft.VisualBasic.FileIO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
+using Charamon.Classes;
+
+namespace ProjectCharamon;
 
 public partial class Program
 {
@@ -18,6 +21,7 @@ public partial class Program
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
     public static List<Options> menuOptions;
+    public static List<Options> inventoryOptions;
     public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
@@ -49,9 +53,10 @@ public partial class Program
 
     static void Initialize()
     {
-        Console.CursorVisible = true; // Hide cursor
+        Console.CursorVisible = false; // Hide cursor
         CharamonActions.SetCharamons();
         CharamonActions.SetCapacities();
+        Item.CreateItems();
 
         player = new();
         {
@@ -88,24 +93,24 @@ public partial class Program
         };
         int index = 0;
 
-        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 15);
-        DialogueMessage(15, " CHARAMON !", 75);
-        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 15);
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 10);
+        DialogueMessage(15, " CHARAMON !", 10);
+        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 10);
 
 
         if (!isCharamonSelected)
         {
             Console.Clear();
-            WriteMenu(menuOptions, menuOptions[index]);
-            ChooseMenu(index, menuOptions);
+            WriteMenu(menuOptions, menuOptions[index], "SELECT YOUR STARTER");
+            ChooseMenu(index, menuOptions, "SELECT YOUR STARTER");
         }
         
         
     }
 
-    public static void WriteMenu(List<Options> options, Options selectedOption)
+    public static void WriteMenu(List<Options> options, Options selectedOption, string firstDialogue)
     {
-        Console.WriteLine("\n\n  SELECT YOUR STARTER\n\n");
+        Console.WriteLine("\n\n  " + firstDialogue + "\n\n");
 
         foreach (Options option in options)
         {
@@ -123,7 +128,7 @@ public partial class Program
         Console.WriteLine("\n\n  Press [Space] to select");
     }
 
-    public static void ChooseMenu(int index, List<Options> menu)
+    public static void ChooseMenu(int index, List<Options> menu, string text)
     {
         bool isSelected = false;
         ConsoleKeyInfo keyinfo;
@@ -137,7 +142,7 @@ public partial class Program
                 {
                     index++;
                     Console.Clear();
-                    WriteMenu(menu, menu[index]);
+                    WriteMenu(menu, menu[index], text);
                 }
             }
             if (keyinfo.Key == ConsoleKey.UpArrow)
@@ -146,7 +151,7 @@ public partial class Program
                 {
                     index--;
                     Console.Clear();
-                    WriteMenu(menu, menu[index]);
+                    WriteMenu(menu, menu[index], text);
                 }
             }
             if (keyinfo.Key == ConsoleKey.Spacebar)
@@ -167,25 +172,25 @@ public partial class Program
         CharamonActions.AddToTeam(charamon);
 
         Console.Clear();
-        DialogueMessage(15, "\n\n Nice choice ! ", 15);
+        DialogueMessage(15, "\n\n Nice choice ! ", 10);
 
         switch (charamon.id)
         {
             case 1:
-                DialogueMessage(10, charamon.name + " is a good starter.", 15);
+                DialogueMessage(10, charamon.name + " is a good starter.", 10);
                 break;
             case 4:
-                DialogueMessage(12, charamon.name + " is a good starter.", 15);
+                DialogueMessage(12, charamon.name + " is a good starter.", 10);
                 break;
             case 7:
-                DialogueMessage(9, charamon.name + " is a good starter.", 15);
+                DialogueMessage(9, charamon.name + " is a good starter.", 10);
                 break;
             default: break;
         }
         Console.WriteLine("\n");
-        DialogueMessage(15, " Now,", 15);
+        DialogueMessage(15, " Now,", 50);
         Console.WriteLine();
-        DialogueMessage(15, " Proceed.", 15);
+        DialogueMessage(15, " Proceed.", 50);
         Console.WriteLine("\n");
         TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
 
@@ -268,13 +273,23 @@ public partial class Program
     static void Inventory()
     {
         Console.Clear();
-        Console.WriteLine(" INVENTORY");
-        PressSpaceToContiue();
+
+        inventoryOptions = new List<Options>();
+        for (int i = 0; i < Item.inventory.Count; i++)
+        {
+            Item item = Item.inventory[i];
+            string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
+            Options itemOption = new Options(name ,() => item.UseItem());
+            inventoryOptions.Add(itemOption);
+        }
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY");
+        Program.ChooseMenu(index, inventoryOptions, "INVENTORY");
     }
 
     static void GrassInterraction()
     {
-        
         Console.Clear();
         CombatManager.EnterCombat(Map);
         //Console.WriteLine("You entered a battle");
@@ -426,7 +441,7 @@ public partial class Program
             if(keyInfo.Key == ConsoleKey.Spacebar)
             {
                 Console.SetCursorPosition(currentX,currentY);
-                TextColor(colorText, text);
+                TextColor(colorText, text + "  ");
                 skip = true;
             }
         }
