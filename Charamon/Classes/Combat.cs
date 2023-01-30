@@ -13,6 +13,7 @@ public static class CombatManager
     public static List<Options> combatOptions;
     public static List<Options> abilityOptions;
     public static List<Options> charamonsList;
+
     public static void Charamons(Charamon charamon, Charamon enemy)
     {
         charamonsList = new List<Options>();
@@ -30,13 +31,29 @@ public static class CombatManager
         Program.ChooseMenu(index, charamonsList, "");
         DrawCombat(CharamonActions.team[0], enemy);
     }
-    public static void Run()
+    public static void Run(Charamon charamon, Charamon enemy)
     {
-        //exit
+        Random random = new Random();
+        int chanceOfExit = random.Next(1, 100);
+
+        if(chanceOfExit >= 20)
+        {
+            Console.Clear();
+            Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
+            return; 
+        }
+        else
+        {
+            Console.Clear();
+            Program.DialogueMessage(15, "\n\n You failed to escape...", 10);
+            //Enemy attack
+            DrawCombat(charamon, enemy);
+        }
     }
-    public static void Inventory() 
+    public static void Inventory(Charamon charamon, Charamon enemy) 
     {
-        //open inventory 
+        Program.Inventory();
+        DrawCombat(charamon, enemy);
     }
     public static void Fight(Charamon charamon, Charamon enemy)
     {
@@ -70,16 +87,17 @@ public static class CombatManager
             combatOptions = new List<Options>
             {
                     new Options("Charamons", () => Charamons(charamon, enemy)),
-                    new Options("Run", () =>  Run()),
-                    new Options("Inventory", () =>  Inventory()),
+                    new Options("Run", () =>  Run(charamon, enemy)),
+                    new Options("Inventory", () =>  Inventory(charamon, enemy)),
                     new Options("Fight", () =>  Fight(charamon, enemy))
             };
             int index = 0;
             Console.Clear();
-            Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-            Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-            Program.WriteMenu(combatOptions, combatOptions[index], "");
-            Program.ChooseMenu(index, combatOptions, "");
+            string charamonStats = "lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+            string enemyStats = "lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
+
+            Program.WriteMenu(combatOptions, combatOptions[index], charamonStats + enemyStats);
+            Program.ChooseMenu(index, combatOptions, charamonStats + enemyStats);
         }
         else
         {

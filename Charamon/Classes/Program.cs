@@ -20,8 +20,11 @@ public partial class Program
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
+    public static List<string> menuList = new List<string>() {"NEW GAME","LOAD GAME", "QUIT"};
+    public static List<Options> startOptions;
     public static List<Options> menuOptions;
     public static List<Options> inventoryOptions;
+    public static List<Options> saveOptions;
     public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
@@ -41,9 +44,6 @@ public partial class Program
     {
         Initialize();
         MenuScreen();
-        StartEvent();
-        CharamonActions.team.Add(CharamonActions.CreateCharamon(56, 5));
-        //Save.SaveFile();
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -64,6 +64,8 @@ public partial class Program
             SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
+
+
     }
 
     static void MenuScreen()
@@ -74,7 +76,21 @@ public partial class Program
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
         TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
 
-        PressSpaceToContiue();
+
+        // START NEW GAME / LOAD / QUIT
+        startOptions = new List<Options>();
+        for (int i = 0; i < menuList.Count; i++)
+        {
+            string name = menuList[i];
+            int a = i;
+            Options menuOption = new Options(name, () => StartGame(a));
+            startOptions.Add(menuOption);
+        }
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(startOptions, startOptions[index], "");
+        Program.ChooseMenu(index, startOptions, "");
     }
 
     static void StartEvent()
@@ -107,6 +123,32 @@ public partial class Program
         }
         
         
+    }
+
+    static void StartGame(int choice)
+    {
+        switch (choice)
+        {
+            case 0:
+                // Start Game
+                StartEvent();
+                break;
+
+            case 1:
+                //load
+                if(File.Exists(@"Team_SaveFile.json"))
+                {
+                    Save.LoadFile();
+                    return;
+                }
+                else StartEvent();
+                break;
+
+            case 2:
+                gameRunning = false;
+                Environment.Exit(0);
+                return;
+        }
     }
 
     public static void WriteMenu(List<Options> options, Options selectedOption, string firstDialogue)
@@ -261,6 +303,10 @@ public partial class Program
                 Inventory();
                 break;
 
+            case ConsoleKey.S:
+                MenuSave();
+                break;
+
             // Quit game
             case ConsoleKey.Escape:
                 gameRunning = false;
@@ -270,7 +316,7 @@ public partial class Program
         }
     }
 
-    static void Inventory()
+    public static void Inventory()
     {
         Console.Clear();
 
@@ -282,6 +328,9 @@ public partial class Program
             Options itemOption = new Options(name ,() => item.UseItem());
             inventoryOptions.Add(itemOption);
         }
+        Options back = new Options("Return", () => Exit());
+        inventoryOptions.Add(back);
+
         int index = 0;
         Console.Clear();
         Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY");
@@ -303,6 +352,11 @@ public partial class Program
     static void EnterField()
     {
         SpawnAtLocation(Maps.Field, 's');
+    }
+
+    public static void Exit()
+    {
+        //exit
     }
 
     static void UpdateDeltaTime()
@@ -411,9 +465,27 @@ public partial class Program
         }
     }
 
+    static void MenuSave()
+    {
+        Console.Clear();
+
+        saveOptions = new List<Options>();
+
+        Options back = new Options("No", () => Exit());
+        saveOptions.Add(back);
+
+        Options saveOption = new Options("yes", () => Save.SaveFile());
+        saveOptions.Add(saveOption);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(saveOptions, saveOptions[index], "\n\n Are you sure to save ? Your current save will be override.");
+        Program.ChooseMenu(index, saveOptions, "\n\n Are you sure to save ? Your current save will be override.");
+    }
+
 
     // DIALOGUE AND TEXT METHODS
-    static void DialogueMessage(int colorText, string text, int delay)
+    public static void DialogueMessage(int colorText, string text, int delay)
     {
         bool skip = false;
         string textWithEnd = text + " ▼";
