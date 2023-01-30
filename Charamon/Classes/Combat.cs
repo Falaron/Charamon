@@ -64,7 +64,6 @@ public static class CombatManager
         Program.ChooseMenu(index, abilityOptions, "");
         DrawCombat(charamon, enemy);
     }
-
     public static void DrawCombat(Charamon charamon, Charamon enemy)
     {
         if (enemy.currentHp > 0)
