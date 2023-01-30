@@ -26,9 +26,13 @@ public static class CombatManager
         Options back = new Options("Return", () => DrawCombat(charamon, enemy));
         charamonsList.Add(back);
         int index = 0;
+
         Console.Clear();
-        Program.WriteMenu(charamonsList, charamonsList[index], "");
-        Program.ChooseMenu(index, charamonsList, "");
+        string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+        string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+
+        Program.WriteMenu(charamonsList, charamonsList[index], charamonsName + charamonsLife);
+        Program.ChooseMenu(index, charamonsList, charamonsName + charamonsLife);
         DrawCombat(CharamonActions.team[0], enemy);
     }
     public static void Run(Charamon charamon, Charamon enemy)
@@ -74,10 +78,11 @@ public static class CombatManager
        
         
         Console.Clear();
-        Console.WriteLine("lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-        Console.WriteLine("lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n");
-        Program.WriteMenu(abilityOptions, abilityOptions[0], "");
-        Program.ChooseMenu(index, abilityOptions, "");
+        string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+        string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
+
+        Program.WriteMenu(abilityOptions, abilityOptions[0], charamonsName + charamonsLife);
+        Program.ChooseMenu(index, abilityOptions, charamonsName + charamonsLife);
         DrawCombat(charamon, enemy);
     }
     public static void DrawCombat(Charamon charamon, Charamon enemy)
@@ -93,16 +98,17 @@ public static class CombatManager
             };
             int index = 0;
             Console.Clear();
-            string charamonStats = "lvl  " + charamon.level + "  " + charamon.name + "\n Hp :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
-            string enemyStats = "lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n";
+            string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
+            string charamonsLife = "\n  HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "                           HP :  " + charamon.currentHp + "/" + charamon.stats["HP"] + "\n\n";
 
-            Program.WriteMenu(combatOptions, combatOptions[index], charamonStats + enemyStats);
-            Program.ChooseMenu(index, combatOptions, charamonStats + enemyStats);
+            Program.WriteMenu(combatOptions, combatOptions[index], charamonsName + charamonsLife);
+            Program.ChooseMenu(index, combatOptions, charamonsName + charamonsLife);
         }
         else
         {
             Console.Clear();
-            Console.WriteLine("you deafeated a lvl  " + enemy.level + "  " + enemy.name + "\n\n");
+            Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
+            Console.WriteLine("you deafeated a " + enemy.name + "  lvl " + enemy.level);
             CharamonActions.GainXp(charamon, enemy);
         }
           
@@ -114,9 +120,8 @@ public static class CombatManager
         float[,] pool = Maps.maps[map];
         Charamon enemy = new Charamon();
         enemy = CharamonActions.CreateCharamon(GetCharamonFromPool(pool, percentage) - 1, SetEnemyLevel());
-        Console.WriteLine("you encountered a lvl  " + enemy.level + "  " + enemy.name + "\n Hp :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n");
-        Console.WriteLine("lvl  " + CharamonActions.team[0].level + "  " + CharamonActions.team[0].name + "\n Hp :  " + CharamonActions.team[0].currentHp + "/" + CharamonActions.team[0].stats["HP"] + "\n\n");
-        Thread.Sleep(1000);
+
+        Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);
     }
     public static T[] GetRow<T>(this T[,] matrix, int row)
