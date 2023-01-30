@@ -43,6 +43,7 @@ public partial class Program
     public static void Main()
     {
         Initialize();
+        StartScreen();
         MenuScreen();
         while (gameRunning)
         {
@@ -68,15 +69,20 @@ public partial class Program
 
     }
 
-    static void MenuScreen()
+    static void StartScreen()
     {
         Console.Clear();
+
         TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
         Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
         TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
 
+        PressSpaceToContiue();
+    }
 
+    static void MenuScreen()
+    {
         // START NEW GAME / LOAD / QUIT
         startOptions = new List<Options>();
         for (int i = 0; i < menuList.Count; i++)

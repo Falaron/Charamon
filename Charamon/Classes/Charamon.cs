@@ -162,15 +162,13 @@ public class CharamonActions
             else
             {
                 Console.Clear();
-                Console.WriteLine("not enough PP \n");
-                Thread.Sleep(750);
+                Program.DialogueMessage(15, "\n\n Not enough PP", 10);
             }  
         }   
         else
         {
             Console.Clear();
-            Console.WriteLine(attack.ename + " missed \n");
-            Thread.Sleep(750);
+            Program.DialogueMessage(15, "\n\n " + attack.ename + " missed", 10);
             EnemyAttack(defender, attacker);
         }
     }
@@ -192,23 +190,22 @@ public class CharamonActions
             defender.currentHp -= damage;
         }
         Console.Clear();
-        Console.WriteLine(attacker.name + " inflicted " + damage + " damages with " + attack.ename);
+        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
         {
-            case 0: Console.WriteLine("it has no effect...");
+            case 0: Program.DialogueMessage(15, "It has no effect...", 10);
                     break;
-            case 0.25f: Console.WriteLine("it's not very effective");
+            case 0.25f: Program.DialogueMessage(15, "It's not very effective.", 10);
+                break;
+            case 0.5f: Program.DialogueMessage(15, "It's not very effective.", 10);
+                break;
+            case 2: Program.DialogueMessage(15, "It's super effective !", 10);
                     break;
-            case 0.5f: Console.WriteLine("it's not very effective ");
-                    break;
-            case 2: Console.WriteLine("it's super effective");
-                    break;
-            case 4: Console.WriteLine("it's super effective");
-                    break;
+            case 4: Program.DialogueMessage(15, "It's super effective !", 10);
+                break;
             default: break;
         }
-        Thread.Sleep(750);
     }
     /// Represents the efficiency of each type to another (indexes mentioned bellow)
     /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
@@ -292,7 +289,7 @@ public class CharamonActions
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
-            Console.WriteLine(target.name + " level UP ! to lvl  " + target.level);
+            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level, 10);
             UpdateStats(target);
             if (target.level >= target.evolutionLvl)  Evolve(target);
             Program.PressSpaceToContiue();
@@ -307,7 +304,7 @@ public class CharamonActions
                 int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
-                Console.WriteLine(kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
+                Console.WriteLine(" " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
             }
             else
             {
