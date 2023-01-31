@@ -48,6 +48,7 @@ public class CharamonActions
 
     public static List<Charamon> team = new List<Charamon>(6);
     public static List<Charamon> pc = new List<Charamon>(32);
+    public static List<Charamon> enemies = new List<Charamon>(6);
 
 
     public static void SetCapacities()
@@ -65,6 +66,7 @@ public class CharamonActions
         chosenPokemon = _pkmn.pokemons[id];
 
         Charamon charamon = new Charamon();
+        charamon.abilities = new List<Ability>(4);
         charamon.id = chosenPokemon.id;
         charamon.name = chosenPokemon.name["english"];
         charamon.iv = chosenPokemon.stats;
@@ -113,12 +115,47 @@ public class CharamonActions
                 if (attacker.stats["Speed"] >= defender.stats["Speed"])
                 {
                     InflictDamage(attacker, defender, attack);
-                    EnemyAttack(defender, attacker) ;
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
+                    EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);                       
+                    }                 
+                                           
                 }
                 else
                 {
                     EnemyAttack(defender, attacker);
+                    if (attacker.currentHp <= 0)
+                    {
+                        if (AllDead())
+                        {
+                            Environment.Exit(0); //or return to infirmary
+                        }
+                        CombatManager.Charamons(attacker, defender);
+                    }
                     InflictDamage(attacker, defender, attack);
+                    if (defender.currentHp <= 0)
+                    {
+                        enemies.Remove(defender);
+                        if (enemies.Count > 0)
+                        {
+                            CombatManager.DrawCombat(attacker, enemies[0]);
+                        }
+                        else return;
+                    }
                 }
                 
             }
@@ -170,8 +207,8 @@ public class CharamonActions
             default: break;
         }
     }
-    /// Represents the efficiency of each type to another (indexes mentioned bellow)
-    /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
+    /* Represents the efficiency of each type to another (indexes mentioned bellow)
+     Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy */
     public static float[,] typeTable = new float[18, 18] {
         {1, 1, 1, 1, 1, 0.5f, 1, 0, 0.5f, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
@@ -248,7 +285,9 @@ public class CharamonActions
     }
     public static void GainXp(Charamon target, Charamon defeated)
     {
-        target.xp += 60 * defeated.level / 7;
+        int xpGain = 60 * defeated.level / 7;
+        target.xp += xpGain;
+        Program.DialogueMessage(15, target.name + " gained " + xpGain + " xp !", 10);
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
@@ -326,9 +365,13 @@ public class CharamonActions
     }
     public static void SwitchPokemon(int target1, int target2)
     {
-        Charamon substitute = team[target1];
-        team[target1] = team[target2];
-        team[target2] = substitute;
+        if (team[target2].currentHp > 0)
+        {
+            Charamon substitute = team[target1];
+            team[target1] = team[target2];
+            team[target2] = substitute;
+        } 
+        else Program.DialogueMessage(15,team[target2] +" is KO !" , 10);
     }
     public static void GetFromPc(Charamon target)
     {
@@ -352,7 +395,7 @@ public class CharamonActions
         newAbility = _ablties.abilities[aId];
         if (charamon.type.Length == 2)
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
@@ -361,7 +404,7 @@ public class CharamonActions
         }
         else
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
@@ -429,6 +472,18 @@ public class CharamonActions
             InflictDamage(enemy, ally, enemy.abilities[random.Next(enemy.abilities.Count)]);
         }
     }
+    public static bool AllDead()
+    {
+        int alive = 0;
+        foreach (Charamon charamon in team)
+        {
+            if (charamon.currentHp > 0)
+            {
+                alive++;
+            }
+        }
+        return alive == 0;
+    }
 }
 
 public class Pokemon
@@ -452,7 +507,7 @@ public class Charamon
     public int currentHp { get; set; }
     public int evolutionLvl { get; set; }
     public int evolutionId { get; set; }
-    public List<Ability> abilities = new List<Ability>(4);
+    public List<Ability> abilities { get; set; }
 }
 public class Ability
 {

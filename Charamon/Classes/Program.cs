@@ -11,7 +11,7 @@ using Microsoft.VisualBasic.FileIO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
-using Charamon.Classes;
+
 
 namespace ProjectCharamon;
 
@@ -45,6 +45,7 @@ public partial class Program
         Initialize();
         StartScreen();
         MenuScreen();
+        Item.AddToInventory(0, 5);
         while (gameRunning)
         {
             RenderWorldMapView();

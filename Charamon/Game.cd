@@ -1,31 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="ProjectCharamon.Player">
-    <Position X="6.5" Y="2.75" Width="1.5" />
+  <Class Name="ProjectCharamon.Player" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAIAAABAAAAAAAAIAAAAAAAAAAAwAAAAAA=</HashCode>
       <FileName>Classes\Player.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjectCharamon.Maps">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+  <Class Name="ProjectCharamon.Maps" Collapsed="true">
+    <Position X="5.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <HashCode>AIAAAAABAAAIAAAAAAAAAAQAACAAAABAAAAAAAAAgAA=</HashCode>
       <FileName>Classes\Maps.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ProjectCharamon.Sprites">
-    <Position X="6.5" Y="5" Width="1.5" />
+  <Class Name="ProjectCharamon.Sprites" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAKCAQAAEAIAAAAQAAAAAAAAEAAAAQAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAKCAQAIAAIAAAQQAAAhAAQAEAAAAQAIAAA=</HashCode>
       <FileName>Classes\Sprites.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Program">
-    <Position X="9.75" Y="2" Width="1.5" />
+  <Class Name="ProjectCharamon.CharamonActions" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAQIAAARAAAQgIAAAECAAAAAAAAAIBAEAARAAAAAA=</HashCode>
+      <HashCode>AiBAAAEAEAAABAQAAAAIAIEgAIAQEQABIAAZAQQIAEk=</HashCode>
+      <FileName>Classes\Charamon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Pokemon" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAFAAQAAAAAAAAAAgA=</HashCode>
+      <FileName>Classes\Charamon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Charamon" Collapsed="true">
+    <Position X="11" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAwAAASAAAAAAAAAACAAAEFAAAAAAAAAEAAIgE=</HashCode>
+      <FileName>Classes\Charamon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Ability" Collapsed="true">
+    <Position X="12.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAIAAAAAAEBAAAAAAAIQAAAAgA=</HashCode>
+      <FileName>Classes\Charamon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.CombatManager" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAICAAAAAgAECgAAAgAAAAAAAAEAgAIAAI=</HashCode>
+      <FileName>Classes\Combat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Options" Collapsed="true">
+    <Position X="8.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Classes\Options.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Program" Collapsed="true">
+    <Position X="7" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAQIAAARAEkQgIEQBAikAgAwIAAgAFIEQARgABAAA=</HashCode>
       <FileName>Classes\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectCharamon.Save" Collapsed="true">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAABAA=</HashCode>
+      <FileName>Classes\Save.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Charamon.Classes.Item" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAQAAAAAAAAAAAIAAAAAIAAEAACCAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Charamon.Classes.SimplePotion" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAQAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Charamon.Classes.BigPotion" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAQAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\item.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
