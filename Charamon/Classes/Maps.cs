@@ -22,8 +22,9 @@ public static class Maps
                 'g' => Sprites.Grass,
                 's' => Sprites.StartHouse,
                 'w' => Sprites.Wall,
-                'z' => Sprites.ZoneField,
-                'i' => Sprites.InvisibleWall,
+                'z' => Sprites.Empty, // house to field zone
+                'i' => Sprites.Empty, //invisible wall
+                'c' => Sprites.Charaball,
 
                 ' ' => Sprites.Empty,
                 'X' => Sprites.Empty,
@@ -42,6 +43,7 @@ public static class Maps
             'g' => true,
             's' => true,
             'z' => true,
+            'c' => true,
             _ => false
         };
     }
@@ -53,6 +55,7 @@ public static class Maps
             'g' => 1,
             's' => 2,
             'z' => 3,
+            'c' => 4,
             _ => 0
         };
     }
@@ -82,7 +85,7 @@ public static class Maps
         "wwwwwwwww".ToCharArray(),
         "w   X   w".ToCharArray(),
         "w       w".ToCharArray(),
-        "w       w".ToCharArray(),
+        "w   c   w".ToCharArray(),
         "w       w".ToCharArray(),
         "w       w".ToCharArray(),
         "wwwwzwwww".ToCharArray(),

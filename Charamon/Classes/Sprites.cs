@@ -29,10 +29,10 @@ public static class Sprites
         @"|█████|" + "\n" +
         @"|██ ██|" + "\n" +
         @"|██ ██|";
-    public const string ZoneField =
+    public const string Charaball =
         @"       " + "\n" +
-        @"       " + "\n" +
-        @"       " + "\n" +
+        @"   _   " + "\n" +
+        @"  (©)  " + "\n" +
         @"       ";
 
 
@@ -57,11 +57,6 @@ public static class Sprites
         @"███████" + "\n" +
         @"███████" + "\n" +
         @"███████";
-    public const string InvisibleWall =
-        @"       " + "\n" +
-        @"       " + "\n" +
-        @"       " + "\n" +
-        @"       ";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +

@@ -301,6 +301,9 @@ public partial class Program
                     case 3:
                         EnterField();
                         break;
+                    case 4:
+                        CharaballInterraction(1, 2);
+                        break;
                     default: break;
                 }
                 break;
@@ -348,7 +351,14 @@ public partial class Program
     {
         Console.Clear();
         CombatManager.EnterCombat(Map);
-        //Console.WriteLine("You entered a battle");
+    }
+
+    static void CharaballInterraction(int itemId, int quantity)
+    {
+        Item.AddToInventory(itemId, quantity);
+        Map[player.TileY][player.TileX] = ' ';
+        Console.Clear();
+        DialogueMessage(15, "\n\n You found " + quantity + " " + Item.inventory[itemId].name, 10);
     }
 
     static void StartHouseInterraction()
