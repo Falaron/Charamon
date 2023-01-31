@@ -23,7 +23,7 @@ public static class CombatManager
             Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0,  a));
             charamonsList.Add(charamonOption);
         }
-        Options back = new Options("Return", () => DrawCombat(charamon, enemy));
+        Options back = new Options("Return", () => Program.Exit());
         charamonsList.Add(back);
         int index = 0;
 

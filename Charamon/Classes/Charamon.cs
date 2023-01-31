@@ -207,8 +207,8 @@ public class CharamonActions
             default: break;
         }
     }
-    /// Represents the efficiency of each type to another (indexes mentioned bellow)
-    /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
+    /* Represents the efficiency of each type to another (indexes mentioned bellow)
+     Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy */
     public static float[,] typeTable = new float[18, 18] {
         {1, 1, 1, 1, 1, 0.5f, 1, 0, 0.5f, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
@@ -285,7 +285,9 @@ public class CharamonActions
     }
     public static void GainXp(Charamon target, Charamon defeated)
     {
-        target.xp += 60 * defeated.level / 7;
+        int xpGain = 60 * defeated.level / 7;
+        target.xp += xpGain;
+        Program.DialogueMessage(15, target.name + " gained " + xpGain + " xp !", 10);
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
@@ -363,9 +365,13 @@ public class CharamonActions
     }
     public static void SwitchPokemon(int target1, int target2)
     {
-        Charamon substitute = team[target1];
-        team[target1] = team[target2];
-        team[target2] = substitute;
+        if (team[target2].currentHp > 0)
+        {
+            Charamon substitute = team[target1];
+            team[target1] = team[target2];
+            team[target2] = substitute;
+        } 
+        else Program.DialogueMessage(15,team[target2] +" is KO !" , 10);
     }
     public static void GetFromPc(Charamon target)
     {
@@ -389,7 +395,7 @@ public class CharamonActions
         newAbility = _ablties.abilities[aId];
         if (charamon.type.Length == 2)
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
@@ -398,7 +404,7 @@ public class CharamonActions
         }
         else
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
