@@ -49,6 +49,7 @@ public partial class Program
         MenuScreen();
         Item.AddToInventory(0, 5);
         Item.AddToInventory(2, 50);
+        Item.AddToInventory(3,2);
         Player.money = 20;
         while (gameRunning)
         {
@@ -358,11 +359,14 @@ public partial class Program
         inventoryOptions = new List<Options>();
         for (int i = 0; i < Item.inventory.Count; i++)
         {
-            Item item = Item.inventory[i];
-            string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
-            Options itemOption = new Options(name ,() => item.UseItem());
-            inventoryOptions.Add(itemOption);
-        }
+            if (Item.inventory[i].quantity <= 0) continue;
+            else
+            {
+                Item item = Item.inventory[i];
+                string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
+                Options itemOption = new Options(name, () => item.UseItem());
+                inventoryOptions.Add(itemOption);
+            }        }
         Options back = new Options("Return", () => Exit());
         inventoryOptions.Add(back);
 

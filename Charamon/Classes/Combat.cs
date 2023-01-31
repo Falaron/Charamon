@@ -17,11 +17,15 @@ public static class CombatManager
     public static void Charamons(Charamon charamon, Charamon enemy)
     {
         charamonsList = new List<Options>();
-        for (int i = 0; i < CharamonActions.team.Count; i++)
+        for (int i = 1; i < CharamonActions.team.Count; i++)
         {
             int a = i;
-            Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0,  a));
-            charamonsList.Add(charamonOption);
+            if (CharamonActions.team[i].currentHp <= 0) continue;
+            else
+            {
+                Options charamonOption = new Options(CharamonActions.team[i].name, () => CharamonActions.SwitchPokemon(0, a));
+                charamonsList.Add(charamonOption);
+            }
         }
         Options back = new Options("Return", () => Program.Exit());
         charamonsList.Add(back);
@@ -48,9 +52,8 @@ public static class CombatManager
         }
         else
         {
-            Console.Clear();
-            Program.DialogueMessage(15, "\n\n You failed to escape...", 10);
-            //Enemy attack
+            Program.DialogueMessage(15, "\n\n  You failed to escape...", 10);
+            CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
             DrawCombat(charamon, enemy);
         }
     }
@@ -107,13 +110,12 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            if (CharamonActions.enemies.Count > 0)
+            if (CharamonActions.enemies.Count >= 0)
             {
-                Program.DialogueMessage(15, "\n\n You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
+                Program.DialogueMessage(15, "\n\n  You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
                 CharamonActions.GainXp(charamon, enemy);
             }
-            else Program.DialogueMessage(15, "\n\n You captured a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
-            
+            else Program.DialogueMessage(15, "\n\n  You captured a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
         }
           
     }

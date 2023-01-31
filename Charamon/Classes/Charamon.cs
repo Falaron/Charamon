@@ -131,7 +131,9 @@ public class CharamonActions
                     {
                         if (AllDead())
                         {
-                            Environment.Exit(0); //or return to infirmary
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n  All your pokemons are dead...", 50);
+                            Environment.Exit(0);
                         }
                         CombatManager.Charamons(attacker, defender);                       
                     }                 
@@ -163,14 +165,12 @@ public class CharamonActions
             }
             else
             {
-                Console.Clear();
-                Program.DialogueMessage(15, "\n\n Not enough PP", 10);
+                Program.DialogueMessage(15, "\n\n  Not enough PP", 10);
             }  
         }   
         else
         {
-            Console.Clear();
-            Program.DialogueMessage(15, "\n\n " + attack.ename + " missed", 10);
+            Program.DialogueMessage(15, "\n\n  " + attack.ename + " missed", 10);
             EnemyAttack(defender, attacker);
         }
     }
@@ -191,7 +191,6 @@ public class CharamonActions
                  * GetTypeAdvantage(attacker, defender, attack));
             defender.currentHp -= damage;
         }
-        Console.Clear();
         Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
@@ -375,8 +374,9 @@ public class CharamonActions
             Charamon substitute = team[target1];
             team[target1] = team[target2];
             team[target2] = substitute;
+            Program.DialogueMessage(15, "\n\n " + team[target1].name + "... GO !", 10);
         } 
-        else Program.DialogueMessage(15,team[target2] +" is KO !" , 10);
+        else Program.DialogueMessage(15, "\n\n " + team[target2].name +" is KO !" , 10);
     }
 
     public static void SwapCharamon(int pcSlot, Charamon target)

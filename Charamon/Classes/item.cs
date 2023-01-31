@@ -58,10 +58,12 @@ public class Item
         SimplePotion simplePotion = new SimplePotion();
         BigPotion bigPotion = new BigPotion();
         Charaball charaball = new Charaball();
+        Revive revive = new Revive();
 
         inventory.Add(simplePotion);
         inventory.Add(bigPotion);
         inventory.Add(charaball);
+        inventory.Add(revive);
     }
     public static void AddToInventory(int index, int number)
     {
@@ -81,8 +83,17 @@ public class SimplePotion : Item
 
     public override void ApplyEffect(Charamon charamon)
     {
-        charamon.currentHp += 20;
-        if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        if (charamon.currentHp <= 0)
+        {
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " is dead... He must be revived thanks to a Revive item", 10);
+            Program.DialogueMessage(15, " He must be revived thanks to a Revive item", 10);
+        }
+        else
+        {
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " gets 20hp !", 10);
+            charamon.currentHp += 20;
+            if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        }
         CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }
@@ -99,8 +110,17 @@ public class BigPotion : Item
 
     public override void ApplyEffect(Charamon charamon)
     {
-        charamon.currentHp += 50;
-        if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        if (charamon.currentHp <= 0)
+        {
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " is dead... He must be revived thanks to a Revive item", 10);
+            Program.DialogueMessage(15, " He must be revived thanks to a Revive item", 10);
+        }
+        else
+        {
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " gets 50hp !", 10);
+            charamon.currentHp += 50;
+            if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        }
         CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }  
 }
@@ -117,12 +137,40 @@ public class Charaball : Item
 
     public override void UseItem()
     {
+        Program.DialogueMessage(15, "\n\n  ...", 10);
+        Program.DialogueMessage(15, "   ...   ", 50);
+        Program.DialogueMessage(15, "   . . .   ", 100);
         if (CharamonActions.TryToCapture(CharamonActions.enemies[0]))
         {
-            Program.DialogueMessage(15, "captured", 10);
+            Program.DialogueMessage(15, "... GATCHA !", 10);
             Program.Exit();
         }
-        else CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+        else
+        {
+            Program.DialogueMessage(15, "The Charamon escaped the Charaball...", 10);
+            CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+        }
+    }
+}
+
+public class Revive : Item
+{
+    public Revive()
+    {
+        name = "Revive";
+        price = 100;
+    }
+    public override int quantity { get; set; }
+    public override int price { get; set; }
+    public override void ApplyEffect(Charamon charamon)
+    {
+        if (charamon.currentHp >= 0)
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " is not dead, but he's fully restored.", 10);
+        else
+            Program.DialogueMessage(15, "\n\n  " + charamon.name + " revived and is fully restored.", 10);
+        charamon.currentHp += charamon.stats["HP"];
+        if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }
 
