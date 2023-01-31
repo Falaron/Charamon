@@ -38,9 +38,11 @@ public class Item
     {
         SimplePotion simplePotion = new SimplePotion();
         BigPotion bigPotion = new BigPotion();
+        Charaball charaball = new Charaball();
 
         inventory.Add(simplePotion);
         inventory.Add(bigPotion);
+        inventory.Add(charaball);
     }
     public static void AddToInventory(int index, int number)
     {
@@ -61,6 +63,7 @@ public class SimplePotion : Item
     {
         charamon.currentHp += 20;
         if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }
 
@@ -77,6 +80,27 @@ public class BigPotion : Item
     {
         charamon.currentHp += 50;
         if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
+        CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }  
+}
+
+public class Charaball : Item
+{
+    public Charaball()
+    {
+        name = "Charaball";
+    }
+    public override int quantity { get; set; }
+    public override int price { get; set; }
+
+    public override void UseItem()
+    {
+        if (CharamonActions.TryToCapture(CharamonActions.enemies[0]))
+        {
+            Program.DialogueMessage(15, "captured", 10);
+            Program.Exit();
+        }
+        else CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+    }
 }
 

@@ -46,6 +46,7 @@ public partial class Program
         StartScreen();
         MenuScreen();
         Item.AddToInventory(0, 5);
+        Item.AddToInventory(2, 50);
         while (gameRunning)
         {
             RenderWorldMapView();

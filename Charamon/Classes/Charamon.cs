@@ -343,7 +343,7 @@ public class CharamonActions
     {
         pc.Add(target);
     }
-    public static void TryToCapture(Charamon target)
+    public static bool TryToCapture(Charamon target)
     {
         Random random = new Random();
 
@@ -354,7 +354,10 @@ public class CharamonActions
         {
             if (team.Count >= 6) AddToPC(target);
             else AddToTeam(target);
+            enemies.Remove(target);
+            return true;
         }
+        return false;
     }
     public static void HealAll()
     {
