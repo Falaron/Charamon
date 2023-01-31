@@ -110,7 +110,7 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            if (CharamonActions.enemies.Count >= 0)
+            if (enemy.currentHp <= 0)
             {
                 Program.DialogueMessage(15, "\n\n  You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
                 CharamonActions.GainXp(charamon, enemy);
