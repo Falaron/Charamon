@@ -42,6 +42,7 @@ public partial class Program
 
     public static void Main()
     {
+        Wilds.Generate();
         Initialize();
         StartScreen();
         MenuScreen();
@@ -64,7 +65,7 @@ public partial class Program
 
         player = new();
         {
-            SpawnAtLocation(Maps.StartHouse, 'X');
+            SpawnAtLocation(Wilds.map, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
 

@@ -64,6 +64,7 @@ public class SimplePotion : Item
         charamon.currentHp += 20;
         if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
         CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+        quantity--;
     }
 }
 
@@ -81,7 +82,8 @@ public class BigPotion : Item
         charamon.currentHp += 50;
         if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
         CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
-    }  
+        quantity--;
+    }
 }
 
 public class Charaball : Item
@@ -95,12 +97,25 @@ public class Charaball : Item
 
     public override void UseItem()
     {
-        if (CharamonActions.TryToCapture(CharamonActions.enemies[0]))
+        if (quantity > 0)
         {
-            Program.DialogueMessage(15, "captured", 10);
-            Program.Exit();
+
+            if (CharamonActions.enemies.Count > 0)
+            {
+                quantity--;
+                if (!CharamonActions.TryToCapture(CharamonActions.enemies[0]))
+                {
+                    Console.Clear();
+                    Program.DialogueMessage(15, "failed to capture ", 10);
+                    CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Program.DialogueMessage(15, "Not usable ", 10);
+            }
         }
-        else CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
+
     }
 }
-

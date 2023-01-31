@@ -77,6 +77,8 @@ public static class Maps
         {12.5f,25,37.5f,50,62.5f,75,87.5f,100f}
     };
 
+    public static float[,] WildsPool = new float[2,40];
+
     public static readonly char[][] StartHouse = new char[][]
     {
         "wwwwwwwww".ToCharArray(),
@@ -91,6 +93,7 @@ public static class Maps
 
     public static Dictionary<char[][], float[,]> maps = new Dictionary<char[][], float[,]>
     {
-        {Field,  FieldPool}
+        {Field,  FieldPool},
+        {Wilds.map, WildsPool}
     };
 }

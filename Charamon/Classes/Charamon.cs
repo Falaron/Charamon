@@ -77,7 +77,8 @@ public class CharamonActions
             charamon.evolutionLvl = Convert.ToInt16(chosenPokemon.evolution["next"][1]);
             charamon.evolutionId = Convert.ToInt16(chosenPokemon.evolution["next"][0]);
         }
-        charamon.level = level;
+        if (level <= 0) charamon.level = 1;
+        else charamon.level = level;
         Random random = new Random();
         int nbAbilities = random.Next(2, 4);
         for (int i = 0; i < nbAbilities; i++)
@@ -347,7 +348,7 @@ public class CharamonActions
     {
         Random random = new Random();
 
-        float f = (target.stats["HP"] * 255 * 4) / target.currentHp * 12;
+        float f = (target.stats["HP"] * 255 * 4) / (target.currentHp * 12);
         float m = random.Next(255);
 
         if (f >= m)
