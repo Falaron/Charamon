@@ -24,6 +24,8 @@ public partial class Program
     public static List<Options> startOptions;
     public static List<Options> menuOptions;
     public static List<Options> inventoryOptions;
+    public static List<Options> shopOptions;
+    public static List<Options> pcOptions;
     public static List<Options> saveOptions;
     public static bool isCharamonSelected = false;
     static bool gameRunning = true;
@@ -47,6 +49,7 @@ public partial class Program
         MenuScreen();
         Item.AddToInventory(0, 5);
         Item.AddToInventory(2, 50);
+        Player.money = 20;
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -297,13 +300,34 @@ public partial class Program
                         }
                         break;
                     case 2:
-                        StartHouseInterraction();
+                        StartHouseToField();
                         break;
                     case 3:
-                        EnterField();
+                        FieldToStartHouse();
                         break;
                     case 4:
                         CharaballInterraction(1, 2);
+                        break;
+                    case 5:
+                        FieldToCharaspital();
+                        break;
+                    case 6:
+                        CharaspitalToField();
+                        break;
+                    case 7:
+                        HealCharamons();
+                        break;
+                    case 8:
+                        FieldToCharashop();
+                        break;
+                    case 9:
+                        CharashopToField();
+                        break;
+                    case 10:
+                        Shop();
+                        break;
+                    case 11:
+                        Computer();
                         break;
                     default: break;
                 }
@@ -354,6 +378,56 @@ public partial class Program
         CombatManager.EnterCombat(Map);
     }
 
+    static void HealCharamons()
+    {
+        CharamonActions.HealAll();
+        Console.Clear();
+        DialogueMessage(10, "\n\n All your pokemons are healed.", 15);
+    }
+
+    public static void Shop()
+    {
+        Console.Clear();
+
+        shopOptions = new List<Options>();
+        for (int i = 0; i < Item.inventory.Count; i++)
+        {
+            Item item = Item.inventory[i];
+            string name = Item.inventory[i].name + " : " + Item.inventory[i].price + " ¥";
+            Options shopOption = new Options(name, () => item.BuyItem());
+            shopOptions.Add(shopOption);
+        }
+        Options back = new Options("Exit shop", () => Exit());
+        shopOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(shopOptions, shopOptions[index], "\n\n Welcome to a Charashop, what can I do for you ? \n\n Current money : " + Player.money + " ¥");
+        Program.ChooseMenu(index, shopOptions, "\n\n Welcome to a Charashop, what can I do for you ? \n\n Current money : " + Player.money + " ¥");
+    }
+
+    public static void Computer()
+    {
+        Console.Clear();
+
+        pcOptions = new List<Options>();
+        for (int i = 0; i < CharamonActions.pc.Count; i++)
+        {
+            int a = i;
+            Charamon charamon = CharamonActions.pc[i];
+            string name = charamon.name;
+            Options pcOption = new Options(name, () => CharamonActions.SwapCharamon(a, charamon));
+            pcOptions.Add(pcOption);
+        }
+        Options back = new Options("Exit Computer", () => Exit());
+        pcOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(pcOptions, pcOptions[index], "Loged to COMPUTER.\n  Charamon captured : " + (CharamonActions.team.Count + CharamonActions.pc.Count));
+        Program.ChooseMenu(index, pcOptions, "Loged to COMPUTER.\n  Charamon captured : " + (CharamonActions.team.Count + CharamonActions.pc.Count));
+    }
+
     static void CharaballInterraction(int itemId, int quantity)
     {
         Item.AddToInventory(itemId, quantity);
@@ -362,14 +436,34 @@ public partial class Program
         DialogueMessage(15, "\n\n You found " + quantity + " " + Item.inventory[itemId].name, 10);
     }
 
-    static void StartHouseInterraction()
+    static void StartHouseToField()
     {
-        SpawnAtLocation(Maps.StartHouse, 'z');
+        SpawnAtLocation(Maps.Field, 'B');
     }
 
-    static void EnterField()
+    static void FieldToStartHouse()
     {
-        SpawnAtLocation(Maps.Field, 's');
+        SpawnAtLocation(Maps.StartHouse, 'A');
+    }
+
+    static void CharaspitalToField()
+    {
+        SpawnAtLocation(Maps.Field, 'C');
+    }
+
+    static void FieldToCharaspital()
+    {
+        SpawnAtLocation(Maps.Charaspital, 'D');
+    }
+
+    static void CharashopToField()
+    {
+        SpawnAtLocation(Maps.Field, 'E');
+    }
+
+    static void FieldToCharashop()
+    {
+        SpawnAtLocation(Maps.Charashop, 'F');
     }
 
     public static void Exit()

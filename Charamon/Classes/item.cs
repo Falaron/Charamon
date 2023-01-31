@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,24 @@ public class Item
             Program.ChooseMenu(index, teamOptions, "use " + name + " on :");
         }
     }
+    public virtual void BuyItem()
+    {
+        if (Player.money >= price)
+        {
+            Player.money -= price;
+            quantity++;
+            Console.Clear();
+            Program.DialogueMessage(15, "\n Thanks for buying a " + name + " !", 10);
+            Program.Shop();
+        }
+        else
+        {
+            Console.Clear();
+            Program.DialogueMessage(15, "\n Not enough money !", 10);
+            Program.Shop();
+
+        }
+    }
     public static void CreateItems()
     {
         SimplePotion simplePotion = new SimplePotion();
@@ -55,6 +74,7 @@ public class SimplePotion : Item
     public SimplePotion()
     {
         name = "Simple Potion";
+        price = 20;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
@@ -72,6 +92,7 @@ public class BigPotion : Item
     public BigPotion()
     {
         name = "Big Potion";
+        price = 50;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
@@ -89,6 +110,7 @@ public class Charaball : Item
     public Charaball()
     {
         name = "Charaball";
+        price = 15;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }

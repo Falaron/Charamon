@@ -29,14 +29,33 @@ public static class Sprites
         @"|█████|" + "\n" +
         @"|██ ██|" + "\n" +
         @"|██ ██|";
+    public const string Charaspital =
+        @"/  +  \" + "\n" +
+        @"|█████|" + "\n" +
+        @"|██ ██|" + "\n" +
+        @"|██ ██|";
+    public const string Charashop =
+        @"/  ¥  \" + "\n" +
+        @"|█████|" + "\n" +
+        @"|██ ██|" + "\n" +
+        @"|██ ██|";
     public const string Charaball =
         @"       " + "\n" +
         @"   _   " + "\n" +
         @"  (©)  " + "\n" +
         @"       ";
+    public const string PC =
+        @"._____." + "\n" +
+        @"|     |" + "\n" +
+        @"|_____|" + "\n" +
+        @"|[#]oo|";
 
 
-
+    public const string PNJ =
+        @"   n_  " + "\n" +
+        @"   @   " + "\n" +
+        @"  /|\  " + "\n" +
+        @"  / \  ";
     public const string Tree =
         @"  (@@) " + "\n" +
         @" (@@@@)" + "\n" +
@@ -57,6 +76,21 @@ public static class Sprites
         @"███████" + "\n" +
         @"███████" + "\n" +
         @"███████";
+    public const string Table =
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"███████" + "\n" +
+        @"███████";
+    public const string TableLeft =
+        @"     ██" + "\n" +
+        @"     ██" + "\n" +
+        @"     ██" + "\n" +
+        @"     ██";
+    public const string TableRight =
+        @"██     " + "\n" +
+        @"██     " + "\n" +
+        @"██     " + "\n" +
+        @"██     ";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +

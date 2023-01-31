@@ -9,11 +9,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ProjectCharamon;
 
 public class CharamonActions
 {
+    public static List<Options> swapTeamOptions;
     class Pokemons
     {
         List<Pokemon> _pokemons;
@@ -376,9 +378,28 @@ public class CharamonActions
         } 
         else Program.DialogueMessage(15,team[target2] +" is KO !" , 10);
     }
+
+    public static void SwapCharamon(int pcSlot, Charamon target)
+    {
+        swapTeamOptions = new List<Options>();
+        for (int i = 0; i < CharamonActions.team.Count; i++)
+        {
+            int a = i;
+            Options charamonOption = new Options(CharamonActions.team[i].name, () => SwitchFromPC(pcSlot, a));
+            swapTeamOptions.Add(charamonOption);
+        }
+        Options back = new Options("Return", () => Program.Exit());
+        swapTeamOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(swapTeamOptions, swapTeamOptions[index], "");
+        Program.ChooseMenu(index, swapTeamOptions, "");
+    }
     public static void GetFromPc(Charamon target)
     {
         AddToTeam(target);
+        pc.Remove(target);
     }
     public static void SwitchFromPC(int pcSlot, int teamSlot)
     {
