@@ -87,7 +87,7 @@ public static class CombatManager
     }
     public static void DrawCombat(Charamon charamon, Charamon enemy)
     {
-        if (enemy.currentHp > 0)
+        if (enemy.currentHp > 0 && CharamonActions.enemies.Count > 0)
         {
             combatOptions = new List<Options>
             {
@@ -107,8 +107,13 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            Program.DialogueMessage(15, "\n\n You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
-            CharamonActions.GainXp(charamon, enemy);
+            if (CharamonActions.enemies.Count > 0)
+            {
+                Program.DialogueMessage(15, "\n\n You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
+                CharamonActions.GainXp(charamon, enemy);
+            }
+            else Program.DialogueMessage(15, "\n\n You captured a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
+            
         }
           
     }
