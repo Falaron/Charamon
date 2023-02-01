@@ -370,7 +370,7 @@ public class CharamonActions
             charamon.currentHp = charamon.stats["HP"];
             foreach (var ability in charamon.abilities)
             {
-                ability.pp = ability.pp;
+                ability.pp = ability.maxPP;
             }
         }
     }
@@ -442,6 +442,8 @@ public class CharamonActions
             }
             charamon.abilities.Add(_ablties.abilities[aId]);
         }
+        newAbility.maxPP = newAbility.pp;
+
     }
     public static void EnemyAttack(Charamon enemy, Charamon ally)
     {
@@ -549,4 +551,5 @@ public class Ability
     public int accuracy { get; set; }
     public int power { get; set; }
     public int pp { get; set; }
+    public int maxPP { get; set; }
 }
