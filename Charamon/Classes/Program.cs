@@ -1,19 +1,33 @@
 ﻿using ProjectCharamon;
 using System.Text;
+using static System.Console;
+using System.Media;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Transactions;
 using Microsoft.VisualBasic.FileIO;
+using System.Runtime.CompilerServices;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection;
+
+
+namespace ProjectCharamon;
 
 public partial class Program
 {
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
+    public static List<string> menuList = new List<string>() {"NEW GAME","LOAD GAME", "QUIT"};
+    public static List<Options> startOptions;
     public static List<Options> menuOptions;
-    static bool isCharamonSelected = false;
+    public static List<Options> inventoryOptions;
+    public static List<Options> shopOptions;
+    public static List<Options> pcOptions;
+    public static List<Options> saveOptions;
+    public static bool isCharamonSelected = false;
     static bool gameRunning = true;
 
     static Player player
@@ -30,9 +44,14 @@ public partial class Program
 
     public static void Main()
     {
+        Wilds.Generate();
         Initialize();
+        StartScreen();
         MenuScreen();
-        StartEvent();
+        Item.AddToInventory(0, 5);
+        Item.AddToInventory(2, 50);
+        Item.AddToInventory(3,2);
+        Player.money = 20;
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -46,23 +65,45 @@ public partial class Program
         Console.CursorVisible = false; // Hide cursor
         CharamonActions.SetCharamons();
         CharamonActions.SetCapacities();
+        Item.CreateItems();
 
         player = new();
         {
             SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
+
+
+    }
+
+    static void StartScreen()
+    {
+        Console.Clear();
+
+        TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
+        Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
+        Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
+        TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
+
+        PressSpaceToContiue();
     }
 
     static void MenuScreen()
     {
-        Console.Clear();
-        TextColor(3, "\n\n\n" + "   ____ _   _    _    ____      _    __  __  ___  _   _ \n  / ___| | | |  / \\  |  _ \\    / \\  |  \\/  |/ _ \\| \\ | |\n | |   | |_| | / _ \\ | |_) |  / _ \\ | |\\/| | | | |  \\| |\n | |___|  _  |/ ___ \\|  _ <  / ___ \\| |  | | |_| | |\\  |\n  \\____|_| |_/_/   \\_\\_| \\_\\/_/   \\_\\_|  |_|\\___/|_| \\_|" + "\n\n");
-        Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
-        Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
-        TextColor(14, " Press "); TextColor(6, "[enter]"); TextColor(14, " to begin...");
+        // START NEW GAME / LOAD / QUIT
+        startOptions = new List<Options>();
+        for (int i = 0; i < menuList.Count; i++)
+        {
+            string name = menuList[i];
+            int a = i;
+            Options menuOption = new Options(name, () => StartGame(a));
+            startOptions.Add(menuOption);
+        }
 
-        PressEnterToContiue();
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(startOptions, startOptions[index], "");
+        Program.ChooseMenu(index, startOptions, "");
     }
 
     static void StartEvent()
@@ -82,15 +123,79 @@ public partial class Program
         };
         int index = 0;
 
+<<<<<<< HEAD
         /*Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
         Thread.Sleep(2000);
         Console.WriteLine(" CHARAMON !\n");
         Thread.Sleep(1000);
         Console.WriteLine(" Now, it's time for you to choose your starter. It will lead you to a great adventure.");
         Thread.Sleep(4000);*/
+=======
+        DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 10);
+        DialogueMessage(15, " CHARAMON !", 10);
+        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 10);
+>>>>>>> 9d0b8d02d933cf9634d8325a4141773ac5ccfc6e
 
-        WriteMenu(menuOptions, menuOptions[index]);
 
+        if (!isCharamonSelected)
+        {
+            Console.Clear();
+            WriteMenu(menuOptions, menuOptions[index], "SELECT YOUR STARTER");
+            ChooseMenu(index, menuOptions, "SELECT YOUR STARTER");
+        }
+        
+        
+    }
+
+    static void StartGame(int choice)
+    {
+        switch (choice)
+        {
+            case 0:
+                // Start Game
+                StartEvent();
+                break;
+
+            case 1:
+                //load
+                if(File.Exists(@"Team_SaveFile.json"))
+                {
+                    Save.LoadFile();
+                    return;
+                }
+                else StartEvent();
+                break;
+
+            case 2:
+                gameRunning = false;
+                Environment.Exit(0);
+                return;
+        }
+    }
+
+    public static void WriteMenu(List<Options> options, Options selectedOption, string firstDialogue)
+    {
+        Console.WriteLine("\n\n  " + firstDialogue + "\n\n");
+
+        foreach (Options option in options)
+        {
+            if (option == selectedOption)
+            {
+                Console.Write(" > ");
+            }
+            else
+            {
+                Console.Write("  ");
+            }
+            Console.WriteLine(option.Name + "\n");
+        }
+
+        Console.WriteLine("\n\n  Press [Space] to select");
+    }
+
+    public static void ChooseMenu(int index, List<Options> menu, string text)
+    {
+        bool isSelected = false;
         ConsoleKeyInfo keyinfo;
         do
         {
@@ -98,10 +203,11 @@ public partial class Program
 
             if (keyinfo.Key == ConsoleKey.DownArrow)
             {
-                if (index + 1 < menuOptions.Count)
+                if (index + 1 < menu.Count)
                 {
                     index++;
-                    WriteMenu(menuOptions, menuOptions[index]);
+                    Console.Clear();
+                    WriteMenu(menu, menu[index], text);
                 }
             }
             if (keyinfo.Key == ConsoleKey.UpArrow)
@@ -109,47 +215,57 @@ public partial class Program
                 if (index - 1 >= 0)
                 {
                     index--;
-                    WriteMenu(menuOptions, menuOptions[index]);
+                    Console.Clear();
+                    WriteMenu(menu, menu[index], text);
                 }
             }
-            if (keyinfo.Key == ConsoleKey.Enter)
+            if (keyinfo.Key == ConsoleKey.Spacebar)
             {
-                menuOptions[index].Selected.Invoke();
+                menu[index].Selected.Invoke();
                 index = 0;
+                isSelected = true;
             }
         }
-        while (isCharamonSelected != true);
+        while (isSelected != true);
 
-        if(isCharamonSelected != true)
+        if (isSelected != true)
             Console.ReadKey();
     }
 
-    static void TextColor(int color, string text)
+    static void WriteStarterMessage(Charamon charamon)
     {
-        Console.ForegroundColor = (ConsoleColor)color;
-        Console.Write(text);
-        Console.ResetColor();
-    }
+        CharamonActions.AddToTeam(charamon);
 
-    static void PressEnterToContiue()
-    {
-    GetInput:
-        ConsoleKey key = Console.ReadKey(true).Key;
-        switch (key)
+        Console.Clear();
+        DialogueMessage(15, "\n\n Nice choice ! ", 10);
+
+        switch (charamon.id)
         {
-            case ConsoleKey.Enter:
-                return;
-            case ConsoleKey.Escape:
-                gameRunning = false;
-                return;
-            default:
-                goto GetInput;
+            case 1:
+                DialogueMessage(10, charamon.name + " is a good starter.", 10);
+                break;
+            case 4:
+                DialogueMessage(12, charamon.name + " is a good starter.", 10);
+                break;
+            case 7:
+                DialogueMessage(9, charamon.name + " is a good starter.", 10);
+                break;
+            default: break;
         }
+        Console.WriteLine("\n");
+        DialogueMessage(15, " Now,", 50);
+        Console.WriteLine();
+        DialogueMessage(15, " Proceed.", 50);
+        Console.WriteLine("\n");
+        TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
+
+        isCharamonSelected = true;
+        PressSpaceToContiue();
     }
 
     static void PlayerInputs()
     {
-        ConsoleKey keyPressed = Console.ReadKey(true).Key;
+        ConsoleKey keyPressed = Console.ReadKey(false).Key;
         switch (keyPressed)
         {
             // Player movement
@@ -187,13 +303,42 @@ public partial class Program
                 switch (Maps.CheckForInterraction(Map, tileX, tileY))
                 {
                     case 1:
-                        GrassInterraction();
+                        Random random = new Random();
+                        int proba = random.Next(100);
+                        if (proba <=16) 
+                        {
+                            GrassInterraction();
+                        }
                         break;
                     case 2:
-                        StartHouseInterraction();
+                        StartHouseToField();
                         break;
                     case 3:
-                        EnterField();
+                        FieldToStartHouse();
+                        break;
+                    case 4:
+                        CharaballInterraction(1, 2);
+                        break;
+                    case 5:
+                        FieldToCharaspital();
+                        break;
+                    case 6:
+                        CharaspitalToField();
+                        break;
+                    case 7:
+                        HealCharamons();
+                        break;
+                    case 8:
+                        FieldToCharashop();
+                        break;
+                    case 9:
+                        CharashopToField();
+                        break;
+                    case 10:
+                        Shop();
+                        break;
+                    case 11:
+                        Computer();
                         break;
                     default: break;
                 }
@@ -204,38 +349,140 @@ public partial class Program
                 Inventory();
                 break;
 
+            case ConsoleKey.S:
+                MenuSave();
+                break;
+
             // Quit game
             case ConsoleKey.Escape:
                 gameRunning = false;
                 Console.Clear();
                 return;
-
             default: break;
         }
+    }
+
+    public static void Inventory()
+    {
+        Console.Clear();
+
+        inventoryOptions = new List<Options>();
+        for (int i = 0; i < Item.inventory.Count; i++)
+        {
+            if (Item.inventory[i].quantity <= 0) continue;
+            else
+            {
+                Item item = Item.inventory[i];
+                string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
+                Options itemOption = new Options(name, () => item.UseItem());
+                inventoryOptions.Add(itemOption);
+            }        }
+        Options back = new Options("Return", () => Exit());
+        inventoryOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY");
+        Program.ChooseMenu(index, inventoryOptions, "INVENTORY");
     }
 
     static void GrassInterraction()
     {
         Console.Clear();
-        Console.WriteLine("You entered a battle");
-        PressEnterToContiue();
+        CombatManager.EnterCombat(Map);
     }
 
-    static void StartHouseInterraction()
+    static void HealCharamons()
     {
-        SpawnAtLocation(Maps.StartHouse, 'z');
+        CharamonActions.HealAll();
+        Console.Clear();
+        DialogueMessage(10, "\n\n All your pokemons are healed.", 15);
     }
 
-    static void EnterField()
-    {
-        SpawnAtLocation(Maps.Field, 's');
-    }
-
-    static void Inventory()
+    public static void Shop()
     {
         Console.Clear();
-        Console.WriteLine(" INVENTORY");
-        PressEnterToContiue();
+
+        shopOptions = new List<Options>();
+        for (int i = 0; i < Item.inventory.Count; i++)
+        {
+            Item item = Item.inventory[i];
+            string name = Item.inventory[i].name + " : " + Item.inventory[i].price + " ¥";
+            Options shopOption = new Options(name, () => item.BuyItem());
+            shopOptions.Add(shopOption);
+        }
+        Options back = new Options("Exit shop", () => Exit());
+        shopOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(shopOptions, shopOptions[index], "\n\n Welcome to a Charashop, what can I do for you ? \n\n Current money : " + Player.money + " ¥");
+        Program.ChooseMenu(index, shopOptions, "\n\n Welcome to a Charashop, what can I do for you ? \n\n Current money : " + Player.money + " ¥");
+    }
+
+    public static void Computer()
+    {
+        Console.Clear();
+
+        pcOptions = new List<Options>();
+        for (int i = 0; i < CharamonActions.pc.Count; i++)
+        {
+            int a = i;
+            Charamon charamon = CharamonActions.pc[i];
+            string name = charamon.name;
+            Options pcOption = new Options(name, () => CharamonActions.SwapCharamon(a, charamon));
+            pcOptions.Add(pcOption);
+        }
+        Options back = new Options("Exit Computer", () => Exit());
+        pcOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(pcOptions, pcOptions[index], "Loged to COMPUTER.\n  Charamon captured : " + (CharamonActions.team.Count + CharamonActions.pc.Count));
+        Program.ChooseMenu(index, pcOptions, "Loged to COMPUTER.\n  Charamon captured : " + (CharamonActions.team.Count + CharamonActions.pc.Count));
+    }
+
+    static void CharaballInterraction(int itemId, int quantity)
+    {
+        Item.AddToInventory(itemId, quantity);
+        Map[player.TileY][player.TileX] = ' ';
+        Console.Clear();
+        DialogueMessage(15, "\n\n You found " + quantity + " " + Item.inventory[itemId].name, 10);
+    }
+
+    static void StartHouseToField()
+    {
+        SpawnAtLocation(Maps.Field, 'B');
+    }
+
+    static void FieldToStartHouse()
+    {
+        SpawnAtLocation(Maps.StartHouse, 'A');
+    }
+
+    static void CharaspitalToField()
+    {
+        SpawnAtLocation(Maps.Field, 'C');
+    }
+
+    static void FieldToCharaspital()
+    {
+        SpawnAtLocation(Maps.Charaspital, 'D');
+    }
+
+    static void CharashopToField()
+    {
+        SpawnAtLocation(Maps.Field, 'E');
+    }
+
+    static void FieldToCharashop()
+    {
+        SpawnAtLocation(Maps.Charashop, 'F');
+    }
+
+    public static void Exit()
+    {
+        //exit
     }
 
     static void UpdateDeltaTime()
@@ -344,54 +591,80 @@ public partial class Program
         }
     }
 
-    static void WriteMenu(List<Options> options, Options selectedOption)
+    static void MenuSave()
     {
         Console.Clear();
-        Console.WriteLine("\n\n  SELECT YOUR STARTER \n\n");
 
-        foreach (Options option in options)
+        saveOptions = new List<Options>();
+
+        Options back = new Options("No", () => Exit());
+        saveOptions.Add(back);
+
+        Options saveOption = new Options("yes", () => Save.SaveFile());
+        saveOptions.Add(saveOption);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(saveOptions, saveOptions[index], "\n\n Are you sure to save ? Your current save will be override.");
+        Program.ChooseMenu(index, saveOptions, "\n\n Are you sure to save ? Your current save will be override.");
+    }
+
+
+    // DIALOGUE AND TEXT METHODS
+    public static void DialogueMessage(int colorText, string text, int delay)
+    {
+        bool skip = false;
+        string textWithEnd = text + " ▼";
+        int currentX = CursorLeft;
+        int currentY = CursorTop;
+
+        for (int i = 0; i < textWithEnd.Length; i++)
         {
-            if (option == selectedOption)
+            TextColor(colorText, textWithEnd[i].ToString());
+            Thread.Sleep(delay);
+
+            if (KeyAvailable)
             {
-                Console.Write(" > ");
+                ConsoleKeyInfo keyInfo = ReadKey(true);
+                if (keyInfo.Key == ConsoleKey.Spacebar)
+                {
+                    TextColor(colorText, textWithEnd.Substring(i + 1));
+                    break;
+                }
             }
-            else
+        }
+        while (!skip)
+        {
+            ConsoleKeyInfo keyInfo = ReadKey(true);
+            if(keyInfo.Key == ConsoleKey.Spacebar)
             {
-                Console.Write("  ");
+                Console.SetCursorPosition(currentX,currentY);
+                TextColor(colorText, text + "  ");
+                skip = true;
             }
-            Console.WriteLine(option.Name + "\n");
         }
     }
 
-    static void WriteStarterMessage(Charamon charamon)
+    static void TextColor(int color, string text)
     {
-        CharamonActions.AddToTeam(charamon);
+        Console.ForegroundColor = (ConsoleColor)color;
+        Console.Write(text);
+        Console.ResetColor();
+    }
 
-        Console.Clear();
-        Console.Write("\n\n Nice choice ! ");
-        switch(charamon.id)
+    public static void PressSpaceToContiue()   
+    {
+        GetInput:
+        ConsoleKey key = Console.ReadKey(false).Key;
+        switch (key)
         {
-            case 1:
-                TextColor(10, charamon.name);
-                break;
-            case 4:
-                TextColor(12, charamon.name);
-                break;
-            case 7:
-                TextColor(9, charamon.name);
-                break;
-            default: break;
+            case ConsoleKey.Spacebar:
+                return;
+            case ConsoleKey.Escape:
+                gameRunning = false;
+                return;
+            default:
+                goto GetInput;
         }
-        Console.WriteLine(" is a good starter.\n\n\n");
-
-        Thread.Sleep(1000);
-        Console.WriteLine(" Now,");
-        Thread.Sleep(1000);
-        Console.WriteLine(" Proceed.");
-        Thread.Sleep(1000);
-        TextColor(14, "\n\n Press "); TextColor(6, "[enter]"); TextColor(14, " to continue...");
-
-        isCharamonSelected = true;
-        PressEnterToContiue();
     }
 }

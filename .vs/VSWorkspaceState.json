@@ -1,7 +1,15 @@
 {
   "ExpandedNodes": [
+<<<<<<< HEAD
     ""
   ],
   "SelectedNode": "\\Charamon.sln",
+=======
+    "",
+    "\\Charamon",
+    "\\Charamon\\Classes"
+  ],
+  "SelectedNode": "\\Charamon\\Classes\\Program.cs",
+>>>>>>> a27bc7c77b8b9ea5e1215182e98683fb62fea02e
   "PreviewInSolutionExplorer": false
 }
