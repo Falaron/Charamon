@@ -82,12 +82,12 @@ public partial class Program
         };
         int index = 0;
 
-        Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
+        /*Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
         Thread.Sleep(2000);
         Console.WriteLine(" CHARAMON !\n");
         Thread.Sleep(1000);
         Console.WriteLine(" Now, it's time for you to choose your starter. It will lead you to a great adventure.");
-        Thread.Sleep(4000);
+        Thread.Sleep(4000);*/
 
         WriteMenu(menuOptions, menuOptions[index]);
 
@@ -200,7 +200,7 @@ public partial class Program
                 break;
 
             // Open inventory
-            case ConsoleKey.Enter:
+            case ConsoleKey.I:
                 Inventory();
                 break;
 
