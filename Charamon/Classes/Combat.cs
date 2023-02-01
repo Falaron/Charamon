@@ -48,6 +48,7 @@ public static class CombatManager
         {
             Console.Clear();
             Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
+            CharamonActions.enemies.Remove(enemy);
             Program.inBattle = false;
             return; 
         }
@@ -117,6 +118,7 @@ public static class CombatManager
                 CharamonActions.GainXp(charamon, enemy);
             }
             else Program.DialogueMessage(15, "\n\n  You captured a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
+            CharamonActions.enemies.Remove(enemy);
             Program.inBattle = false;
         }
           
