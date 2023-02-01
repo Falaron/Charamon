@@ -390,7 +390,7 @@ public partial class Program
     {
         CharamonActions.HealAll();
         Console.Clear();
-        DialogueMessage(10, "\n\n All your pokemons are healed.", 15);
+        DialogueMessage(10, "\n\n The Charanurse healed and revived your team.", 15);
     }
 
     public static void Shop()
@@ -405,6 +405,8 @@ public partial class Program
             Options shopOption = new Options(name, () => item.BuyItem());
             shopOptions.Add(shopOption);
         }
+        Options info = new Options("How can I get money ?", () => Info("shop"));
+        shopOptions.Add(info);
         Options back = new Options("Exit shop", () => Exit());
         shopOptions.Add(back);
 
@@ -427,6 +429,8 @@ public partial class Program
             Options pcOption = new Options(name, () => CharamonActions.SwapCharamon(a, charamon));
             pcOptions.Add(pcOption);
         }
+        Options info = new Options("Informations", () => Info("pc"));
+        pcOptions.Add(info);
         Options back = new Options("Exit Computer", () => Exit());
         pcOptions.Add(back);
 
@@ -601,6 +605,34 @@ public partial class Program
         Console.Clear();
         Program.WriteMenu(saveOptions, saveOptions[index], "\n\n Are you sure to save ? Your current save will be override.");
         Program.ChooseMenu(index, saveOptions, "\n\n Are you sure to save ? Your current save will be override.");
+    }
+
+    public static void Info(string infoIndex)
+    {
+        Console.Clear();
+        switch (infoIndex)
+        {
+            case "pc":
+                Console.Write("\n\n Launching computer_explanation.exe...");
+                DialogueMessage(15, " [################]100%", 100);
+                DialogueMessage(15, "\n\n\n The pc allows you to see all Charamons you captured.", 10);
+                DialogueMessage(15, "\n\n If your team is complete (6 charamons), the next Charamons you'll capture will automatically be stocked in the pc.", 10);
+                DialogueMessage(15, "\n\n You are able to swap a Charamon of your team with one of the pc", 10);
+                Console.Write("\n\n\n *End of program* ");
+                Console.WriteLine("exiting computer_explanation.exe...");
+                Thread.Sleep(2000);
+                break;
+
+            case "shop":
+                DialogueMessage(15, "\n\n You want some money ?", 10);
+                DialogueMessage(15, "Work for me !", 10);
+                DialogueMessage(15, "\n\n Aha... I m   j o k i n g", 50);
+                Console.Clear();
+                DialogueMessage(15, "\n\n Kill or capture Charamons will give you money.", 10);
+                DialogueMessage(15, "\n Trainers of the arena will give you money if you beat them.", 10);
+                DialogueMessage(15, "\n\n That all you need to do, kid.", 10);
+                break;
+        }
     }
 
 
