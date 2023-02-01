@@ -95,7 +95,7 @@ public class SimplePotion : Item
             charamon.currentHp += 20;
             if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
         }
-        if (Program.inBattle)
+        if (CharamonActions.enemies.Count > 0)
             CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }
@@ -124,7 +124,7 @@ public class BigPotion : Item
             charamon.currentHp += 50;
             if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
         }
-        if (Program.inBattle)
+        if (CharamonActions.enemies.Count > 0)
             CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }
@@ -141,7 +141,7 @@ public class Charaball : Item
 
     public override void UseItem()
     {
-        if (Program.inBattle)
+        if (CharamonActions.enemies.Count > 0)
         {
             quantity--;
             Program.DialogueMessage(15, "\n\n  ...", 10);
@@ -181,7 +181,7 @@ public class Revive : Item
             Program.DialogueMessage(15, "\n\n  " + charamon.name + " revived and is fully restored.", 10);
         charamon.currentHp += charamon.stats["HP"];
         if (charamon.currentHp > charamon.stats["HP"]) charamon.currentHp = charamon.stats["HP"];
-        if (Program.inBattle)
+        if (CharamonActions.enemies.Count > 0)
             CharamonActions.EnemyAttack(CharamonActions.enemies[0], CharamonActions.team[0]);
     }
 }

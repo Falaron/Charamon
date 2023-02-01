@@ -49,7 +49,6 @@ public static class CombatManager
             Console.Clear();
             Program.DialogueMessage(15, "\n\n You escaped successfully !", 10);
             CharamonActions.enemies.Remove(enemy);
-            Program.inBattle = false;
             return; 
         }
         else
@@ -119,13 +118,11 @@ public static class CombatManager
             }
             else Program.DialogueMessage(15, "\n\n  You captured a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
             CharamonActions.enemies.Remove(enemy);
-            Program.inBattle = false;
         }
           
     }
     public static void EnterCombat(char[][] map)
     {
-        Program.inBattle = true;
         Random random = new Random();
         float percentage = random.Next(100);
         float[,] pool = Maps.maps[map];

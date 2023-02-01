@@ -29,8 +29,6 @@ public partial class Program
     public static List<Options> saveOptions;
     public static bool isCharamonSelected = false;
     static bool gameRunning = true;
-    public static bool inBattle = false;
-
 
     static Player player
     {

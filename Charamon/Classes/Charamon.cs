@@ -184,6 +184,7 @@ public class CharamonActions
                 / defender.stats["Sp. Defense"] / 50) + 2)
                 * GetTypeAdvantage(attacker, defender, attack));
             defender.currentHp -= damage;
+            if (defender.currentHp < 0) defender.currentHp = 0;
         }
         else
         {
@@ -191,6 +192,7 @@ public class CharamonActions
                  / defender.stats["Defense"] / 50) + 2)
                  * GetTypeAdvantage(attacker, defender, attack));
             defender.currentHp -= damage;
+            if (defender.currentHp < 0) defender.currentHp = 0;
         }
         Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
 
@@ -366,6 +368,10 @@ public class CharamonActions
         foreach (var charamon in team)
         {
             charamon.currentHp = charamon.stats["HP"];
+            foreach (var ability in charamon.abilities)
+            {
+                ability.pp = ability.pp;
+            }
         }
     }
     public static void SwitchPokemon(int target1, int target2)
