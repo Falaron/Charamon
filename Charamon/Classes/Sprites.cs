@@ -7,7 +7,7 @@ public static class Sprites
     public static int SpriteWidth { get => _spriteWidth; }
     public static int SpriteHeight { get => _spriteHeight; }
 
-    
+
 
     public const string Empty =
         @"       " + "\n" +
@@ -29,11 +29,26 @@ public static class Sprites
         @"|█████|" + "\n" +
         @"|██ ██|" + "\n" +
         @"|██ ██|";
-    public const string ZoneField =
+    public const string Charaspital =
+        @"/  +  \" + "\n" +
+        @"|█████|" + "\n" +
+        @"|██ ██|" + "\n" +
+        @"|██ ██|";
+    public const string Charashop =
+        @"/  ¥  \" + "\n" +
+        @"|█████|" + "\n" +
+        @"|██ ██|" + "\n" +
+        @"|██ ██|";
+    public const string Charaball =
         @"       " + "\n" +
-        @"       " + "\n" +
-        @"       " + "\n" +
+        @"   _   " + "\n" +
+        @"  (©)  " + "\n" +
         @"       ";
+    public const string PC =
+        @"._____." + "\n" +
+        @"|     |" + "\n" +
+        @"|_____|" + "\n" +
+        @"|[#]oo|";
     public const string StadiumEntry =
         @"XXXXXXX" + "\n" +
         @"STADIUM" + "\n" +
@@ -41,6 +56,11 @@ public static class Sprites
         @"XXXXXXX";
 
 
+    public const string PNJ =
+        @"   n_  " + "\n" +
+        @"   @   " + "\n" +
+        @"  /|\  " + "\n" +
+        @"  / \  ";
     public const string Tree =
         @"  (@@) " + "\n" +
         @" (@@@@)" + "\n" +
@@ -61,11 +81,21 @@ public static class Sprites
         @"███████" + "\n" +
         @"███████" + "\n" +
         @"███████";
-    public const string InvisibleWall =
+    public const string Table =
         @"       " + "\n" +
         @"       " + "\n" +
-        @"       " + "\n" +
-        @"       ";
+        @"███████" + "\n" +
+        @"███████";
+    public const string TableLeft =
+        @"     ██" + "\n" +
+        @"     ██" + "\n" +
+        @"     ██" + "\n" +
+        @"     ██";
+    public const string TableRight =
+        @"██     " + "\n" +
+        @"██     " + "\n" +
+        @"██     " + "\n" +
+        @"██     ";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +
