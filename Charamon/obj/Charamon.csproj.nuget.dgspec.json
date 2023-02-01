@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\arthu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {}
+    "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {}
   },
   "projects": {
-    "C:\\Users\\arthu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {
+    "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\Charamon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\arthu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
+        "projectUniqueName": "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
         "projectName": "Charamon",
-        "projectPath": "C:\\Users\\arthu\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
-        "packagesPath": "C:\\Users\\arthu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\arthu\\source\\repos\\Charamon\\Charamon\\obj\\",
+        "projectPath": "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\Charamon.csproj",
+        "packagesPath": "C:\\Users\\arthurjouve\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\arthurjouve\\source\\repos\\Charamon\\Charamon\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\arthu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\arthurjouve\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
