@@ -12,7 +12,8 @@ using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
+using System.Drawing;
+using System.Globalization;
 
 namespace ProjectCharamon;
 
@@ -56,7 +57,6 @@ public partial class Program
         {
             RenderWorldMapView();
             PlayerInputs();
-            UpdateDeltaTime();
         }
     }
 
@@ -85,7 +85,7 @@ public partial class Program
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
         TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
 
-        TextColor(8, "\n\n\n\n" + " INPUTS\n" + " move: directional_keys\n" + " interract/dialogue: spacebar\n" + " inventory: i\n" + " save progession: s");
+        TextColor(8, "\n\n\n\n" + " INPUTS\n" + " move:        directional_keys\n" + " interract:   spacebar\n" + " inventory:   i\n" + " save:        s\n" + " quit game:   escape");
 
         PressSpaceToContiue();
     }
@@ -182,6 +182,7 @@ public partial class Program
         }
 
         Console.WriteLine("\n\n  Press [Space] to select");
+        Console.WriteLine("\n\n  ────────────────────────────────────────────────────────────");
     }
 
     public static void ChooseMenu(int index, List<Options> menu, string text)
@@ -276,66 +277,8 @@ public partial class Program
                     ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
                 };
 
-                if (Maps.DontCollide(Map, tileX, tileY))
-                {
-                    switch (keyPressed)
-                    {
-                        case ConsoleKey.UpArrow:
-                            player.posY -= Sprites.SpriteHeight;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            player.posY += Sprites.SpriteHeight;
-                            break;
-                        case ConsoleKey.LeftArrow:
-                            player.posX -= Sprites.SpriteWidth;
-                            break;
-                        case ConsoleKey.RightArrow:
-                            player.posX += Sprites.SpriteWidth;
-                            break;
-                    }
-                }
-                switch (Maps.CheckForInterraction(Map, tileX, tileY))
-                {
-                    case 1:
-                        Random random = new Random();
-                        int proba = random.Next(100);
-                        if (proba <=16) 
-                        {
-                            GrassInterraction();
-                        }
-                        break;
-                    case 2:
-                        StartHouseToField();
-                        break;
-                    case 3:
-                        FieldToStartHouse();
-                        break;
-                    case 4:
-                        CharaballInterraction(1, 2);
-                        break;
-                    case 5:
-                        FieldToCharaspital();
-                        break;
-                    case 6:
-                        CharaspitalToField();
-                        break;
-                    case 7:
-                        HealCharamons();
-                        break;
-                    case 8:
-                        FieldToCharashop();
-                        break;
-                    case 9:
-                        CharashopToField();
-                        break;
-                    case 10:
-                        Shop();
-                        break;
-                    case 11:
-                        Computer();
-                        break;
-                    default: break;
-                }
+                CheckCollision(keyPressed, tileX, tileY);
+                CheckInterraction(tileX, tileY);
                 break;
 
             // Open inventory
@@ -478,21 +421,41 @@ public partial class Program
         SpawnAtLocation(Maps.Charashop, 'F');
     }
 
+    static void FieldToWilds()
+    {
+        bool canEnter = false;
+        foreach(Charamon charamon in CharamonActions.team)
+        {
+            if (charamon.level >= 6 &&  CharamonActions.team.Count >= 4)
+            {
+                Console.Clear();
+                DialogueMessage(15, "\n\n You enter into the Wilds...", 10);
+                canEnter = true;
+                //SpawnAtLocation(Maps.Wilds, 'H');
+                break;
+            }
+
+
+        }
+        if(!canEnter)
+        {
+            Console.Clear();
+            DialogueMessage(15, "\n\n The wilds is the only way to the arena.. but it's a dangerous zone...", 30);
+            Console.Clear();
+            DialogueMessage(15, "\n\n You shall be stronger to go forward.", 20);
+            DialogueMessage(8, "\n\n One Charamon of your team muse be at least level 6.", 0);
+            DialogueMessage(8, "\n You must catch at least 4 Charamons.", 0);
+        }
+    }
+
+    static void WildsToField()
+    {
+        SpawnAtLocation(Maps.Field, 'G');
+    }
+
     public static void Exit()
     {
         //exit
-    }
-
-    static void UpdateDeltaTime()
-    {
-        // frame rate control (33 fps)
-        DateTime now = DateTime.Now;
-        TimeSpan sleep = TimeSpan.FromMilliseconds(33) - (now - previoiusRender);
-        if (sleep > TimeSpan.Zero)
-        {
-            Thread.Sleep(sleep);
-        }
-        previoiusRender = DateTime.Now;
     }
 
     static void RenderWorldMapView()
@@ -632,6 +595,79 @@ public partial class Program
                 DialogueMessage(15, "\n Trainers of the arena will give you money if you beat them.", 10);
                 DialogueMessage(15, "\n\n That all you need to do, kid.", 10);
                 break;
+        }
+    }
+
+    static void CheckCollision(ConsoleKey keyPressed, int tileX, int tileY)
+    {
+        if (Maps.DontCollide(Map, tileX, tileY))
+        {
+            switch (keyPressed)
+            {
+                case ConsoleKey.UpArrow:
+                    player.posY -= Sprites.SpriteHeight;
+                    break;
+                case ConsoleKey.DownArrow:
+                    player.posY += Sprites.SpriteHeight;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    player.posX -= Sprites.SpriteWidth;
+                    break;
+                case ConsoleKey.RightArrow:
+                    player.posX += Sprites.SpriteWidth;
+                    break;
+            }
+        }
+    }
+    static void CheckInterraction(int tileX, int tileY)
+    {
+        switch (Maps.CheckForInterraction(Map, tileX, tileY))
+        {
+            case 1:
+                Random random = new Random();
+                int proba = random.Next(100);
+                if (proba <= 16)
+                {
+                    GrassInterraction();
+                }
+                break;
+            case 2:
+                StartHouseToField();
+                break;
+            case 3:
+                FieldToStartHouse();
+                break;
+            case 4:
+                CharaballInterraction(1, 2);
+                break;
+            case 5:
+                FieldToCharaspital();
+                break;
+            case 6:
+                CharaspitalToField();
+                break;
+            case 7:
+                HealCharamons();
+                break;
+            case 8:
+                FieldToCharashop();
+                break;
+            case 9:
+                CharashopToField();
+                break;
+            case 10:
+                Shop();
+                break;
+            case 11:
+                Computer();
+                break;
+            case 12:
+                FieldToWilds();
+                break;
+            case 13:
+                WildsToField();
+                break;
+            default: break;
         }
     }
 

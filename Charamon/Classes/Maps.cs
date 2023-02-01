@@ -30,6 +30,15 @@ public static class Maps
                 'h' => Sprites.Table, //heal table
                 'c' => Sprites.Charaball,
                 'e' => Sprites.PC,
+                'k' => Sprites.Water,
+                '1' => Sprites.WaterBottom,
+                '2' => Sprites.WaterTop,
+                '3' => Sprites.WaterRight,
+                '4' => Sprites.WaterLeft,
+                '5' => Sprites.WaterDiagRight,
+                '6' => Sprites.WaterDiagLeft,
+                '7' => Sprites.WaterDiagTopRight,
+                '8' => Sprites.WaterDiagTopLeft,
 
 
                 // BUILDINGS
@@ -39,6 +48,8 @@ public static class Maps
                 'D' => Sprites.Empty,        // Charaspital => Field
                 'E' => Sprites.Charashop,    // Field => Charashop
                 'F' => Sprites.Empty,        // Charashop => Field
+                'G' => Sprites.Empty,        // Field => Wilds
+                'H' => Sprites.Empty,        // Wilds => Field
 
 
                 ' ' => Sprites.Empty,
@@ -59,6 +70,14 @@ public static class Maps
             's' => true,
             'z' => true,
             'c' => true,
+            '1' => true,
+            '2' => true,
+            '3' => true,
+            '4' => true,
+            '5' => true,
+            '6' => true,
+            '7' => true,
+            '8' => true,
             _ => false
         };
     }
@@ -78,22 +97,38 @@ public static class Maps
             'F' => 9,
             'j' => 10,
             'e' => 11,
+            'G' => 12,
+            'H' => 13,
             _ => 0
         };
     }
 
     public static readonly char[][] Field = new char[][]
     {
-        "mmmmmmm    mmmm".ToCharArray(),
-        "mm           mm".ToCharArray(),
+        "                    ".ToCharArray(),
+        "                   mm".ToCharArray(),
+        "m                  m".ToCharArray(),
+        "mmm     mmiimmmm   m".ToCharArray(),
+        "mmmmmmmmmmGGmmmmmmmm".ToCharArray(),
+        "mmmmmmmmmm  mmmmmmmm".ToCharArray(),
+        "mmgggg   11111 gg   mmm".ToCharArray(),
+        "mm     15kkkkk61       mm".ToCharArray(),
+        "mm    3kkkkkkkkk4gggggggmm".ToCharArray(),
+        "mm    3kkkkkkk82  ggggmm".ToCharArray(),
+        "mmgg   227kkkk4       mm".ToCharArray(),
+        "mm   gg   2222 mmmmmmm".ToCharArray(),
         "mmmm         mm".ToCharArray(),
-        "mmmmmfffffffmmm".ToCharArray(),
-        "mmmmggg C g  mm".ToCharArray(),
-        "mmggg    tt  Em".ToCharArray(),
+        "mmmmmmmmgggmmm".ToCharArray(),
+        "mmmmmmmgggmmmmm".ToCharArray(),
+        "mmmmmmm gg mmm".ToCharArray(),
+        "mmmm         mm".ToCharArray(),
+        "mmmmmfff  ffmmm".ToCharArray(),
+        "mmmmC       mm".ToCharArray(),
+        "mm       tt  Em".ToCharArray(),
         "mmm       B   m".ToCharArray(),
         "mm    t       m".ToCharArray(),
-        "mmm   gg tt   m".ToCharArray(),
-        "ttttttttttttmmm".ToCharArray(),
+        "mmm      tt   m".ToCharArray(),
+        "mmmmmmmmmmmmmm".ToCharArray(),
     };
 
     public static float[,] FieldPool = new float[,]

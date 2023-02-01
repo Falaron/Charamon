@@ -194,7 +194,7 @@ public class CharamonActions
             defender.currentHp -= damage;
             if (defender.currentHp < 0) defender.currentHp = 0;
         }
-        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
+        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
         {
@@ -298,7 +298,7 @@ public class CharamonActions
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
-            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level, 10);
+            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level + "\n", 10);
             UpdateStats(target);
             if (target.level >= target.evolutionLvl)  Evolve(target);
             Program.PressSpaceToContiue();
@@ -313,13 +313,13 @@ public class CharamonActions
                 int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
-                Console.WriteLine(" " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
+                Console.WriteLine("  " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
             }
             else
             {
                 int stat = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + 5;
-                Console.WriteLine(kvp.Key +" " + target.stats[kvp.Key]+  " => " + stat);
+                Console.WriteLine(kvp.Key +"  " + target.stats[kvp.Key]+  " => " + stat);
             }
         }
         target.xpThreshold = (int)Math.Pow(target.level, 3);

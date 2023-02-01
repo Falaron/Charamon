@@ -96,6 +96,52 @@ public static class Sprites
         @"██     " + "\n" +
         @"██     " + "\n" +
         @"██     ";
+
+    public const string Water =
+        @"~  ~   " + "\n" +
+        @"    ~  " + "\n" +
+        @" ~    ~" + "\n" +
+        @"   ~   ";
+    public const string WaterTop =
+        @"───────" + "\n" +
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       ";
+    public const string WaterBottom =
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"       " + "\n" +
+        @"───────";
+    public const string WaterRight =
+        @"      │" + "\n" +
+        @"      │" + "\n" +
+        @"      │" + "\n" +
+        @"      │";
+    public const string WaterLeft =
+        @"│      " + "\n" +
+        @"│      " + "\n" +
+        @"│      " + "\n" +
+        @"│      ";
+    public const string WaterDiagRight =
+        @"      │" + "\n" +
+        @"      │" + "\n" +
+        @"      |" + "\n" +
+        @"──────┘";
+    public const string WaterDiagLeft =
+        @"│      " + "\n" +
+        @"│      " + "\n" +
+        @"│      " + "\n" +
+        @"└──────";
+    public const string WaterDiagTopLeft =
+        @"┌──────" + "\n" +
+        @"│      " + "\n" +
+        @"│      " + "\n" +
+        @"│      ";
+    public const string WaterDiagTopRight =
+        @"──────┐" + "\n" +
+        @"      │" + "\n" +
+        @"      │" + "\n" +
+        @"      │";
     public const string Error =
         @"=======" + "\n" +
         @"=unexi=" + "\n" +
