@@ -17,6 +17,10 @@ internal class Save
         string teamFileName = "Team_SaveFile.json";
         string jsonTeam = JsonSerializer.Serialize(CharamonActions.team);
 
+        TextWriter tw = new StreamWriter("PlayerSave.txt");
+        tw.WriteLine(Player.money);
+        tw.Close();
+
 
         File.WriteAllText(pcFileName, jsonPc);
         File.WriteAllText(teamFileName, jsonTeam);
@@ -33,6 +37,11 @@ internal class Save
             string json = r.ReadToEnd();
             CharamonActions.pc = JsonSerializer.Deserialize<List<Charamon>>(json);
         }
+
+        TextReader tr = new StreamReader("PlayerSave.txt");
+        string money = tr.ReadLine();
+        Player.money = Convert.ToInt32(money);
+        tr.Close();
     }
 }
 

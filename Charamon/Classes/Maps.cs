@@ -4,6 +4,7 @@ namespace ProjectCharamon;
 
 public static class Maps
 {
+
     public static string GetMapTileRender(char[][] map, int tileX, int tileY)
     {
         if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
@@ -126,7 +127,7 @@ public static class Maps
         "mmmmC       mm".ToCharArray(),
         "mm       tt  Em".ToCharArray(),
         "mmm       B   m".ToCharArray(),
-        "mm    t       m".ToCharArray(),
+        "mm    t   X   m".ToCharArray(),
         "mmm      tt   m".ToCharArray(),
         "mmmmmmmmmmmmmm".ToCharArray(),
     };
@@ -144,7 +145,7 @@ public static class Maps
         "w yhhhv w".ToCharArray(),
         "w       w".ToCharArray(),
         "wc      w".ToCharArray(),
-        "w       w".ToCharArray(),
+        "w   X   w".ToCharArray(),
         "wwwwDwwww".ToCharArray(),
         "    i    ".ToCharArray()
     };
@@ -156,7 +157,7 @@ public static class Maps
         "wxj  xxxw".ToCharArray(),
         "w       w".ToCharArray(),
         "w    xxxw".ToCharArray(),
-        "w       w".ToCharArray(),
+        "w   X   w".ToCharArray(),
         "wwwwFwwww".ToCharArray(),
         "    i    ".ToCharArray()
     };
