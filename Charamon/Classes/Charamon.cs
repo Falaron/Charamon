@@ -9,11 +9,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ProjectCharamon;
 
 public class CharamonActions
 {
+    public static List<Options> swapTeamOptions;
     class Pokemons
     {
         List<Pokemon> _pokemons;
@@ -77,7 +79,8 @@ public class CharamonActions
             charamon.evolutionLvl = Convert.ToInt16(chosenPokemon.evolution["next"][1]);
             charamon.evolutionId = Convert.ToInt16(chosenPokemon.evolution["next"][0]);
         }
-        charamon.level = level;
+        if (level <= 0) charamon.level = 1;
+        else charamon.level = level;
         Random random = new Random();
         int nbAbilities = random.Next(2, 4);
         for (int i = 0; i < nbAbilities; i++)
@@ -129,7 +132,9 @@ public class CharamonActions
                     {
                         if (AllDead())
                         {
-                            Environment.Exit(0); //or return to infirmary
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n  All your pokemons are dead...", 50);
+                            Environment.Exit(0);
                         }
                         CombatManager.Charamons(attacker, defender);                       
                     }                 
@@ -161,14 +166,12 @@ public class CharamonActions
             }
             else
             {
-                Console.Clear();
-                Program.DialogueMessage(15, "\n\n Not enough PP", 10);
+                Program.DialogueMessage(15, "\n\n  Not enough PP", 10);
             }  
         }   
         else
         {
-            Console.Clear();
-            Program.DialogueMessage(15, "\n\n " + attack.ename + " missed", 10);
+            Program.DialogueMessage(15, "\n\n  " + attack.ename + " missed", 10);
             EnemyAttack(defender, attacker);
         }
     }
@@ -189,7 +192,6 @@ public class CharamonActions
                  * GetTypeAdvantage(attacker, defender, attack));
             defender.currentHp -= damage;
         }
-        Console.Clear();
         Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
@@ -207,8 +209,8 @@ public class CharamonActions
             default: break;
         }
     }
-    /// Represents the efficiency of each type to another (indexes mentioned bellow)
-    /// Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy 
+    /* Represents the efficiency of each type to another (indexes mentioned bellow)
+     Normal Fighting Flying Poison Ground Rock Bug Ghost Steel Fire Water Grass Electric Psychic Ice Dragon Dark Fairy */
     public static float[,] typeTable = new float[18, 18] {
         {1, 1, 1, 1, 1, 0.5f, 1, 0, 0.5f, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {2, 1, 0.5f, 0.5f, 1, 2, 0.5f, 0, 2, 1, 1, 1, 1, 0.5f, 2, 1, 2, 0.5f},
@@ -285,7 +287,9 @@ public class CharamonActions
     }
     public static void GainXp(Charamon target, Charamon defeated)
     {
-        target.xp += 60 * defeated.level / 7;
+        int xpGain = 60 * defeated.level / 7;
+        target.xp += xpGain;
+        Program.DialogueMessage(15, target.name + " gained " + xpGain + " xp !", 10);
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
@@ -341,18 +345,21 @@ public class CharamonActions
     {
         pc.Add(target);
     }
-    public static void TryToCapture(Charamon target)
+    public static bool TryToCapture(Charamon target)
     {
         Random random = new Random();
 
-        float f = (target.stats["HP"] * 255 * 4) / target.currentHp * 12;
+        float f = (target.stats["HP"] * 255 * 4) / (target.currentHp * 12);
         float m = random.Next(255);
 
         if (f >= m)
         {
             if (team.Count >= 6) AddToPC(target);
             else AddToTeam(target);
+            enemies.Remove(target);
+            return true;
         }
+        return false;
     }
     public static void HealAll()
     {
@@ -363,13 +370,37 @@ public class CharamonActions
     }
     public static void SwitchPokemon(int target1, int target2)
     {
-        Charamon substitute = team[target1];
-        team[target1] = team[target2];
-        team[target2] = substitute;
+        if (team[target2].currentHp > 0)
+        {
+            Charamon substitute = team[target1];
+            team[target1] = team[target2];
+            team[target2] = substitute;
+            Program.DialogueMessage(15, "\n\n " + team[target1].name + "... GO !", 10);
+        } 
+        else Program.DialogueMessage(15, "\n\n " + team[target2].name +" is KO !" , 10);
+    }
+
+    public static void SwapCharamon(int pcSlot, Charamon target)
+    {
+        swapTeamOptions = new List<Options>();
+        for (int i = 0; i < CharamonActions.team.Count; i++)
+        {
+            int a = i;
+            Options charamonOption = new Options(CharamonActions.team[i].name, () => SwitchFromPC(pcSlot, a));
+            swapTeamOptions.Add(charamonOption);
+        }
+        Options back = new Options("Return", () => Program.Exit());
+        swapTeamOptions.Add(back);
+
+        int index = 0;
+        Console.Clear();
+        Program.WriteMenu(swapTeamOptions, swapTeamOptions[index], "");
+        Program.ChooseMenu(index, swapTeamOptions, "");
     }
     public static void GetFromPc(Charamon target)
     {
         AddToTeam(target);
+        pc.Remove(target);
     }
     public static void SwitchFromPC(int pcSlot, int teamSlot)
     {
@@ -389,7 +420,7 @@ public class CharamonActions
         newAbility = _ablties.abilities[aId];
         if (charamon.type.Length == 2)
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0] && newAbility.type != charamon.type[1])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
@@ -398,7 +429,7 @@ public class CharamonActions
         }
         else
         {
-            while (newAbility.category == "status" || newAbility.power == 0 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
+            while (newAbility.category == "status" || newAbility.power == 0 && newAbility.power > charamon.level * 5 || newAbility.accuracy == 0 || newAbility.type != charamon.type[0])
             {
                 aId = random.Next(_ablties.abilities.Count());
                 newAbility = _ablties.abilities[aId];
