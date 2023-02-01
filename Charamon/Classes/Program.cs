@@ -11,6 +11,7 @@ using Microsoft.VisualBasic.FileIO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 
 namespace ProjectCharamon;
@@ -51,7 +52,6 @@ public partial class Program
         Item.AddToInventory(0, 5);
         Item.AddToInventory(2, 50);
         Item.AddToInventory(3,2);
-        Player.money = 20;
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -84,6 +84,8 @@ public partial class Program
         Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
         TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
+
+        TextColor(8, "\n\n\n\n" + " INPUTS\n" + " move: directional_keys\n" + " interract/dialogue: spacebar\n" + " inventory: i\n" + " save progession: s");
 
         PressSpaceToContiue();
     }
@@ -122,20 +124,9 @@ public partial class Program
                 new Options(starterThree.name, () =>  WriteStarterMessage(starterThree))
         };
         int index = 0;
-
-<<<<<<< HEAD
-        /*Console.Write("\n\n Hi, my name is professor Char, welcome to the world of...");
-        Thread.Sleep(2000);
-        Console.WriteLine(" CHARAMON !\n");
-        Thread.Sleep(1000);
-        Console.WriteLine(" Now, it's time for you to choose your starter. It will lead you to a great adventure.");
-        Thread.Sleep(4000);*/
-=======
         DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 10);
         DialogueMessage(15, " CHARAMON !", 10);
-        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 10);
->>>>>>> 9d0b8d02d933cf9634d8325a4141773ac5ccfc6e
-
+        DialogueMessage(15, "\n\n As a new trainer, it's time for you to choose your starter. It will leads you to a great adventure.", 10);
 
         if (!isCharamonSelected)
         {
@@ -237,7 +228,7 @@ public partial class Program
         CharamonActions.AddToTeam(charamon);
 
         Console.Clear();
-        DialogueMessage(15, "\n\n Nice choice ! ", 10);
+        DialogueMessage(15, "\n\n Nice choice !", 10);
 
         switch (charamon.id)
         {
@@ -252,12 +243,15 @@ public partial class Program
                 break;
             default: break;
         }
-        Console.WriteLine("\n");
-        DialogueMessage(15, " Now,", 50);
-        Console.WriteLine();
-        DialogueMessage(15, " Proceed.", 50);
-        Console.WriteLine("\n");
-        TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
+        Console.Clear();
+        DialogueMessage(15, "\n\n You objective is to reach the arena of this land !", 10);
+        DialogueMessage(15, "However,", 10);
+        DialogueMessage(15, "this task is not easy...", 30);
+        DialogueMessage(15, "\n\n Train you charamon,", 30);
+        DialogueMessage(15, "it needs to be stronger.", 60);
+        DialogueMessage(15, "\n\n Now,", 10);
+        DialogueMessage(15, "\n Proceed.", 10);
+        TextColor(14, "\n\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
 
         isCharamonSelected = true;
         PressSpaceToContiue();
@@ -382,8 +376,8 @@ public partial class Program
 
         int index = 0;
         Console.Clear();
-        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY");
-        Program.ChooseMenu(index, inventoryOptions, "INVENTORY");
+        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY\n\n  Current money : " + Player.money + " ¥\n\n");
+        Program.ChooseMenu(index, inventoryOptions, "INVENTORY\n\n  Current money : " + Player.money + " ¥\n\n");
     }
 
     static void GrassInterraction()

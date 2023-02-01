@@ -290,7 +290,10 @@ public class CharamonActions
     public static void GainXp(Charamon target, Charamon defeated)
     {
         int xpGain = 60 * defeated.level / 7;
+        int moneyGain = 5 * defeated.level / 7;
         target.xp += xpGain;
+        Player.money += moneyGain;
+        Program.DialogueMessage(15, "You gained " + moneyGain + "¥", 10);
         Program.DialogueMessage(15, target.name + " gained " + xpGain + " xp !", 10);
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
