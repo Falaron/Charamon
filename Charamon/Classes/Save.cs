@@ -17,7 +17,7 @@ internal class Save
         string teamFileName = "Team_SaveFile.json";
         string jsonTeam = JsonSerializer.Serialize(CharamonActions.team);
 
-        
+
         File.WriteAllText(pcFileName, jsonPc);
         File.WriteAllText(teamFileName, jsonTeam);
     }
