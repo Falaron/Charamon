@@ -52,7 +52,6 @@ public static class Maps
                 'F' => Sprites.Empty,        // Charashop => Field
                 'G' => Sprites.Empty,        // Field => Wilds
                 'H' => Sprites.Empty,        // Wilds => Field
-                'Z' => Sprites.StadiumEntry, // Wilds => Stadium
                 'I' => Sprites.Arena,        // Wilds => Arena
                 'J' => Sprites.Empty,        // Arena => Wilds
 

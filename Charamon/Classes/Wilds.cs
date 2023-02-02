@@ -52,7 +52,7 @@ public class Wilds
         if ((i >= 1 && i < 63 && j >= 0 && j < 63) && map[i][j] != 't' && map[i][j] != 'm' && visited[i, j] == 0)
         {
             visited[i, j] = 1;
-            if (map[i][j] == 'Z') return true;
+            if (map[i][j] == 'I') return true;
 
             bool left = IsaPath(i - 1, j, visited);
             if (left) return true;
@@ -108,7 +108,7 @@ public class Wilds
             }
             map[i] = chars;
         }
-        map[1][32] = 'Z';
+        map[1][32] = 'I';
         map[62][32] = 'X';
     }
     public static char FromFloatToChar(float n)

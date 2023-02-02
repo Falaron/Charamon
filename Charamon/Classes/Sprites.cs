@@ -54,11 +54,6 @@ public static class Sprites
         @"|     |" + "\n" +
         @"|_____|" + "\n" +
         @"|[#]oo|";
-    public const string StadiumEntry =
-        @"XXXXXXX" + "\n" +
-        @"STADIUM" + "\n" +
-        @"XXXXXXX" + "\n" +
-        @"XXXXXXX";
 
 
     public const string PNJ =
