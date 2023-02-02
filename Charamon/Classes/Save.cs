@@ -16,6 +16,8 @@ internal class Save
         string jsonPc = JsonSerializer.Serialize(CharamonActions.pc);
         string teamFileName = "Team_SaveFile.json";
         string jsonTeam = JsonSerializer.Serialize(CharamonActions.team);
+        string inventoryFileName = "Inventory_SaveFile.json";
+        string jsonInventory = JsonSerializer.Serialize(Item.inventory);
 
         TextWriter tw = new StreamWriter("PlayerSave.txt");
         tw.WriteLine(Player.money);
@@ -24,6 +26,7 @@ internal class Save
 
         File.WriteAllText(pcFileName, jsonPc);
         File.WriteAllText(teamFileName, jsonTeam);
+        File.WriteAllText(inventoryFileName, jsonInventory);
     }
     public static void LoadFile()
     {
@@ -36,6 +39,11 @@ internal class Save
         {
             string json = r.ReadToEnd();
             CharamonActions.pc = JsonSerializer.Deserialize<List<Charamon>>(json);
+        }
+        using (StreamReader r = new StreamReader("Inventory_SaveFile.json"))
+        {
+            string json = r.ReadToEnd();
+            Item.inventory = JsonSerializer.Deserialize<List<Item>>(json);
         }
 
         TextReader tr = new StreamReader("PlayerSave.txt");

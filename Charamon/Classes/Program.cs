@@ -50,9 +50,6 @@ public partial class Program
         Initialize();
         StartScreen();
         MenuScreen();
-        Item.AddToInventory(0, 5);
-        Item.AddToInventory(2, 50);
-        Item.AddToInventory(3,2);
         while (gameRunning)
         {
             RenderWorldMapView();
@@ -69,11 +66,9 @@ public partial class Program
 
         player = new();
         {
-            SpawnAtLocation(Maps.StartHouse, 'X');
+            SpawnAtLocation(Maps.Arena, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
-
-
     }
 
     static void StartScreen()
@@ -116,6 +111,7 @@ public partial class Program
         Charamon starterOne = CharamonActions.CreateCharamon(0, 5);
         Charamon starterTwo = CharamonActions.CreateCharamon(3, 5);
         Charamon starterThree = CharamonActions.CreateCharamon(6, 5);
+        Item.AddToInventory(2, 15);
 
         menuOptions = new List<Options>
         {
@@ -148,8 +144,8 @@ public partial class Program
                 break;
 
             case 1:
-                //load
-                if(File.Exists(@"Team_SaveFile.json"))
+                // check if files exists
+                if(File.Exists(@"Team_SaveFile.json") && File.Exists(@"Pc_SaveFile.json") && File.Exists(@"Inventory_SaveFile.json") && File.Exists(@"PlayerSave.txt"))
                 {
                     Save.LoadFile();
                     return;
@@ -329,6 +325,13 @@ public partial class Program
         CombatManager.EnterCombat(Map);
     }
 
+    static void ArenaBossInterraction()
+    {
+        Console.Clear();
+        DialogueMessage(15, "\n\n Well, i'm the big boss of this arena !" , 30);
+        //CombatManager.EnterCombat(Map);
+    }
+
     static void HealCharamons()
     {
         CharamonActions.HealAll();
@@ -426,12 +429,12 @@ public partial class Program
         bool canEnter = false;
         foreach(Charamon charamon in CharamonActions.team)
         {
-            if (charamon.level >= 6 &&  CharamonActions.team.Count >= 4)
+            if (charamon.level >= 6 &&  CharamonActions.team.Count >= 2)
             {
                 Console.Clear();
                 DialogueMessage(15, "\n\n You enter into the Wilds...", 10);
                 canEnter = true;
-                //SpawnAtLocation(Maps.Wilds, 'H');
+                SpawnAtLocation(Wilds.map, 'X');
                 break;
             }
 
@@ -444,13 +447,23 @@ public partial class Program
             Console.Clear();
             DialogueMessage(15, "\n\n You shall be stronger to go forward.", 20);
             DialogueMessage(8, "\n\n One Charamon of your team muse be at least level 6.", 0);
-            DialogueMessage(8, "\n You must catch at least 4 Charamons.", 0);
+            DialogueMessage(8, "\n You must catch at least 2 Charamons.", 0);
         }
     }
 
     static void WildsToField()
     {
         SpawnAtLocation(Maps.Field, 'G');
+    }
+
+    static void WildsToArena()
+    {
+        SpawnAtLocation(Maps.Arena, 'J');
+    }
+
+    static void ArenaToWilds()
+    {
+        SpawnAtLocation(Wilds.map, 'I');
     }
 
     public static void Exit()
@@ -666,6 +679,15 @@ public partial class Program
                 break;
             case 13:
                 WildsToField();
+                break;
+            case 14:
+                ArenaBossInterraction();
+                break;
+            case 15:
+                WildsToArena();
+                break;
+            case 16:
+                ArenaToWilds();
                 break;
             default: break;
         }

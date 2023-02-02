@@ -39,6 +39,11 @@ public static class Sprites
         @"|█████|" + "\n" +
         @"|██ ██|" + "\n" +
         @"|██ ██|";
+    public const string Arena =
+        @"iiiiiii" + "\n" +
+        @"|█████|" + "\n" +
+        @"|█i i█|" + "\n" +
+        @"|█i i█|";
     public const string Charaball =
         @"       " + "\n" +
         @"   _   " + "\n" +

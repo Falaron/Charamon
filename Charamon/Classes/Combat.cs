@@ -149,6 +149,21 @@ public static class CombatManager
         Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);
     }
+    public static void EnterTrainerCombat(char[][] map, List<Charamon> charamonList)
+    {
+        Random random = new Random();
+        float percentage = random.Next(100);
+
+        for (int i=0; i < charamonList.Count; i++)
+        {
+            int a = i;
+            Charamon enemy = new Charamon();
+            enemy = CharamonActions.CreateCharamon(a, SetEnemyLevel());
+            CharamonActions.enemies.Add(enemy);
+            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemy.name + "  lvl " + enemy.level + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
+            DrawCombat(CharamonActions.team[0], enemy);
+        }
+    }
     public static T[] GetRow<T>(this T[,] matrix, int row)
     {
         var rowLength = matrix.GetLength(1);

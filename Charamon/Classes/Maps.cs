@@ -9,7 +9,7 @@ public static class Maps
     {
         if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
         {
-            if (map != StartHouse && map != Charaspital && map != Charashop) return Sprites.Mountain;
+            if (map != StartHouse && map != Charaspital && map != Charashop && map != Arena) return Sprites.Mountain;
             else return Sprites.Empty;
 
         }
@@ -40,6 +40,7 @@ public static class Maps
                 '6' => Sprites.WaterDiagLeft,
                 '7' => Sprites.WaterDiagTopRight,
                 '8' => Sprites.WaterDiagTopLeft,
+                'l' => Sprites.PNJ,
 
 
                 // BUILDINGS
@@ -51,6 +52,8 @@ public static class Maps
                 'F' => Sprites.Empty,        // Charashop => Field
                 'G' => Sprites.Empty,        // Field => Wilds
                 'H' => Sprites.Empty,        // Wilds => Field
+                'I' => Sprites.Arena,        // Wilds => Arena
+                'J' => Sprites.Empty,        // Arena => Wilds
 
 
                 ' ' => Sprites.Empty,
@@ -60,7 +63,6 @@ public static class Maps
         }
 
     }
-
     public static bool DontCollide(char[][] map, int tileX, int tileY)
     {
         return map[tileY][tileX] switch
@@ -82,7 +84,6 @@ public static class Maps
             _ => false
         };
     }
-
     public static int CheckForInterraction(char[][] map, int tileX, int tileY)
     {
         return map[tileY][tileX] switch
@@ -100,9 +101,13 @@ public static class Maps
             'e' => 11,
             'G' => 12,
             'H' => 13,
+            'l' => 14,
+            'I' => 15,
+            'J' => 16,
             _ => 0
         };
     }
+
 
     public static readonly char[][] Field = new char[][]
     {
@@ -172,11 +177,23 @@ public static class Maps
         "   i   ".ToCharArray()
     };
 
+    public static readonly char[][] Arena = new char[][]
+    {
+        "wwwwwwwww".ToCharArray(),
+        "w  ylv  w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w       w".ToCharArray(),
+        "w   X   w".ToCharArray(),
+        "wwwwJwwww".ToCharArray(),
+        "    i    ".ToCharArray()
+    };
+
     public static float[,] WildsPool = new float[2, 40];
 
     public static Dictionary<char[][], float[,]> maps = new Dictionary<char[][], float[,]>
 {
     {Field,  FieldPool},
-    {Wilds.map, WildsPool}
+    {Wilds.map, WildsPool},
 };
 }
