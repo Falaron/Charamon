@@ -22,7 +22,7 @@ public partial class Program
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
-    public static List<string> menuList = new List<string>() {"NEW GAME","LOAD GAME", "QUIT"};
+    public static List<string> menuList = new List<string>() { "NEW GAME", "LOAD GAME", "QUIT" };
     public static List<Options> startOptions;
     public static List<Options> menuOptions;
     public static List<Options> inventoryOptions;
@@ -66,7 +66,7 @@ public partial class Program
 
         player = new();
         {
-            SpawnAtLocation(Maps.Arena, 'X');
+            SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
     }
@@ -130,8 +130,8 @@ public partial class Program
             WriteMenu(menuOptions, menuOptions[index], "SELECT YOUR STARTER");
             ChooseMenu(index, menuOptions, "SELECT YOUR STARTER");
         }
-        
-        
+
+
     }
 
     static void StartGame(int choice)
@@ -145,7 +145,7 @@ public partial class Program
 
             case 1:
                 // check if files exists
-                if(File.Exists(@"Team_SaveFile.json") && File.Exists(@"Pc_SaveFile.json") && File.Exists(@"Inventory_SaveFile.json") && File.Exists(@"PlayerSave.txt"))
+                if (File.Exists(@"Team_SaveFile.json") && File.Exists(@"Pc_SaveFile.json") && File.Exists(@"Inventory_SaveFile.json") && File.Exists(@"PlayerSave.txt"))
                 {
                     Save.LoadFile();
                     return;
@@ -309,7 +309,8 @@ public partial class Program
                 string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
                 Options itemOption = new Options(name, () => item.UseItem());
                 inventoryOptions.Add(itemOption);
-            }        }
+            }
+        }
         Options back = new Options("Return", () => Exit());
         inventoryOptions.Add(back);
 
@@ -328,7 +329,7 @@ public partial class Program
     static void ArenaBossInterraction()
     {
         Console.Clear();
-        DialogueMessage(15, "\n\n Well, i'm the big boss of this arena !" , 30);
+        DialogueMessage(15, "\n\n Well, i'm the big boss of this arena !", 30);
         //CombatManager.EnterCombat(Map);
     }
 
@@ -427,9 +428,9 @@ public partial class Program
     static void FieldToWilds()
     {
         bool canEnter = false;
-        foreach(Charamon charamon in CharamonActions.team)
+        foreach (Charamon charamon in CharamonActions.team)
         {
-            if (charamon.level >= 6 &&  CharamonActions.team.Count >= 2)
+            if (charamon.level >= 6 && CharamonActions.team.Count >= 2)
             {
                 Console.Clear();
                 DialogueMessage(15, "\n\n You enter into the Wilds...", 10);
@@ -440,7 +441,7 @@ public partial class Program
 
 
         }
-        if(!canEnter)
+        if (!canEnter)
         {
             Console.Clear();
             DialogueMessage(15, "\n\n The wilds is the only way to the arena.. but it's a dangerous zone...", 30);
@@ -720,9 +721,9 @@ public partial class Program
         while (!skip)
         {
             ConsoleKeyInfo keyInfo = ReadKey(true);
-            if(keyInfo.Key == ConsoleKey.Spacebar)
+            if (keyInfo.Key == ConsoleKey.Spacebar)
             {
-                Console.SetCursorPosition(currentX,currentY);
+                Console.SetCursorPosition(currentX, currentY);
                 TextColor(colorText, text + "  ");
                 skip = true;
             }
@@ -736,9 +737,9 @@ public partial class Program
         Console.ResetColor();
     }
 
-    public static void PressSpaceToContiue()   
+    public static void PressSpaceToContiue()
     {
-        GetInput:
+    GetInput:
         ConsoleKey key = Console.ReadKey(false).Key;
         switch (key)
         {

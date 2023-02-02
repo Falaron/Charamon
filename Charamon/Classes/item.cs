@@ -81,6 +81,10 @@ public class SimplePotion : Item
     public override int quantity { get; set; }
     public override int price { get; set; }
 
+    public override void UseItem()
+    {
+        base.UseItem();
+    }
     public override void ApplyEffect(Charamon charamon)
     {
         quantity--;

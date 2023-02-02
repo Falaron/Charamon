@@ -1,1 +1,22 @@
-[{"name":"Simple Potion","quantity":0,"price":20},{"name":"Big Potion","quantity":0,"price":50},{"name":"Charaball","quantity":15,"price":15},{"name":"Revive","quantity":0,"price":100}]
+[
+  {
+    "name": "Simple Potion",
+    "quantity": 0,
+    "price": 20
+  },
+  {
+    "name": "Big Potion",
+    "quantity": 0,
+    "price": 50
+  },
+  {
+    "name": "Charaball",
+    "quantity": 15,
+    "price": 15
+  },
+  {
+    "name": "Revive",
+    "quantity": 0,
+    "price": 100
+  }
+] 
