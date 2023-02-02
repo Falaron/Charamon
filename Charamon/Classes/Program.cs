@@ -11,7 +11,9 @@ using Microsoft.VisualBasic.FileIO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection;
-
+using System.Text.RegularExpressions;
+using System.Drawing;
+using System.Globalization;
 
 namespace ProjectCharamon;
 
@@ -20,7 +22,7 @@ public partial class Program
     static Player? _player;
     static char[][]? _map;
     static DateTime previoiusRender = DateTime.Now;
-    public static List<string> menuList = new List<string>() {"NEW GAME","LOAD GAME", "QUIT"};
+    public static List<string> menuList = new List<string>() { "NEW GAME", "LOAD GAME", "QUIT" };
     public static List<Options> startOptions;
     public static List<Options> menuOptions;
     public static List<Options> inventoryOptions;
@@ -48,15 +50,10 @@ public partial class Program
         Initialize();
         StartScreen();
         MenuScreen();
-        Item.AddToInventory(0, 5);
-        Item.AddToInventory(2, 50);
-        Item.AddToInventory(3,2);
-        Player.money = 20;
         while (gameRunning)
         {
             RenderWorldMapView();
             PlayerInputs();
-            UpdateDeltaTime();
         }
     }
 
@@ -72,8 +69,6 @@ public partial class Program
             SpawnAtLocation(Maps.StartHouse, 'X');
         }
         player.PlayerRenderer = Sprites.Player;
-
-
     }
 
     static void StartScreen()
@@ -84,6 +79,8 @@ public partial class Program
         Console.WriteLine("{0, 58}", "Your adventure awaits!\n\n\n");
         Console.WriteLine(" You are a Charamon trainer.\n" + " Explore the world and catch them all." + "\n\n");
         TextColor(14, " Press "); TextColor(6, "[space]"); TextColor(14, " to begin...");
+
+        TextColor(8, "\n\n\n\n" + " INPUTS\n" + " move:        directional_keys\n" + " interract:   spacebar\n" + " inventory:   i\n" + " save:        s\n" + " quit game:   escape");
 
         PressSpaceToContiue();
     }
@@ -114,6 +111,7 @@ public partial class Program
         Charamon starterOne = CharamonActions.CreateCharamon(0, 5);
         Charamon starterTwo = CharamonActions.CreateCharamon(3, 5);
         Charamon starterThree = CharamonActions.CreateCharamon(6, 5);
+        Item.AddToInventory(2, 15);
 
         menuOptions = new List<Options>
         {
@@ -122,11 +120,9 @@ public partial class Program
                 new Options(starterThree.name, () =>  WriteStarterMessage(starterThree))
         };
         int index = 0;
-
         DialogueMessage(15, "\n\n Hi, my name is professor Char, welcome to the world of...", 10);
         DialogueMessage(15, " CHARAMON !", 10);
-        DialogueMessage(15, "\n\n Now, it's time for you to choose your starter. It will lead you to a great adventure.", 10);
-
+        DialogueMessage(15, "\n\n As a new trainer, it's time for you to choose your starter. It will leads you to a great adventure.", 10);
 
         if (!isCharamonSelected)
         {
@@ -134,8 +130,8 @@ public partial class Program
             WriteMenu(menuOptions, menuOptions[index], "SELECT YOUR STARTER");
             ChooseMenu(index, menuOptions, "SELECT YOUR STARTER");
         }
-        
-        
+
+
     }
 
     static void StartGame(int choice)
@@ -148,8 +144,8 @@ public partial class Program
                 break;
 
             case 1:
-                //load
-                if(File.Exists(@"Team_SaveFile.json"))
+                // check if files exists
+                if (File.Exists(@"Team_SaveFile.json") && File.Exists(@"Pc_SaveFile.json") && File.Exists(@"Inventory_SaveFile.json") && File.Exists(@"PlayerSave.txt"))
                 {
                     Save.LoadFile();
                     return;
@@ -182,6 +178,7 @@ public partial class Program
         }
 
         Console.WriteLine("\n\n  Press [Space] to select");
+        Console.WriteLine("\n\n  ────────────────────────────────────────────────────────────");
     }
 
     public static void ChooseMenu(int index, List<Options> menu, string text)
@@ -228,7 +225,7 @@ public partial class Program
         CharamonActions.AddToTeam(charamon);
 
         Console.Clear();
-        DialogueMessage(15, "\n\n Nice choice ! ", 10);
+        DialogueMessage(15, "\n\n Nice choice !", 10);
 
         switch (charamon.id)
         {
@@ -243,12 +240,15 @@ public partial class Program
                 break;
             default: break;
         }
-        Console.WriteLine("\n");
-        DialogueMessage(15, " Now,", 50);
-        Console.WriteLine();
-        DialogueMessage(15, " Proceed.", 50);
-        Console.WriteLine("\n");
-        TextColor(14, "\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
+        Console.Clear();
+        DialogueMessage(15, "\n\n You objective is to reach the arena of this land !", 10);
+        DialogueMessage(15, "However,", 10);
+        DialogueMessage(15, "this task is not easy...", 30);
+        DialogueMessage(15, "\n\n Train you charamon,", 30);
+        DialogueMessage(15, "it needs to be stronger.", 60);
+        DialogueMessage(15, "\n\n Now,", 10);
+        DialogueMessage(15, "\n Proceed.", 10);
+        TextColor(14, "\n\n\n Press "); TextColor(6, "[space]"); TextColor(14, " to continue...");
 
         isCharamonSelected = true;
         PressSpaceToContiue();
@@ -273,66 +273,8 @@ public partial class Program
                     ConsoleKey.RightArrow => (player.TileX + 1, player.TileY)
                 };
 
-                if (Maps.DontCollide(Map, tileX, tileY))
-                {
-                    switch (keyPressed)
-                    {
-                        case ConsoleKey.UpArrow:
-                            player.posY -= Sprites.SpriteHeight;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            player.posY += Sprites.SpriteHeight;
-                            break;
-                        case ConsoleKey.LeftArrow:
-                            player.posX -= Sprites.SpriteWidth;
-                            break;
-                        case ConsoleKey.RightArrow:
-                            player.posX += Sprites.SpriteWidth;
-                            break;
-                    }
-                }
-                switch (Maps.CheckForInterraction(Map, tileX, tileY))
-                {
-                    case 1:
-                        Random random = new Random();
-                        int proba = random.Next(100);
-                        if (proba <=16) 
-                        {
-                            GrassInterraction();
-                        }
-                        break;
-                    case 2:
-                        StartHouseToField();
-                        break;
-                    case 3:
-                        FieldToStartHouse();
-                        break;
-                    case 4:
-                        CharaballInterraction(1, 2);
-                        break;
-                    case 5:
-                        FieldToCharaspital();
-                        break;
-                    case 6:
-                        CharaspitalToField();
-                        break;
-                    case 7:
-                        HealCharamons();
-                        break;
-                    case 8:
-                        FieldToCharashop();
-                        break;
-                    case 9:
-                        CharashopToField();
-                        break;
-                    case 10:
-                        Shop();
-                        break;
-                    case 11:
-                        Computer();
-                        break;
-                    default: break;
-                }
+                CheckCollision(keyPressed, tileX, tileY);
+                CheckInterraction(tileX, tileY);
                 break;
 
             // Open inventory
@@ -367,14 +309,15 @@ public partial class Program
                 string name = Item.inventory[i].name + " : " + Item.inventory[i].quantity;
                 Options itemOption = new Options(name, () => item.UseItem());
                 inventoryOptions.Add(itemOption);
-            }        }
+            }
+        }
         Options back = new Options("Return", () => Exit());
         inventoryOptions.Add(back);
 
         int index = 0;
         Console.Clear();
-        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY");
-        Program.ChooseMenu(index, inventoryOptions, "INVENTORY");
+        Program.WriteMenu(inventoryOptions, inventoryOptions[index], "INVENTORY\n\n  Current money : " + Player.money + " ¥\n\n");
+        Program.ChooseMenu(index, inventoryOptions, "INVENTORY\n\n  Current money : " + Player.money + " ¥\n\n");
     }
 
     static void GrassInterraction()
@@ -383,11 +326,18 @@ public partial class Program
         CombatManager.EnterCombat(Map);
     }
 
+    static void ArenaBossInterraction()
+    {
+        Console.Clear();
+        DialogueMessage(15, "\n\n Well, i'm the big boss of this arena !", 30);
+        //CombatManager.EnterCombat(Map);
+    }
+
     static void HealCharamons()
     {
         CharamonActions.HealAll();
         Console.Clear();
-        DialogueMessage(10, "\n\n All your pokemons are healed.", 15);
+        DialogueMessage(10, "\n\n The Charanurse healed and revived your team.", 15);
     }
 
     public static void Shop()
@@ -402,6 +352,8 @@ public partial class Program
             Options shopOption = new Options(name, () => item.BuyItem());
             shopOptions.Add(shopOption);
         }
+        Options info = new Options("How can I get money ?", () => Info("shop"));
+        shopOptions.Add(info);
         Options back = new Options("Exit shop", () => Exit());
         shopOptions.Add(back);
 
@@ -424,6 +376,8 @@ public partial class Program
             Options pcOption = new Options(name, () => CharamonActions.SwapCharamon(a, charamon));
             pcOptions.Add(pcOption);
         }
+        Options info = new Options("Informations", () => Info("pc"));
+        pcOptions.Add(info);
         Options back = new Options("Exit Computer", () => Exit());
         pcOptions.Add(back);
 
@@ -471,21 +425,51 @@ public partial class Program
         SpawnAtLocation(Maps.Charashop, 'F');
     }
 
+    static void FieldToWilds()
+    {
+        bool canEnter = false;
+        foreach (Charamon charamon in CharamonActions.team)
+        {
+            if (charamon.level >= 6 && CharamonActions.team.Count >= 2)
+            {
+                Console.Clear();
+                DialogueMessage(15, "\n\n You enter into the Wilds...", 10);
+                canEnter = true;
+                SpawnAtLocation(Wilds.map, 'X');
+                break;
+            }
+
+
+        }
+        if (!canEnter)
+        {
+            Console.Clear();
+            DialogueMessage(15, "\n\n The wilds is the only way to the arena.. but it's a dangerous zone...", 30);
+            Console.Clear();
+            DialogueMessage(15, "\n\n You shall be stronger to go forward.", 20);
+            DialogueMessage(8, "\n\n One Charamon of your team muse be at least level 6.", 0);
+            DialogueMessage(8, "\n You must catch at least 2 Charamons.", 0);
+        }
+    }
+
+    static void WildsToField()
+    {
+        SpawnAtLocation(Maps.Field, 'G');
+    }
+
+    static void WildsToArena()
+    {
+        SpawnAtLocation(Maps.Arena, 'J');
+    }
+
+    static void ArenaToWilds()
+    {
+        SpawnAtLocation(Wilds.map, 'I');
+    }
+
     public static void Exit()
     {
         //exit
-    }
-
-    static void UpdateDeltaTime()
-    {
-        // frame rate control (33 fps)
-        DateTime now = DateTime.Now;
-        TimeSpan sleep = TimeSpan.FromMilliseconds(33) - (now - previoiusRender);
-        if (sleep > TimeSpan.Zero)
-        {
-            Thread.Sleep(sleep);
-        }
-        previoiusRender = DateTime.Now;
     }
 
     static void RenderWorldMapView()
@@ -600,6 +584,116 @@ public partial class Program
         Program.ChooseMenu(index, saveOptions, "\n\n Are you sure to save ? Your current save will be override.");
     }
 
+    public static void Info(string infoIndex)
+    {
+        Console.Clear();
+        switch (infoIndex)
+        {
+            case "pc":
+                Console.Write("\n\n Launching computer_explanation.exe...");
+                DialogueMessage(15, " [################]100%", 100);
+                DialogueMessage(15, "\n\n\n The pc allows you to see all Charamons you captured.", 10);
+                DialogueMessage(15, "\n\n If your team is complete (6 charamons), the next Charamons you'll capture will automatically be stocked in the pc.", 10);
+                DialogueMessage(15, "\n\n You are able to swap a Charamon of your team with one of the pc", 10);
+                Console.Write("\n\n\n *End of program* ");
+                Console.WriteLine("exiting computer_explanation.exe...");
+                Thread.Sleep(2000);
+                break;
+
+            case "shop":
+                DialogueMessage(15, "\n\n You want some money ?", 10);
+                DialogueMessage(15, "Work for me !", 10);
+                DialogueMessage(15, "\n\n Aha... I m   j o k i n g", 50);
+                Console.Clear();
+                DialogueMessage(15, "\n\n Kill or capture Charamons will give you money.", 10);
+                DialogueMessage(15, "\n Trainers of the arena will give you money if you beat them.", 10);
+                DialogueMessage(15, "\n\n That all you need to do, kid.", 10);
+                break;
+        }
+    }
+
+    static void CheckCollision(ConsoleKey keyPressed, int tileX, int tileY)
+    {
+        if (Maps.DontCollide(Map, tileX, tileY))
+        {
+            switch (keyPressed)
+            {
+                case ConsoleKey.UpArrow:
+                    player.posY -= Sprites.SpriteHeight;
+                    break;
+                case ConsoleKey.DownArrow:
+                    player.posY += Sprites.SpriteHeight;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    player.posX -= Sprites.SpriteWidth;
+                    break;
+                case ConsoleKey.RightArrow:
+                    player.posX += Sprites.SpriteWidth;
+                    break;
+            }
+        }
+    }
+    static void CheckInterraction(int tileX, int tileY)
+    {
+        switch (Maps.CheckForInterraction(Map, tileX, tileY))
+        {
+            case 1:
+                Random random = new Random();
+                int proba = random.Next(100);
+                if (proba <= 16)
+                {
+                    GrassInterraction();
+                }
+                break;
+            case 2:
+                StartHouseToField();
+                break;
+            case 3:
+                FieldToStartHouse();
+                break;
+            case 4:
+                CharaballInterraction(1, 2);
+                break;
+            case 5:
+                FieldToCharaspital();
+                break;
+            case 6:
+                CharaspitalToField();
+                break;
+            case 7:
+                HealCharamons();
+                break;
+            case 8:
+                FieldToCharashop();
+                break;
+            case 9:
+                CharashopToField();
+                break;
+            case 10:
+                Shop();
+                break;
+            case 11:
+                Computer();
+                break;
+            case 12:
+                FieldToWilds();
+                break;
+            case 13:
+                WildsToField();
+                break;
+            case 14:
+                ArenaBossInterraction();
+                break;
+            case 15:
+                WildsToArena();
+                break;
+            case 16:
+                ArenaToWilds();
+                break;
+            default: break;
+        }
+    }
+
 
     // DIALOGUE AND TEXT METHODS
     public static void DialogueMessage(int colorText, string text, int delay)
@@ -627,9 +721,9 @@ public partial class Program
         while (!skip)
         {
             ConsoleKeyInfo keyInfo = ReadKey(true);
-            if(keyInfo.Key == ConsoleKey.Spacebar)
+            if (keyInfo.Key == ConsoleKey.Spacebar)
             {
-                Console.SetCursorPosition(currentX,currentY);
+                Console.SetCursorPosition(currentX, currentY);
                 TextColor(colorText, text + "  ");
                 skip = true;
             }
@@ -643,9 +737,9 @@ public partial class Program
         Console.ResetColor();
     }
 
-    public static void PressSpaceToContiue()   
+    public static void PressSpaceToContiue()
     {
-        GetInput:
+    GetInput:
         ConsoleKey key = Console.ReadKey(false).Key;
         switch (key)
         {

@@ -14,11 +14,24 @@ public class Wilds
 
     public static void Generate()
     {
-        do
+        Random random = new Random();
+    findMap:
+
+        SetValues();
+        /*for (int x = 0; x < 64; x++)
         {
-            SetValues();
+            char[] chars = new char[64];
+            for (int y = 0; y < 64; y++)
+            {
+                chars[y] = map[x][y];
+            }
+            Console.WriteLine(chars);
+        }*/
+        if (!IsPath())
+        {
+            Noise2d.Reseed();
+            goto findMap;
         }
-        while (IsPath());
         SetPool();
     }
 
@@ -36,10 +49,10 @@ public class Wilds
     static bool IsaPath(int i, int j, int[,] visited)
     {
 
-        if ((i >= 0 && i < 63 && j >= 0 && j < 63) && (map[i][j] != 't' || map[i][j] != 'm') && visited[i, j] == 0)
+        if ((i >= 1 && i < 63 && j >= 0 && j < 63) && map[i][j] != 't' && map[i][j] != 'm' && visited[i, j] == 0)
         {
             visited[i, j] = 1;
-            if (map[i][j] == '1') return true;
+            if (map[i][j] == 'I') return true;
 
             bool left = IsaPath(i - 1, j, visited);
             if (left) return true;
@@ -66,14 +79,15 @@ public class Wilds
             for (int j = 0; j < 64; j++)
             {
                 if (map[i][j] == 'X' && visited[i, j] == 0)
+                {
                     if (IsaPath(i, j, visited))
                     {
                         flag = true;
                         break;
                     }
+                }
             }
         }
-
         return flag;
     }
     public static void SetValues()
@@ -83,7 +97,7 @@ public class Wilds
             char[] chars = new char[64];
             for (int j = 0; j < 64; j++)
             {
-                preMap[i, j] = Noise2d.Noise(i / 64.0f, j / 64.0f) * 7;
+                preMap[i, j] = Noise2d.Noise(i / 64.0f, j / 64.0f) * 6;
                 if (preMap[i, j] < 0)
                 {
                     preMap[i, j] *= -1;
@@ -94,8 +108,8 @@ public class Wilds
             }
             map[i] = chars;
         }
-        map[1][32] = '1';
-        map[63][32] = 'X';
+        map[1][32] = 'I';
+        map[62][32] = 'X';
     }
     public static char FromFloatToChar(float n)
     {

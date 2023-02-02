@@ -13,6 +13,7 @@ public static class CombatManager
     public static List<Options> combatOptions;
     public static List<Options> abilityOptions;
     public static List<Options> charamonsList;
+    public static bool isArenaBoss = false;
 
     public static void Charamons(Charamon charamon, Charamon enemy)
     {
@@ -100,6 +101,9 @@ public static class CombatManager
                     new Options("Inventory", () =>  Inventory(charamon, enemy)),
                     new Options("Fight", () =>  Fight(charamon, enemy))
             };
+            Options info = new Options("How to fight ?", () => DrawBattleInfos(charamon, enemy));
+            combatOptions.Add(info);
+
             int index = 0;
             Console.Clear();
             string charamonsName = charamon.name + "  lvl " + charamon.level + "                      " + enemy.name + "  lvl " + enemy.level;
@@ -111,7 +115,12 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            if (enemy.currentHp <= 0)
+            if(isArenaBoss)
+            {
+                isArenaBoss = false;
+                Program.EndGame();
+            }
+            else if (enemy.currentHp <= 0)
             {
                 Program.DialogueMessage(15, "\n\n  You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
                 CharamonActions.GainXp(charamon, enemy);
@@ -120,6 +129,19 @@ public static class CombatManager
             CharamonActions.enemies.Remove(enemy);
         }
           
+    }
+    public static void DrawBattleInfos(Charamon charamon, Charamon enemy)
+    {
+        Console.Clear();
+        Program.DialogueMessage(15, "\n\n You're in a 1vs1 battle. If your current Charamon die, the next Charamon of your team will help you.", 10);
+        Program.DialogueMessage(15, "\n If all your team is dead, you loose and go back to the last save.", 10);
+        Program.DialogueMessage(15, "\n\n\n CHARAMON: Swap your main Charamon.", 10);
+        Program.DialogueMessage(15, "\n\n RUN: Escape the battle. Careful, you don't escape for sure.", 10);
+        Program.DialogueMessage(15, "\n\n INVENTORY: Use items during the battle. Use a Charaball (if you have some) to catch the enemy.", 10);
+        Program.DialogueMessage(15, "\n            Decrease enemy's health to improve chances of capture.", 10);
+        Program.DialogueMessage(15, "\n\n FIGHT: Use your skills to deal damages to your enemy.", 10);
+        Program.DialogueMessage(15, "\n        If your Charamon type is the opposite of your enemy type, you deal more/minus damages !", 10);
+        DrawCombat(charamon, enemy);
     }
     public static void EnterCombat(char[][] map)
     {
@@ -132,6 +154,19 @@ public static class CombatManager
 
         Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);
+    }
+    public static void EnterTrainerCombat(List<Charamon> charamonList)
+    {
+        for (int i = 0; i < charamonList.Count; i++)
+        {
+            
+            Charamon enemy = new Charamon();
+            enemy = charamonList[i];
+            CharamonActions.enemies.Add(enemy);
+            
+        }
+        Program.DialogueMessage(15, "\n\n The trainer drops a " + CharamonActions.enemies[0].name + "  lvl " + CharamonActions.enemies[0].level + "\n HP :  " + CharamonActions.enemies[0].currentHp + "/" + CharamonActions.enemies[0].stats["HP"] + "\n\n", 10);
+        DrawCombat(CharamonActions.team[0], CharamonActions.enemies[0]);
     }
     public static T[] GetRow<T>(this T[,] matrix, int row)
     {

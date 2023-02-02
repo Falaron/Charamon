@@ -123,6 +123,8 @@ public class CharamonActions
                         enemies.Remove(defender);
                         if (enemies.Count > 0)
                         {
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemies[0].name + "  lvl " + enemies[0].level + "\n HP :  " + enemies[0].currentHp + "/" + enemies[0].stats["HP"] + "\n\n", 10);
                             CombatManager.DrawCombat(attacker, enemies[0]);
                         }
                         else return;
@@ -147,7 +149,9 @@ public class CharamonActions
                     {
                         if (AllDead())
                         {
-                            Environment.Exit(0); //or return to infirmary
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n  All your pokemons are dead...", 50);
+                            Environment.Exit(0);
                         }
                         CombatManager.Charamons(attacker, defender);
                     }
@@ -157,6 +161,8 @@ public class CharamonActions
                         enemies.Remove(defender);
                         if (enemies.Count > 0)
                         {
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemies[0].name + "  lvl " + enemies[0].level + "\n HP :  " + enemies[0].currentHp + "/" + enemies[0].stats["HP"] + "\n\n", 10);
                             CombatManager.DrawCombat(attacker, enemies[0]);
                         }
                         else return;
@@ -194,7 +200,7 @@ public class CharamonActions
             defender.currentHp -= damage;
             if (defender.currentHp < 0) defender.currentHp = 0;
         }
-        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n\n", 10);
+        Program.DialogueMessage(15, "\n\n  " + attacker.name + " inflicted " + damage + " damages with " + attack.ename + "\n", 10);
 
         switch (GetTypeAdvantage(attacker, defender, attack))
         {
@@ -290,12 +296,15 @@ public class CharamonActions
     public static void GainXp(Charamon target, Charamon defeated)
     {
         int xpGain = 60 * defeated.level / 7;
+        int moneyGain = 10 * defeated.level / 7;
         target.xp += xpGain;
+        Player.money += moneyGain;
+        Program.DialogueMessage(15, "You gained " + moneyGain + "¥", 10);
         Program.DialogueMessage(15, target.name + " gained " + xpGain + " xp !", 10);
         while (target.xp >= target.xpThreshold && target.level < 100)
         {
             target.level++;
-            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level, 10);
+            Program.DialogueMessage(15, target.name + "level UP ! to lvl  " + target.level + "\n", 10);
             UpdateStats(target);
             if (target.level >= target.evolutionLvl)  Evolve(target);
             Program.PressSpaceToContiue();
@@ -310,13 +319,13 @@ public class CharamonActions
                 int hp = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + target.level + 10;
                 target.currentHp += target.stats[kvp.Key] - hp;
-                Console.WriteLine(" " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
+                Console.WriteLine("  " + kvp.Key + " " +  target.stats[kvp.Key]+ " => " + hp );
             }
             else
             {
                 int stat = target.stats[kvp.Key];
                 target.stats[kvp.Key] = ((2 * target.stats[kvp.Key] * target.level) / 100) + 5;
-                Console.WriteLine(kvp.Key +" " + target.stats[kvp.Key]+  " => " + stat);
+                Console.WriteLine(kvp.Key +"  " + target.stats[kvp.Key]+  " => " + stat);
             }
         }
         target.xpThreshold = (int)Math.Pow(target.level, 3);
