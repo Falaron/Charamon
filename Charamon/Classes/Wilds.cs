@@ -78,7 +78,7 @@ public class Wilds
         {
             for (int j = 0; j < 64; j++)
             {
-                if (map[i][j] == 'X' && visited[i, j] == 0)
+                if (map[i][j] == 'H' && visited[i, j] == 0)
                 {
                     if (IsaPath(i, j, visited))
                     {
@@ -109,7 +109,7 @@ public class Wilds
             map[i] = chars;
         }
         map[1][32] = 'I';
-        map[62][32] = 'X';
+        map[62][32] = 'H';
     }
     public static char FromFloatToChar(float n)
     {

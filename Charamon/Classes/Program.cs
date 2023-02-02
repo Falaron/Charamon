@@ -330,7 +330,18 @@ public partial class Program
     {
         Console.Clear();
         DialogueMessage(15, "\n\n Well, i'm the big boss of this arena !", 30);
-        //CombatManager.EnterCombat(Map);
+        List<Charamon> charamons = new List<Charamon>(5);
+        int[] championTeamId = new int[]
+        {
+            50, 75, 151, 500, 3
+        };
+
+        for (int i = 0; i < 5; i++)
+        {
+            charamons.Add(CharamonActions.CreateCharamon(championTeamId[i], 20));
+        }
+        CombatManager.isArenaBoss = true;
+        CombatManager.EnterTrainerCombat(charamons);
     }
 
     static void HealCharamons()
@@ -389,10 +400,18 @@ public partial class Program
 
     static void CharaballInterraction(int itemId, int quantity)
     {
-        Item.AddToInventory(itemId, quantity);
-        Map[player.TileY][player.TileX] = ' ';
-        Console.Clear();
-        DialogueMessage(15, "\n\n You found " + quantity + " " + Item.inventory[itemId].name, 10);
+        if (Item.inventory[itemId].itemGet)
+        {
+            Console.Clear();
+            DialogueMessage(15, "\n\n The Charaball is empty, you already taken its content.", 10);
+        }
+        else
+        {
+            Item.inventory[itemId].itemGet = true;
+            Item.AddToInventory(itemId, quantity);
+            Console.Clear();
+            DialogueMessage(15, "\n\n You found " + quantity + " " + Item.inventory[itemId].name, 10);
+        }
     }
 
     static void StartHouseToField()
@@ -435,7 +454,7 @@ public partial class Program
                 Console.Clear();
                 DialogueMessage(15, "\n\n You enter into the Wilds...", 10);
                 canEnter = true;
-                SpawnAtLocation(Wilds.map, 'X');
+                SpawnAtLocation(Wilds.map, 'H');
                 break;
             }
 
@@ -610,6 +629,16 @@ public partial class Program
                 DialogueMessage(15, "\n\n That all you need to do, kid.", 10);
                 break;
         }
+    }
+
+    public static void EndGame()
+    {
+        Console.Clear();
+        DialogueMessage(6, "\n\n GOOD JOB ! You beaten the arena ! <3", 10);
+        Save.SaveFile();
+        Console.Clear();
+        DialogueMessage(15, "\n\n Game saved. The game will be loaded right before the battle. \n\n\n\n Thanks for playing our game. The team <3 (we love you)", 10);
+        Save.LoadFile();
     }
 
     static void CheckCollision(ConsoleKey keyPressed, int tileX, int tileY)

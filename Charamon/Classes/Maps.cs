@@ -50,7 +50,7 @@ public static class Maps
                 'E' => Sprites.Charashop,    // Field => Charashop
                 'F' => Sprites.Empty,        // Charashop => Field
                 'G' => Sprites.Empty,        // Field => Wilds
-                'H' => Sprites.Empty,        // Wilds => Field
+                'H' => Sprites.StartHouse,        // Wilds => Field
                 'I' => Sprites.Arena,        // Wilds => Arena
                 'J' => Sprites.Empty,        // Arena => Wilds
 
