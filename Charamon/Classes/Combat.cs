@@ -13,6 +13,7 @@ public static class CombatManager
     public static List<Options> combatOptions;
     public static List<Options> abilityOptions;
     public static List<Options> charamonsList;
+    public static bool isArenaBoss = false;
 
     public static void Charamons(Charamon charamon, Charamon enemy)
     {
@@ -114,7 +115,12 @@ public static class CombatManager
         else
         {
             Console.Clear();
-            if (enemy.currentHp <= 0)
+            if(isArenaBoss)
+            {
+                isArenaBoss = false;
+                Program.EndGame();
+            }
+            else if (enemy.currentHp <= 0)
             {
                 Program.DialogueMessage(15, "\n\n  You deafeated a " + enemy.name + "  lvl " + enemy.level + "\n\n", 10);
                 CharamonActions.GainXp(charamon, enemy);
@@ -149,20 +155,18 @@ public static class CombatManager
         Program.DialogueMessage(15, "\n\n You encountered a " + enemy.name + "  lvl " + enemy.level  + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
         DrawCombat(CharamonActions.team[0], enemy);
     }
-    public static void EnterTrainerCombat(char[][] map, List<Charamon> charamonList)
+    public static void EnterTrainerCombat(List<Charamon> charamonList)
     {
-        Random random = new Random();
-        float percentage = random.Next(100);
-
-        for (int i=0; i < charamonList.Count; i++)
+        for (int i = 0; i < charamonList.Count; i++)
         {
-            int a = i;
+            
             Charamon enemy = new Charamon();
-            enemy = CharamonActions.CreateCharamon(a, SetEnemyLevel());
+            enemy = charamonList[i];
             CharamonActions.enemies.Add(enemy);
-            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemy.name + "  lvl " + enemy.level + "\n HP :  " + enemy.currentHp + "/" + enemy.stats["HP"] + "\n\n", 10);
-            DrawCombat(CharamonActions.team[0], enemy);
+            
         }
+        Program.DialogueMessage(15, "\n\n The trainer drops a " + CharamonActions.enemies[0].name + "  lvl " + CharamonActions.enemies[0].level + "\n HP :  " + CharamonActions.enemies[0].currentHp + "/" + CharamonActions.enemies[0].stats["HP"] + "\n\n", 10);
+        DrawCombat(CharamonActions.team[0], CharamonActions.enemies[0]);
     }
     public static T[] GetRow<T>(this T[,] matrix, int row)
     {

@@ -4,7 +4,6 @@ namespace ProjectCharamon;
 
 public static class Maps
 {
-
     public static string GetMapTileRender(char[][] map, int tileX, int tileY)
     {
         if (tileY < 0 || tileY >= map.Length || tileX < 0 || tileX >= map[tileY].Length)
@@ -72,7 +71,6 @@ public static class Maps
             'g' => true,
             's' => true,
             'z' => true,
-            'c' => true,
             '1' => true,
             '2' => true,
             '3' => true,
@@ -81,6 +79,7 @@ public static class Maps
             '6' => true,
             '7' => true,
             '8' => true,
+            'l' => true,
             _ => false
         };
     }

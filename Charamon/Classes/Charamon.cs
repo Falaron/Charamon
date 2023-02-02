@@ -123,6 +123,8 @@ public class CharamonActions
                         enemies.Remove(defender);
                         if (enemies.Count > 0)
                         {
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemies[0].name + "  lvl " + enemies[0].level + "\n HP :  " + enemies[0].currentHp + "/" + enemies[0].stats["HP"] + "\n\n", 10);
                             CombatManager.DrawCombat(attacker, enemies[0]);
                         }
                         else return;
@@ -147,7 +149,9 @@ public class CharamonActions
                     {
                         if (AllDead())
                         {
-                            Environment.Exit(0); //or return to infirmary
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n  All your pokemons are dead...", 50);
+                            Environment.Exit(0);
                         }
                         CombatManager.Charamons(attacker, defender);
                     }
@@ -157,6 +161,8 @@ public class CharamonActions
                         enemies.Remove(defender);
                         if (enemies.Count > 0)
                         {
+                            Console.Clear();
+                            Program.DialogueMessage(15, "\n\n The trainer drops a " + enemies[0].name + "  lvl " + enemies[0].level + "\n HP :  " + enemies[0].currentHp + "/" + enemies[0].stats["HP"] + "\n\n", 10);
                             CombatManager.DrawCombat(attacker, enemies[0]);
                         }
                         else return;

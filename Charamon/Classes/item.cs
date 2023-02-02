@@ -14,6 +14,8 @@ public class Item
     public virtual int quantity { get; set; }
     public virtual int price { get; set; }
 
+    public virtual bool itemGet { get; set; }
+
     public static List<Item> inventory = new List<Item>();
     public virtual void ApplyEffect(Charamon charamon) { }
     public virtual void UseItem()
@@ -77,6 +79,7 @@ public class SimplePotion : Item
     {
         name = "Simple Potion";
         price = 20;
+        itemGet = false;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
@@ -110,6 +113,7 @@ public class BigPotion : Item
     {
         name = "Big Potion";
         price = 50;
+        itemGet = false;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
@@ -139,6 +143,7 @@ public class Charaball : Item
     {
         name = "Charaball";
         price = 15;
+        itemGet = false;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
@@ -173,6 +178,7 @@ public class Revive : Item
     {
         name = "Revive";
         price = 100;
+        itemGet = false;
     }
     public override int quantity { get; set; }
     public override int price { get; set; }
